@@ -1,0 +1,110 @@
+---
+title: "GSA #1"
+output: html_document
+---
+
+
+
+```{r, echo=FALSE}
+library(knitr)
+knitr::opts_chunk$set(message = FALSE, error = FALSE, warning = FALSE, echo = FALSE)
+```
+
+
+
+```{r}
+library(crosstalk)
+library(leaflet)
+library(plotly)
+library(DT)
+library(tidyverse)
+library(summarywidget) #devtools::install_github("kent37/summarywidget")
+```
+
+
+```{r}
+priority <- "HIGH" # get from params or filter from df of GSA & priority
+  
+if(priority == "HIGH") 
+  pristr <- paste0(" ", fontawesome::fa("exclamation-circle", fill = "red"), 
+                   paste0(" Basin prioritization: **<font color = 'red'>", priority, "</font>**") )
+if(priority == "MEDIUM") 
+  pristr <- paste0(" ", fontawesome::fa("exclamation-circle", fill = "orange"), 
+                   paste0(" Basin prioritization: **<font color = 'orange'>", priority, "</font>**") )
+if(priority == "LOW") 
+  pristr <- paste0(" ", fontawesome::fa("check-circle", fill = "green"), 
+                   paste0(" Basin prioritization: **<font color = 'green'>", priority, "</font>**") )
+
+```
+
+## `r pristr`
+
+
+<div class="alert alert-info alert-dismissible fade in">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <strong>Instructions:</strong> Drag the slider bar below from left to right to select a range of groundwater level decline. Remaining active wells at the specified groundwater level decline are shown in the map and table.
+</div>
+
+
+
+
+```{r}
+eqs <- highlight_key(quakes)
+
+decline <- filter_slider(
+  "depth", "Groundwater level decline (ft)", 
+  eqs, ~depth,
+  dragRange = TRUE
+)
+```
+
+
+```{r}
+p <- plot_ly(eqs, x = ~depth, y = ~mag) %>% 
+  add_markers(alpha = 0.5) %>% 
+  highlight("plotly_selected")
+
+map <- leaflet(eqs) %>% 
+  addTiles() %>% 
+  addCircles(label = ~depth)
+
+dtab <- datatable(eqs, extensions="Scroller", style="bootstrap", class="compact", width="100%",
+    options=list(deferRender=TRUE, scrollY=300, scroller=TRUE))
+
+bscols(
+  widths = 12,
+  decline
+)
+```
+
+
+Given the specified amount of groundwater level decline, an average of `r summarywidget(eqs)` of `r nrow(quakes)` domestic wells in this GSA are expected to remain active.
+
+
+## Active domestic wells
+
+```{r}
+bscols(map, dtab)
+```
+
+# Impact summary
+
+```{r}
+sigmoid = function(x) {
+   1 / (1 + exp(-x))
+}
+
+p <- tibble(gwl = seq(0,10, 0.5), 
+       n   = sigmoid(round(seq(-5,5, 0.5),0))) %>% 
+  mutate(lab = glue::glue("<b>GWL decline (ft):</b> {gwl} <br>",
+                          "<b>n failures:</b> {round(n,0)} <br>",
+                          "<b>Estimated Cost:</b> ${round(5*n,2)}")) %>% 
+  ggplot(aes(gwl, n, text= lab)) +
+  geom_point() +
+  labs(x = "Uniform groundwater level decline from current conditions",
+       y = "Estimated number of well failures")
+
+bscols(widths = 12,
+       ggplotly(p, tooltip = "lab"))
+```
+
