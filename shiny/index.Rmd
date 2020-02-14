@@ -115,7 +115,8 @@ radioButtons(
 #   color = "primary",
 #   icon = icon("info")
 # )
-actionButton("input_help", "Instructions")
+actionButton("input_help", "Instructions",
+             style="color: #fff; background-color: #337ab7; border-color: #2e6da4; width: 100%;")
 ```
 
 
@@ -249,8 +250,9 @@ output$output_map <- renderLeaflet({
 observeEvent(input$input_help, {
       showModal(modalDialog(
         title = "How to use this dashboard",
-        "Instrucitons, instructions, instructions. <b>bold</b>. `code` markdown",
-        easyClose = TRUE
+        HTML("Instrucitons, instructions, instructions. <b>bold</b>. `code` markdown"),
+        easyClose = TRUE,
+        footer = NULL
       ))
     })
 ```
