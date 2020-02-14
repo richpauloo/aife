@@ -22,8 +22,8 @@ library(plotly)
 #em <-  mapview::mapview(breweries91) %>% mapedit::editMap()
 #write_rds(em, "C:/Users/rpauloo/Documents/Github/aife/shiny/breweries.rds")
 #em <- read_rds("C:/Users/rpauloo/Documents/Github/aife/shiny/data/breweries.rds")
-em <- read_rds("~/Github/aife/shiny/data/breweries.rds")
-#em <- read_rds("data/breweries.rds")
+#em <- read_rds("~/Github/aife/shiny/data/breweries.rds")
+em <- read_rds("data/breweries.rds")
 em$drawn$priority <- factor(c("high","medium","low"), levels = c("high","medium","low"))
 em$drawn$gsa      <- c("Kern","Tulare","Kings","Kaweah","Shasta","Sacramento")
 em$drawn$min_threshold  <- c(50,55,60,65,70,75)
@@ -108,13 +108,14 @@ radioButtons(
 ```
 
 ```{r}
-actionBttn(
-  inputId = "input_help",
-  label = "adfdsf",
-  style = "material-circle",
-  color = "primary",
-  icon = icon("info")
-)
+# actionBttn(
+#   inputId = "input_help",
+#   label = "adfdsf",
+#   style = "material-circle",
+#   color = "primary",
+#   icon = icon("info")
+# )
+actionButton("input_help", "Instructions")
 ```
 
 
@@ -237,14 +238,21 @@ output$output_map <- renderLeaflet({
 ```
 
 ```{r, context = "server"}
+# observeEvent(input$input_help, {
+#   sendSweetAlert(
+#     session = session,
+#     title = "Help",
+#     text = "Instructions on how to use the dashboard.",
+#     type = "info"
+#   )
+# })
 observeEvent(input$input_help, {
-  sendSweetAlert(
-    session = session,
-    title = "Help",
-    text = "Instructions on how to use the dashboard.",
-    type = "info"
-  )
-})
+      showModal(modalDialog(
+        title = "How to use this dashboard",
+        "Instrucitons, instructions, instructions. <b>bold</b>. `code` markdown",
+        easyClose = TRUE
+      ))
+    })
 ```
 
 ```{r, context = "server"}
