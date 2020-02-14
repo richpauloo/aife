@@ -209,7 +209,7 @@ reactive_range <- reactive({
 output$output_map <- renderLeaflet({
   #if(nrow(reactive_pts()) > 0) {
     icons <- awesomeIcons(
-      icon = 'ios-close',
+      icon = 'ios-home',
       iconColor = 'black',
       library = 'ion',
       markerColor = getColor(reactive_pts_color())
