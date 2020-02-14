@@ -1,15 +1,14 @@
 ---
 title: "GSA #1"
 output: html_document
+runtime: shiny_prerendered
 ---
 
 
-
-```{r, echo=FALSE}
+```{r, include=FALSE}
 library(knitr)
 knitr::opts_chunk$set(message = FALSE, error = FALSE, warning = FALSE, echo = FALSE)
 ```
-
 
 
 ```{r}
@@ -54,7 +53,8 @@ eqs <- highlight_key(quakes)
 decline <- filter_slider(
   "depth", "Groundwater level decline (ft)", 
   eqs, ~depth,
-  dragRange = TRUE
+  dragRange = TRUE,
+  post = " ft"
 )
 ```
 

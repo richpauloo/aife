@@ -17,14 +17,14 @@ library(shinyWidgets)
 library(tidyverse)
 library(leaflet)
 library(plotly)
-library(shinyalert)
 
 # toy data
 #em <-  mapview::mapview(breweries91) %>% mapedit::editMap()
 #write_rds(em, "C:/Users/rpauloo/Documents/Github/aife/shiny/breweries.rds")
-em <- read_rds("C:/Users/rpauloo/Documents/Github/aife/shiny/data/breweries.rds")
+#em <- read_rds("C:/Users/rpauloo/Documents/Github/aife/shiny/data/breweries.rds")
+em <- read_rds("~/Github/aife/shiny/data/breweries.rds")
 #em <- read_rds("data/breweries.rds")
-em$drawn$priority <- c("high","medium","low")
+em$drawn$priority <- factor(c("high","medium","low"), levels = c("high","medium","low"))
 em$drawn$gsa      <- c("Kern","Tulare","Kings","Kaweah","Shasta","Sacramento")
 em$drawn$min_threshold  <- c(50,55,60,65,70,75)
 em$drawn$min_objective  <- em$drawn$min_threshold - 15
@@ -46,7 +46,7 @@ sigmoid = function(x) {
 
 # color palette for markers
 #pal <- colorFactor(c("red", "blue","green"), domain = c("high", "medium","low"))
-getColor <- function(data) {
+pal_points <- function(data) {
   sapply(data$fail, function(x) {
   if(x == TRUE) {
     "red"
@@ -55,6 +55,9 @@ getColor <- function(data) {
   }
 })
 }
+
+# palette for gsa polygons
+pal_polygons <- colorFactor(c("#542788", "#35978f","#dfc27d"), domain = c("high", "medium","low"))
 ```
 
 
@@ -116,15 +119,17 @@ actionBttn(
 
 
 ```{r, context = "server"}
+# when the GSA changes in the dropdown menu, update the slider values
+# relative to that GSA's min objective and threshold
 observe({
   
-  temp <- filter(em$drawn, gsa == input$input_gsa)
+  selected_gsa <- filter(em$drawn, gsa == input$input_gsa)
 
   val <- switch(
     input$input_scenario,
-    "specified groundwater decline" = 0,
-    "minimum threshold" = temp$min_threshold,
-    "minimum objective" = temp$min_objective
+    "specified groundwater decline" = input$input_gwl,
+    "minimum threshold" = selected_gsa$min_threshold,
+    "minimum objective" = selected_gsa$min_objective
   )
   # Control the slider value
   updateSliderInput(session, "input_gwl", value = val)
@@ -138,7 +143,7 @@ observe({
     x <-  c("specified groundwater decline", "minimum objective", "minimum threshold")
   
   # Control the slider value
-  updateRadioButtons(session, "input_scenario", choices = x, selected = "specified groundwater decline")
+  updateRadioButtons(session, "input_scenario", choices = x, selected = input$input_scenario)#"specified groundwater decline")
 })
 ```
 
@@ -212,14 +217,16 @@ output$output_map <- renderLeaflet({
       icon = 'ios-home',
       iconColor = 'black',
       library = 'ion',
-      markerColor = getColor(reactive_pts_color())
+      markerColor = pal_points(reactive_pts_color())
     )
     reactive_poly() %>% 
       leaflet() %>% 
-      addTiles() %>% 
-      addPolygons(label = ~gsa) %>% 
+      addProviderTiles(providers$CartoDB.Positron) %>% 
+      addPolygons(label = ~gsa, color = ~pal_polygons(priority)) %>% 
       addAwesomeMarkers(data = reactive_pts_color(), label = ~pump_depth, icon=icons) %>% 
-      setView(lng = reactive_range()[1], lat = reactive_range()[2], zoom = 8)
+      setView(lng = reactive_range()[1], lat = reactive_range()[2], zoom = 8) %>% 
+      addLegend("bottomright", pal = pal_polygons, values = ~priority, 
+                title = "Basin \nprioritization")
   #} else
     # reactive_poly() %>% 
     #   leaflet() %>% 
