@@ -1,0 +1,13 @@
+name: aife
+title: aife
+username:
+account: richpauloo
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1813667
+bundleId: 2801901
+url: https://richpauloo.shinyapps.io/aife/
+when: 1581712471.1635
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: index.html
