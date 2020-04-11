@@ -31,12 +31,12 @@ gen_sampling_dist_mean <- function(x) {
 # ------------------------------------------------------------------------
 
 # GSP names
-nam <- read_csv(here("RawData", "gsp_names.csv"))
+nam <- read_csv(here("data", "gsp_names.csv"))
 
 # monitoring network of minimum thresholds
 mn <- 
   list.files(
-    here("RawData", "MinimumThresholdShapefiles"), 
+    here("data", "MinimumThresholdShapefiles"), 
     pattern = "\\.shp$",
     full.names = TRUE
   )
@@ -57,14 +57,16 @@ for(i in 1:length(l)){
     st_transform(prj)
 }
 
+# remove z attribute data that in l[[4]] geometry
+l[[4]] <- st_zm(l[[4]], drop=TRUE)
 
 
 # read groundwater levels (roughly present day) from ERL paper
 # https://iopscience.iop.org/article/10.1088/1748-9326/ab6f10
 # and transform to Mercatorprojection
-d_sp <- read_rds(here("RawData", "lGF_SP2018.rds")) # SP 2018
-d_fa <- read_rds(here("RawData", "lGF_FA2018.rds")) # FA 2018
-d_19 <- read_rds(here("RawData", "lGF_2019.rds"))   # FA SP 2019 avg
+d_sp <- read_rds(here("data", "lGF_SP2018.rds")) # SP 2018
+d_fa <- read_rds(here("data", "lGF_FA2018.rds")) # FA 2018
+d_19 <- read_rds(here("data", "lGF_2019.rds"))   # FA SP 2019 avg
 
 d_sp <- projectRaster(d_sp, crs = prj)
 d_fa <- projectRaster(d_fa, crs = prj)
