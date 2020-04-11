@@ -173,3 +173,22 @@ ggsave(p1, filename = here("plots", "p1.pdf"), device = cairo_pdf)
 ggsave(p2, filename = here("plots", "p2.pdf"), device = cairo_pdf)
 ggsave(p3, filename = here("plots", "p3.pdf"), device = cairo_pdf)
 
+# gsas
+gsa <- shapefile(here("data","gsa_master","GSA_Master.shp"))
+gsa <- spTransform(gsas, prj)
+
+# combine all pts
+pts <- lapply(l, as_Spatial) %>% 
+  do.call(bind, .) %>% 
+  spTransform(prj)
+
+# subset GSAs to pts: these are the ones we're working with
+# then simplify the boundary for easy plotting
+gsa <- gsa[pts, ]
+gsa <- rmapshaper::ms_simplify(gsa)
+
+# visualize
+ggplot(st_as_sf(gsa)) +
+  geom_sf() +
+  geom_sf(data = st_as_sf(pts))
+
