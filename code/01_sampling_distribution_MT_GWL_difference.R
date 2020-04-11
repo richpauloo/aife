@@ -174,7 +174,7 @@ ggsave(p2, filename = here("plots", "p2.pdf"), device = cairo_pdf)
 ggsave(p3, filename = here("plots", "p3.pdf"), device = cairo_pdf)
 
 # gsas
-gsa <- shapefile(here("data","gsa_master","GSA_Master.shp"))
+gsa <- shapefile(here("data","gsa_master","GSP_merc.shp"))
 gsa <- spTransform(gsas, prj)
 
 # combine all pts
