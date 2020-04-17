@@ -196,5 +196,4 @@ ggsave(p1, filename = here("code", "plots", "p1.pdf"), device = cairo_pdf)
 ggsave(p2, filename = here("code", "plots", "p2.pdf"), device = cairo_pdf)
 ggsave(p3, filename = here("code", "plots", "p3.pdf"), device = cairo_pdf)
 ggsave(p4, filename = here("code", "plots", "p4.pdf"), device = cairo_pdf)
-
-
+write_rds(gsa, here("shiny", "data", "gsa.rds"))
