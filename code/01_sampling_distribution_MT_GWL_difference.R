@@ -52,7 +52,7 @@ mn <- mn[!grepl(paste(to_rm, collapse="|"), mn)]
 l <- vector("list", length(mn)) 
 for(i in 1:length(l)){
   l[[i]] <- st_read(mn[i], stringsAsFactors = FALSE) %>% 
-    mutate(MT_dtw = as.numeric(MT_dtw)) %>% 
+    mutate(MT_dtw  = as.numeric(MT_dtw)) %>% 
     dplyr::select(Well_ID, MT_dtw) %>% 
     st_transform(prj)
 }
@@ -74,9 +74,9 @@ d_19 <- projectRaster(d_19, crs = prj)
 
 # calculate avg spring and fall groundwater level and visualize
 d_avg <- mean(d_fa$Prediction, d_sp$Prediction, d_19$Prediction)
-plot(d_fa$Prediction, main = "2018 Spring Interpolation (ft)")
-plot(d_sp$Prediction, main = "2018 Fall Interpolation (ft)")
-plot(d_avg, main = "Mean WSE (ft) \n(2018 and 2019)")
+spplot(d_fa$Prediction, main = "2018 Spring Interpolation (ft)")
+spplot(d_sp$Prediction, main = "2018 Fall Interpolation (ft)")
+spplot(d_avg, main = "Mean WSE (ft) \n(2018 and 2019)")
 
 
 # ------------------------------------------------------------------------
@@ -104,7 +104,7 @@ sum(((sapply(l, function(x) x$diff_MT_wse) %>% unlist()) == 0), na.rm = TRUE) /
   length(sapply(l, function(x) x$diff_MT_wse) %>% unlist())
 
 # save
-write_rds(l, here("results", "GSP_MinimumThresholds.rds"))
+write_rds(l, here("code", "results", "GSP_min_thresholds.rds"))
 
 
 # ------------------------------------------------------------------------
@@ -159,7 +159,7 @@ zz <- bind_rows(bs) %>%
             p90 = quantile(z, 0.90)) %>% 
   ungroup() %>% 
   mutate(IQR = p75-p25)
-result
+
 p3 <- ggplot(zz, aes(fct_reorder(GSP_Name, IQR), IQR)) + 
   geom_point() + 
   coord_flip() +
@@ -168,10 +168,6 @@ p3 <- ggplot(zz, aes(fct_reorder(GSP_Name, IQR), IQR)) +
        subtitle = "for selected GSAs in California's Central Valley")
 p3
 
-# save
-ggsave(p1, filename = here("plots", "p1.pdf"), device = cairo_pdf)
-ggsave(p2, filename = here("plots", "p2.pdf"), device = cairo_pdf)
-ggsave(p3, filename = here("plots", "p3.pdf"), device = cairo_pdf)
 
 # gsas
 gsa <- shapefile(here("data","gsa_master","GSP_merc.shp"))
@@ -185,10 +181,20 @@ pts <- lapply(l, as_Spatial) %>%
 # subset GSAs to pts: these are the ones we're working with
 # then simplify the boundary for easy plotting
 gsa <- gsa[pts, ]
-gsa <- rmapshaper::ms_simplify(gsa)
+gsa <- rmapshaper::ms_simplify(gsa, keep_shapes = TRUE)
 
 # visualize
-ggplot(st_as_sf(gsa)) +
+p4 <- ggplot(st_as_sf(gsa)) +
   geom_sf() +
-  geom_sf(data = st_as_sf(pts))
+  geom_sf(data = st_as_sf(pts), alpha = 0.5, col = "red") +
+  labs(title = "Critical priority GSAs",
+       subtitle = "Points show monitoring well locations with defined MTs")
+p4
+
+# save
+ggsave(p1, filename = here("code", "plots", "p1.pdf"), device = cairo_pdf)
+ggsave(p2, filename = here("code", "plots", "p2.pdf"), device = cairo_pdf)
+ggsave(p3, filename = here("code", "plots", "p3.pdf"), device = cairo_pdf)
+ggsave(p4, filename = here("code", "plots", "p4.pdf"), device = cairo_pdf)
+
 
