@@ -21,7 +21,7 @@ prj <- CRS("+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_
 gen_sampling_dist_mean <- function(x) {
   replicate(1000,
             mean(
-              sample(x$diff_MT_wse, size = 5, replace = TRUE), na.rm=TRUE
+              sample(x$diff_MT_wse, size = 4, replace = TRUE), na.rm=TRUE
             )
   )
 }
@@ -31,14 +31,13 @@ gen_sampling_dist_mean <- function(x) {
 # ------------------------------------------------------------------------
 
 # GSP names
-nam <- read_csv(here("data", "gsp_names.csv"))
+#nam <- read_csv(here("data", "gsp_names.csv"))
 
 # monitoring network of minimum thresholds
 mn <- 
   list.files(
     here("data", "MinimumThresholdShapefiles"), 
-    pattern = "\\.shp$",
-    full.names = TRUE
+    pattern = "\\.shp$"
   )
 
 # remove coastal GSPs (by name in case more shapefiles are added later):
@@ -49,17 +48,20 @@ to_rm <- c("BorregoValley_BorregoSprings", "Cuyama", "FoxCanyon",
 mn <- mn[!grepl(paste(to_rm, collapse="|"), mn)]
 
 # organize all minimum threshold data into a list
-l <- vector("list", length(mn)) 
+l <- vector("list", length(mn))  
 for(i in 1:length(l)){
-  l[[i]] <- st_read(mn[i], stringsAsFactors = FALSE) %>% 
-    mutate(MT_dtw  = as.numeric(MT_dtw)) %>% 
-    dplyr::select(Well_ID, MT_dtw) %>% 
+  l[[i]] <- st_read(here("data", "MinimumThresholdShapefiles", mn[i]), 
+                    stringsAsFactors = FALSE) %>% 
+    mutate(MT_dtw  = as.numeric(MT_dtw),
+           name    = str_remove(mn[i], ".shp")) %>% 
     st_transform(prj)
 }
 
 # remove z attribute data that in l[[4]] geometry
 l[[4]] <- st_zm(l[[4]], drop=TRUE)
 
+# remove an offending empty geometry
+l[[17]] <- l[[17]][-36, ]
 
 # read groundwater levels (roughly present day) from ERL paper
 # https://iopscience.iop.org/article/10.1088/1748-9326/ab6f10
@@ -95,11 +97,11 @@ for(i in 1:length(l)){
   wse_18_19          <- raster::extract(d_avg, l[[i]])
   l[[i]]             <- cbind(l[[i]], wse_18_19)
   l[[i]]$diff_MT_wse <- l[[i]]$MT_dtw - l[[i]]$wse_18_19
-  l[[i]]$diff_MT_wse <- ifelse(l[[i]]$diff_MT_wse < 0, 0, l[[i]]$diff_MT_wse)
+  l[[i]]$diff_MT_wse <- ifelse(l[[i]]$diff_MT_wse < 0, NA, l[[i]]$diff_MT_wse)
 }
 
 
-# 5.3 % of MT wells were re-assigned a value of 0
+# 5.1 % of MT wells were re-assigned a value of 0
 sum(((sapply(l, function(x) x$diff_MT_wse) %>% unlist()) == 0), na.rm = TRUE) / 
   length(sapply(l, function(x) x$diff_MT_wse) %>% unlist())
 
@@ -111,19 +113,44 @@ write_rds(l, here("code", "results", "GSP_min_thresholds.rds"))
 # compute sampling distribution of sampling means
 # ------------------------------------------------------------------------
 
-# subset to wells with a MT
-l2 <- lapply(l, function(x) x[!is.na(x$diff_MT_wse), ])
+# remove wells with MTs
+l2 <- lapply(l, function(x) x[!is.na(x$diff_MT_wse), ]) 
 
-# take out wells that don't have enough MTs
-nam <- nam[-29, ]
-l2[[29]] <- NULL
+# take out wells that don't have enough MTs or that, upon visual 
+# inspection, show non-normal sampling distributions
+non_normal <- c("BuenaVista_Kern",
+                "Alpaugh_Tule",
+                "CountyofFresno_DeltaMendota",
+                "FarmersWD_DeltaMendota",
+                "GravellyFord_Madera",
+                "Olcese_Kern",
+                "Pixley_Tule"
+                )
+# GSAs with normal distribution of decline under MT
+l3 <- l2[-str_which(mn, paste(non_normal, collapse="|"))]
 
 # bootstrap sampling distributions of sample mean
-bs <- vector("list", length(l2))
-for(i in 1:length(l2)) {
-  bs[[i]] <- data.frame(
-    name = nam[i, 1], 
-    z = gen_sampling_dist_mean(l2[[i]])
+bs <- vector("list", length(l3))
+set.seed(12231241)
+for(i in 1:length(l3)) {
+  bs[[i]] <- tibble(
+    z    = gen_sampling_dist_mean(l3[[i]]),
+    n    = nrow(l3[[i]]),
+    name = l3[[i]]$name[1]
+  )
+}
+
+# GSAs with non-normal distribution
+l4 <- l2[str_which(mn, paste(non_normal, collapse="|"))]
+
+# compute range for GSAs with non-normal distribution
+rg <- vector("list", length(l4))
+for(i in 1:length(l4)) {
+  rg[[i]] <- tibble(
+    z_low = min(l4[[i]]$diff_MT_wse),
+    z_up  = max(l4[[i]]$diff_MT_wse),
+    n     = nrow(l4[[i]]),
+    name  = l4[[i]]$name[1]
   )
 }
 
@@ -131,16 +158,17 @@ for(i in 1:length(l2)) {
 # as the sampling distribution of the sample means of differences between
 # MTs specified by GSAs and the current groundwater level at that location
 p1 <- bind_rows(bs) %>%
+  mutate(name_n = paste0(name, "_", n)) %>% 
   ggplot(aes(z)) +
   geom_line(stat="density") +
-  facet_wrap(~GSP_Name, scales="free", nrow = 7, ncol = 5) +
+  facet_wrap(~name_n, scales="free", nrow = 7, ncol = 6) +
   labs(y = "Density", x = "Projected groundwater level decline (ft)",
        title = "Projected groundwater level decline under MTs (ft)",
        subtitle = "for selected GSAs in California's Central Valley")
 p1
 
 p2 <- bind_rows(bs) %>% 
-  ggplot(aes(fct_reorder(GSP_Name, z), z)) +
+  ggplot(aes(fct_reorder(name, z), z)) +
   geom_boxplot(outlier.shape = NA) +
   coord_flip() +
   labs(x = "", y = "Projected groundwater level decline (ft)",
@@ -151,7 +179,7 @@ p2
 
 # calculate median and various quantiles of GWL decline projected by the MTs
 zz <- bind_rows(bs) %>% 
-  group_by(GSP_Name) %>% 
+  group_by(name) %>% 
   summarise(p10 = quantile(z, 0.10),
             p25 = quantile(z, 0.25),
             p50 = quantile(z, 0.50),
@@ -160,7 +188,7 @@ zz <- bind_rows(bs) %>%
   ungroup() %>% 
   mutate(IQR = p75-p25)
 
-p3 <- ggplot(zz, aes(fct_reorder(GSP_Name, IQR), IQR)) + 
+p3 <- ggplot(zz, aes(fct_reorder(name, IQR), IQR)) + 
   geom_point() + 
   coord_flip() +
   labs(x = "", y = "Interquartile range of projected groundwater level decline under MTs (ft)",
@@ -171,9 +199,10 @@ p3
 
 # gsas
 gsa <- shapefile(here("data","gsa_master","GSP_merc.shp"))
-gsa <- spTransform(gsas, prj)
+gsa <- spTransform(gsa, prj)
 
 # combine all pts
+st_crs(l[[17]]) <- st_crs(l[[16]]) # fix a garbled CRS 
 pts <- lapply(l, as_Spatial) %>% 
   do.call(bind, .) %>% 
   spTransform(prj)
@@ -197,3 +226,8 @@ ggsave(p2, filename = here("code", "plots", "p2.pdf"), device = cairo_pdf)
 ggsave(p3, filename = here("code", "plots", "p3.pdf"), device = cairo_pdf)
 ggsave(p4, filename = here("code", "plots", "p4.pdf"), device = cairo_pdf)
 write_rds(gsa, here("shiny", "data", "gsa.rds"))
+
+# normal distributions generated via bootstrap
+write_rds(bs,  here("code", "results", "MT_diffs_bootstrapped.rds"))
+# non-normal or small-sample-size data for which we only have a range
+write_rds(rg,  here("code", "results", "MT_diffs_range.rds"))
