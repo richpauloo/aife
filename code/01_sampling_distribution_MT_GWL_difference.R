@@ -31,7 +31,7 @@ gen_sampling_dist_mean <- function(x) {
 # ------------------------------------------------------------------------
 
 # GSP names
-#nam <- read_csv(here("data", "gsp_names.csv"))
+nam <- read_csv(here("data", "gsp_names.csv"))
 
 # monitoring network of minimum thresholds
 mn <- 
@@ -53,15 +53,19 @@ for(i in 1:length(l)){
   l[[i]] <- st_read(here("data", "MinimumThresholdShapefiles", mn[i]), 
                     stringsAsFactors = FALSE) %>% 
     mutate(MT_dtw  = as.numeric(MT_dtw),
-           name    = str_remove(mn[i], ".shp")) %>% 
-    st_transform(prj)
+           shp_nam = str_remove(mn[i], ".shp")) %>% 
+    st_transform(prj) %>% 
+    left_join(nam, by = c("shp_nam" = "Shapefile_Name"))
 }
 
-# remove z attribute data that in l[[4]] geometry
-l[[4]] <- st_zm(l[[4]], drop=TRUE)
+# name the list
+names(l) <- mn
 
-# remove an offending empty geometry
-l[[17]] <- l[[17]][-36, ]
+# remove z attribute data that in CentralKings_Kings l[[4]] geometry
+l$CentralKings_Kings.shp <-  st_zm(l$CentralKings_Kings.shp, drop=TRUE)
+
+# remove an empty point in KernRiver_MTs that breaks later computations
+l$KernRiver_MTs.shp <- l$KernRiver_MTs.shp[-36, ]
 
 # read groundwater levels (roughly present day) from ERL paper
 # https://iopscience.iop.org/article/10.1088/1748-9326/ab6f10
@@ -139,7 +143,7 @@ for(i in 1:length(l3)) {
   bs[[i]] <- tibble(
     z    = gen_sampling_dist_mean(l3[[i]]),
     n    = nrow(l3[[i]]),
-    name = l3[[i]]$name[1]
+    name = l3[[i]]$shp_nam[1]
   )
 }
 
@@ -150,10 +154,10 @@ l4 <- l2[str_which(mn, paste(non_normal, collapse="|"))]
 rg <- vector("list", length(l4))
 for(i in 1:length(l4)) {
   rg[[i]] <- tibble(
-    z_low = min(l4[[i]]$diff_MT_wse),
-    z_up  = max(l4[[i]]$diff_MT_wse),
+    z1 = min(l4[[i]]$diff_MT_wse),
+    z2  = max(l4[[i]]$diff_MT_wse),
     n     = nrow(l4[[i]]),
-    name  = l4[[i]]$name[1]
+    name  = l4[[i]]$shp_nam[1]
   )
 }
 
@@ -182,7 +186,7 @@ p2
 
 # calculate median and various quantiles of GWL decline projected by the MTs
 zz <- bind_rows(bs) %>% 
-  group_by(name) %>% 
+  group_by(name, n) %>% 
   summarise(p10 = quantile(z, 0.10),
             p25 = quantile(z, 0.25),
             p50 = quantile(z, 0.50),
@@ -204,10 +208,11 @@ p3
 gsa <- shapefile(here("data","gsa_master","GSP_merc.shp"))
 gsa <- spTransform(gsa, prj)
 
-# combine all pts
-st_crs(l[[17]]) <- st_crs(l[[16]]) # fix a garbled CRS 
+# fix a garbled CRS, and combine all pts (which requires identical CRS)
+st_crs(l$KernRiver_MTs.shp) <- st_crs(l$Aliso_DeltaMendota.shp) 
 pts <- lapply(l, as_Spatial) %>% 
-  do.call(bind, .) %>% 
+  lapply(., as, "SpatialPoints") %>% 
+  do.call(rbind, .) %>% 
   spTransform(prj)
 
 # subset GSAs to pts: these are the ones we're working with
@@ -223,12 +228,35 @@ p4 <- ggplot(st_as_sf(gsa)) +
        subtitle = "Points show monitoring well locations with defined MTs")
 p4
 
-# save
+# save plots 
 ggsave(p1, filename = here("code", "plots", "p1.pdf"), device = cairo_pdf)
 ggsave(p2, filename = here("code", "plots", "p2.pdf"), device = cairo_pdf)
 ggsave(p3, filename = here("code", "plots", "p3.pdf"), device = cairo_pdf)
 ggsave(p4, filename = here("code", "plots", "p4.pdf"), device = cairo_pdf)
-write_rds(gsa, here("shiny", "data", "gsa.rds"))
+
+
+# ------------------------------------------------------------------------
+# save important data for GSAs, MT wells, domestic wells.
+# ------------------------------------------------------------------------
+
+# GSA polygons with all relevant GSA-level groundwater level declines.
+
+# join gsa@data to nam to map domestic wells to MT wells to GSA polygons
+gsa@data <- left_join(gsa@data, nam, c("GSP_Name" = "gsa_master_shp_name"))
+
+# join to bootstrapped data (bs) and range data (rg) for normal and 
+# non-normal MT differences respectively, then save
+mt_data  <- dplyr::select(zz, name, n, p10, p90) %>% 
+  rename(z1 = p10, z2 = p90) %>% 
+  mutate(method = "bootstrap") %>% 
+  bind_rows(
+    mutate(
+      bind_rows(rg), method = "range"
+      )
+    ) %>% 
+  rename(n_MT_wells = n)
+gsa@data <- left_join(gsa@data, mt_data, c("Shapefile_Name" = "name"))
+write_rds(gsa, here("code", "results", "gsa.rds"))
 
 # list of MT and current GWL differences for GSAs normal distributions, 
 # generated via bootstrap
@@ -240,3 +268,7 @@ write_rds(rg,  here("code", "results", "MT_diffs_range.rds"))
 
 # list of MT shapefiles, with difference from current GWL
 write_rds(l,   here("code", "results", "GSP_min_thresholds.rds"))
+
+# list of MT shapefiles, with difference from current GWL and 6% of
+# wells with MTs > current groundwater level
+write_rds(l2,  here("code", "results", "GSP_min_thresholds_NA.rds"))

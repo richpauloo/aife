@@ -7,7 +7,7 @@ prj <- CRS("+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_
 
 # read in domestic wells and GSAs
 d   <- read_rds(here("data","domcv6_mean_gw_with_beta_GF_CI.rds"))
-gsa <- read_rds(here("shiny", "data","gsa.rds"))
+gsa <- read_rds(here("code", "results","gsa.rds"))
 
 # re-project
 d   <- spTransform(d, prj)
@@ -24,5 +24,11 @@ d@data <- d@data %>%
   dplyr::select(WCRNumber, mean_ci_upper, mean_ci_lower) %>% 
   rename(wcr_number = WCRNumber)
 
-# save
-write_rds(d, here("shiny", "data", "dom_wells.rds"))
+gsa@data <- gsa@data %>% 
+  dplyr::select(BASIN, GSP_Name, Pln.Mngr, PM.Email) %>% 
+  rename(basin = BASIN, gsp_name = GSP_Name, 
+         plan_manager = Pln.Mngr, email = PM.Email)
+
+# save to shiny data folder
+write_rds(d,   here("shiny", "data", "dom_wells.rds"))
+write_rds(gsa, here("shiny", "data", "gsa.rds"))
