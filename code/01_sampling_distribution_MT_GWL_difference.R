@@ -88,6 +88,9 @@ spplot(d_avg, main = "Mean WSE (ft) \n(2018 and 2019)")
 # sanity check: CRS of gwl == CRS of MT points
 st_crs(l[[1]]) == st_crs(d_avg)
 
+# remove wells with MTs
+l <- lapply(l, function(x) x[!is.na(x$MT_dtw), ]) 
+
 # extract raster cell value where each monitoring well is located,
 # bind back to the MT point data,
 # rename the extracted column,
@@ -101,19 +104,19 @@ for(i in 1:length(l)){
 }
 
 
-# 5.1 % of MT wells were re-assigned a value of 0
-sum(((sapply(l, function(x) x$diff_MT_wse) %>% unlist()) == 0), na.rm = TRUE) / 
+# 6.4 % of MT wells have a diff_MT_wse < 0, and these wells are neglected.
+# In the code, this means we assign them a diff_MT_wse == NA, which is 
+# filtered out in the next code block before bootstrapping
+sum(((is.na(sapply(l, function(x) x$diff_MT_wse) %>% unlist()))), na.rm = TRUE) / 
   length(sapply(l, function(x) x$diff_MT_wse) %>% unlist())
-
-# save
-write_rds(l, here("code", "results", "GSP_min_thresholds.rds"))
 
 
 # ------------------------------------------------------------------------
 # compute sampling distribution of sampling means
 # ------------------------------------------------------------------------
 
-# remove wells with MTs
+# remove wells with diff_MT_wse < 0, which was assigned NA in the 
+# previous step
 l2 <- lapply(l, function(x) x[!is.na(x$diff_MT_wse), ]) 
 
 # take out wells that don't have enough MTs or that, upon visual 
@@ -227,7 +230,13 @@ ggsave(p3, filename = here("code", "plots", "p3.pdf"), device = cairo_pdf)
 ggsave(p4, filename = here("code", "plots", "p4.pdf"), device = cairo_pdf)
 write_rds(gsa, here("shiny", "data", "gsa.rds"))
 
-# normal distributions generated via bootstrap
+# list of MT and current GWL differences for GSAs normal distributions, 
+# generated via bootstrap
 write_rds(bs,  here("code", "results", "MT_diffs_bootstrapped.rds"))
-# non-normal or small-sample-size data for which we only have a range
+
+# list of MT and current GWL differences for GSAs with non-normal or 
+# small-sample-size data for which we only have a range
 write_rds(rg,  here("code", "results", "MT_diffs_range.rds"))
+
+# list of MT shapefiles, with difference from current GWL
+write_rds(l,   here("code", "results", "GSP_min_thresholds.rds"))
