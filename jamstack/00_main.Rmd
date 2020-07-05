@@ -76,6 +76,10 @@ library(leaflet)
 library(htmltools)
 library(plotly)
 
+# read groundwater level and gsas
+gwl <- readr::read_rds(here::here("code", "results", "gwl_2019_avg_ll.rds"))
+gsa <- readr::read_rds(here::here("code", "results", "gsa_ll.rds"))
+
 # if(params %in% )is_gsa_page = 
 ```
 
@@ -127,72 +131,72 @@ tags$div(
 
 
 <!-- Row {data-width=100} -->
-Row 
------------------------------------------------------------------------
+<!-- Row -->
+<!-- ----------------------------------------------------------------------- -->
 
-```{r}
-bs_modal(
-  id = "md-instructions",
-  title = "Using Markdown",
-  body = includeMarkdown(system.file("markdown","modal.md",package="bsplus"))
-)
-bs_modal(
-  id = "md-groundwater-level-decline",
-  title = "Using Markdown",
-  body = includeMarkdown(system.file("markdown","modal.md",package="bsplus"))
-)
-bs_modal(
-  id = "md-well-failures",
-  title = "Using Markdown",
-  body = includeMarkdown(system.file("markdown","modal.md",package="bsplus"))
-)
-bs_modal(
-  id = "md-percent-of-failing-wells",
-  title = "Using Markdown",
-  body = includeMarkdown(system.file("markdown","modal.md",package="bsplus"))
-)
-bs_modal(
-  id = "md-cost",
-  title = "Using Markdown",
-  body = includeMarkdown(system.file("markdown","modal.md",package="bsplus"))
-)
-```
+<!-- ```{r} -->
+<!-- bs_modal( -->
+<!--   id = "md-instructions", -->
+<!--   title = "Using Markdown", -->
+<!--   body = includeMarkdown(system.file("markdown","modal.md",package="bsplus")) -->
+<!-- ) -->
+<!-- bs_modal( -->
+<!--   id = "md-groundwater-level-decline", -->
+<!--   title = "Using Markdown", -->
+<!--   body = includeMarkdown(system.file("markdown","modal.md",package="bsplus")) -->
+<!-- ) -->
+<!-- bs_modal( -->
+<!--   id = "md-well-failures", -->
+<!--   title = "Using Markdown", -->
+<!--   body = includeMarkdown(system.file("markdown","modal.md",package="bsplus")) -->
+<!-- ) -->
+<!-- bs_modal( -->
+<!--   id = "md-percent-of-failing-wells", -->
+<!--   title = "Using Markdown", -->
+<!--   body = includeMarkdown(system.file("markdown","modal.md",package="bsplus")) -->
+<!-- ) -->
+<!-- bs_modal( -->
+<!--   id = "md-cost", -->
+<!--   title = "Using Markdown", -->
+<!--   body = includeMarkdown(system.file("markdown","modal.md",package="bsplus")) -->
+<!-- ) -->
+<!-- ``` -->
 
-```{r, include=FALSE}
-bs_button("Click for modal", button_type = "primary") %>%
-  bs_attach_modal("md-instructions")
-bs_button("Click for modal", button_type = "primary") %>%
-  bs_attach_modal("md-groundwater-level-decline")
-bs_button("Click for modal", button_type = "primary") %>%
-  bs_attach_modal("md-well-failures")
-bs_button("Click for modal", button_type = "primary") %>%
-  bs_attach_modal("md-percent-of-failing-wells")
-bs_button("Click for modal", button_type = "primary") %>%
-  bs_attach_modal("md-cost")
-```
+<!-- ```{r, include=FALSE} -->
+<!-- bs_button("Click for modal", button_type = "primary") %>% -->
+<!--   bs_attach_modal("md-instructions") -->
+<!-- bs_button("Click for modal", button_type = "primary") %>% -->
+<!--   bs_attach_modal("md-groundwater-level-decline") -->
+<!-- bs_button("Click for modal", button_type = "primary") %>% -->
+<!--   bs_attach_modal("md-well-failures") -->
+<!-- bs_button("Click for modal", button_type = "primary") %>% -->
+<!--   bs_attach_modal("md-percent-of-failing-wells") -->
+<!-- bs_button("Click for modal", button_type = "primary") %>% -->
+<!--   bs_attach_modal("md-cost") -->
+<!-- ``` -->
 
 
-### Groundwater level decline 
-```{r}
-valueBox("Min threshold", 
-         color = "primary", 
-         icon = "fa-arrow-alt-circle-down")
-```
+<!-- ### Groundwater level decline  -->
+<!-- ```{r} -->
+<!-- valueBox("Min threshold",  -->
+<!--          color = "primary",  -->
+<!--          icon = "fa-arrow-alt-circle-down") -->
+<!-- ``` -->
 
-### Well failures 
-```{r}
-valueBox("5000-10000", color = "danger", icon = "fa-times-circle")
-```
+<!-- ### Well failures  -->
+<!-- ```{r} -->
+<!-- valueBox("5000-10000", color = "danger", icon = "fa-times-circle") -->
+<!-- ``` -->
 
-### Percent of failing wells
-```{r}
-valueBox("15-60", color = "warning", icon = "fa-percentage")
-```
+<!-- ### Percent of failing wells -->
+<!-- ```{r} -->
+<!-- valueBox("15-60", color = "warning", icon = "fa-percentage") -->
+<!-- ``` -->
 
-### Cost 
-```{r}
-valueBox("$1.2-1.3M", color = "success", icon = "fa-money-check-alt")
-```
+<!-- ### Cost  -->
+<!-- ```{r} -->
+<!-- valueBox("$1.2-1.3M", color = "success", icon = "fa-money-check-alt") -->
+<!-- ``` -->
 
 
 
@@ -205,7 +209,61 @@ Row
 ### Groundwater surface and wells
 
 ```{r}
-leaflet(leaflet::breweries91) %>% addTiles() %>% addMarkers()
+col <- rev(colormap::colormap(colormap::colormaps$magma, nshades = 20))
+pal <- colorNumeric(col, raster::values(gwl), na.color = "transparent")
+
+#pal2 <- colorNumeric(col, raster::values(gwl)/2, na.color = "transparent")
+gwl2 <- gwl/2
+
+leaflet(gsa) %>% 
+  
+  # tiles
+  addProviderTiles(providers$CartoDB,             group = "Light") %>% 
+  #addProviderTiles(providers$CartoDB.DarkMatter,  group = "Dark") %>% 
+  #addProviderTiles(providers$Esri.WorldStreetMap, group = "Street") %>% 
+  
+  # center
+  setView(-119.7, 36.8, 7) %>% 
+  
+  # polygons
+  addPolygons(weight = 2, opacity = 1, fillOpacity = 0.1, 
+              group = "critical priority GSAs") %>% 
+  
+  # groundwater level
+  addRasterImage(gwl, opacity = 0.8, colors = pal, 
+                 layerId = "2019", group = "2019 groundwater level") %>% 
+  addRasterImage(gwl2, opacity = 0.8, colors = pal, 
+                 layerId = "2040", group = "2040 min threshold") %>% 
+  addLegend(pal = pal, values = raster::values(gwl), 
+            title    = "Groundwater <br>level (ft. BLS)",
+            position = "bottomright") %>% 
+  
+  # raster value display
+  leafem::addMouseCoordinates() %>%
+  leafem::addImageQuery(gwl, type="mousemove", layerId = "2019", 
+                        group = "2019 groundwater level", prefix = "",
+                        digits = 2, position = "bottomright") %>% 
+  leafem::addImageQuery(gwl2, type="mousemove", layerId = "2040", 
+                        group = "2040 min threshold", prefix = "",
+                        digits = 2, position = "bottomright") %>% 
+
+  # layer control
+  addLayersControl(
+    overlayGroups = c("critical priority GSAs"),
+    baseGroups    = c("2019 groundwater level", "2040 min threshold"),
+    options       = layersControlOptions(collapsed = FALSE, 
+                                         position = "bottomleft")
+  ) %>%
+  
+  # zoom to home
+  addEasyButton(easyButton(
+    icon="fa-globe", title="Zoom to Level 1",
+    onClick=JS("function(btn, map){ map.setView([36.8, -119.7], 7); }"),
+    position = "topleft")) %>% 
+  
+  # geocoding
+  leaflet.extras::addSearchOSM(options = list(position = "topright")) #%>% 
+  #leafem::addMouseCoordinates()
 ```
 
 

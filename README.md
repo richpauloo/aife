@@ -22,6 +22,10 @@ About 1.5 million residents of California’s Central Valley rely on private dom
 
 `/archive`: outdated, unused material  
 `/code`: analysis and modeling scripts  
+* `01_sampling_distribution_MT_GWL_difference.R`: data cleaning, bootstrapping forecasted groundwater declines, generating plots `p1-p4`   
+* `02_preprocess_data_for_dashbard`: read in data saved in `01_...` and preprocess scpecifically for JAMstack   
+* `03_compare_domestic_and_MT_well_depths.R`: sanity check to ensure domestic well depths coincide with the ranges of groundwater level decline  
+
 `/data`: data used in this project  
 `/jamstack`: code and files related to dashboard generation, which is hosted via Jekyll at [github.com/richpauloo/jbp](github.com/richpauloo/jbp)
 

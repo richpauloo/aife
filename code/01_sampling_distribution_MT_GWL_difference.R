@@ -168,7 +168,7 @@ p1 <- bind_rows(bs) %>%
   mutate(name_n = paste0(name, "_", n)) %>% 
   ggplot(aes(z)) +
   geom_line(stat="density") +
-  facet_wrap(~name_n, scales="free", nrow = 7, ncol = 6) +
+  facet_wrap(~name_n, scales="free", ncol = 3) +
   labs(y = "Density", x = "Projected groundwater level decline (ft)",
        title = "Projected groundwater level decline under MTs (ft)",
        subtitle = "for selected GSAs in California's Central Valley")
@@ -229,14 +229,14 @@ p4 <- ggplot(st_as_sf(gsa)) +
 p4
 
 # save plots 
-ggsave(p1, filename = here("code", "plots", "p1.pdf"), device = cairo_pdf)
+ggsave(p1, filename = here("code", "plots", "p1.pdf"), device = cairo_pdf, height = 11)
 ggsave(p2, filename = here("code", "plots", "p2.pdf"), device = cairo_pdf)
 ggsave(p3, filename = here("code", "plots", "p3.pdf"), device = cairo_pdf)
 ggsave(p4, filename = here("code", "plots", "p4.pdf"), device = cairo_pdf)
 
 
 # ------------------------------------------------------------------------
-# save important data for GSAs, MT wells, domestic wells.
+# save important data for GSAs, MT wells, domestic wells, groundwater lvl
 # ------------------------------------------------------------------------
 
 # GSA polygons with all relevant GSA-level groundwater level declines.
@@ -272,3 +272,6 @@ write_rds(l,   here("code", "results", "GSP_min_thresholds.rds"))
 # list of MT shapefiles, with difference from current GWL and 6% of
 # wells with MTs > current groundwater level
 write_rds(l2,  here("code", "results", "GSP_min_thresholds_NA.rds"))
+
+# average 2019 (spring and fall) casgem ambient groundwater level
+write_rds(d_avg, here("code", "results", "gwl_2019_avg.rds"))
