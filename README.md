@@ -1,9 +1,9 @@
 # AI enabled forecasting of regional-scale drinking water shortages in underserved communities
 
-Rich Pauloo, PhD [richpauloo at gmail dot com], *Larry Walker Associates, UC Davis*
-Darcy Bostic, MS [email], *Pacific Institute, UC Davis*
-Amanda Monaco, JD [email], *Leadership Counsel for Justice and Accountability*
-Kaylon Hammond, JD [email], *Leadership Counsel for Justice and Accountability*
+Rich Pauloo, PhD [richpauloo at gmail dot com], *Larry Walker Associates, UC Davis*  
+Darcy Bostic, MS [email], *Pacific Institute, UC Davis*  
+Amanda Monaco, JD [email], *Leadership Counsel for Justice and Accountability*  
+Kaylon Hammond, JD [email], *Leadership Counsel for Justice and Accountability*  
  
 
 ## Overview
