@@ -30,11 +30,13 @@ About 1.5 million residents of California’s Central Valley rely on private dom
 `/jamstack`: code and files related to dashboard generation, which is hosted via Jekyll at [github.com/richpauloo/jbp](github.com/richpauloo/jbp)
 
 
-## Processed data for the app in `shiny/data`:
+## Processed data in `/data`:
 
-* `dom_wells.rds`: domestic wells in critical-priority GSAs and within a 28 year retirement age* with selected data (wcr_num, lat, lon, pump_loc_low, pump_loc_up). Derived from [published data here (`domcv6_mean_gw_with_beta_GF_CI.rds`)](https://datadryad.org/stash/dataset/doi:10.25338/B8Q31D). `year` data was removed to reduce file size.
-* `gsa.rds`: critical priority GSA polygons (output from `rmapshaper::ms_simplify` to reduce file size) containing monitoring well locations. Output from `code/01_sampling_distribution_MT_GWL.R`.  
+* `dom_wells.rds`: domestic wells in critical-priority GSAs and within a 28 year retirement age* with selected data (`wcr_num, lat, lon, pump_loc_low, pump_loc_up, TotalCompletedDepth`). Derived from [published data here (`domcv6_mean_gw_with_beta_GF_CI.rds`)](https://datadryad.org/stash/dataset/doi:10.25338/B8Q31D). `year` data was removed to reduce file size.  
+* `gsa.rds`: critical priority GSA polygons (output from `rmapshaper::ms_simplify()` to reduce file size) containing monitoring well locations. Output from `code/01_sampling_distribution_MT_GWL.R`.  
+* `gwl_2019_avg_ll.rds`: 2019 average kriged groundwater level data.  
+
 
 ## LICENSE
 
-Add MIT
+Need to add MIT
