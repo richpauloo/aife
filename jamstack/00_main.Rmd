@@ -1,0 +1,232 @@
+---
+title: "GSA well failure - GSA 1"
+output: 
+  flexdashboard::flex_dashboard:
+    vertical_layout: fill
+    orientation: rows
+    navbar:
+      - { title: "Instructions",  align: right}
+      - { title: "About", href: "https://google.com", align: right}
+      - { icon: "fa-github", href: "https://google.com", align: right}
+    css: etc/w3.css
+    self_contained: false
+    #logo: etc/cwq_8_pixels.png
+    #favicon: etc/cwq_8_pixels.png
+---
+
+<!-- a wee bit of JS that allows a modal popup when the first -->
+<!-- list element of the navbar (Instructions) is clicked -->
+<!-- adapted from: https://github.com/rstudio/flexdashboard/issues/208 -->
+<script>
+$('.navbar-brand').wrap('<a href="http://www.google.com">');
+
+$(document).ready(function() {
+  $('#dashboard-container').on('flexdashboard:layoutcomplete', 
+    function() {
+      $('#navbar li:nth-child(1)').click(function() {
+        $('#md-instructions').modal(); });
+  })
+})
+
+<!-- modal popup when valueboxes are clicked -->
+$(document).ready(function() {
+  $('#dashboard-container').on('flexdashboard:layoutcomplete', 
+    function() {
+      $('#groundwater-level-decline').click(function() {
+        $('#md-groundwater-level-decline').modal(); });
+  })
+})
+
+<!-- modal popup when valueboxes are clicked -->
+$(document).ready(function() {
+  $('#dashboard-container').on('flexdashboard:layoutcomplete', 
+    function() {
+      $('#well-failures').click(function() {
+        $('#md-well-failures').modal(); });
+  })
+})
+
+<!-- modal popup when valueboxes are clicked -->
+$(document).ready(function() {
+  $('#dashboard-container').on('flexdashboard:layoutcomplete', 
+    function() {
+      $('#percent-of-failing-wells').click(function() {
+        $('#md-percent-of-failing-wells').modal(); });
+  })
+})
+
+<!-- modal popup when valueboxes are clicked -->
+$(document).ready(function() {
+  $('#dashboard-container').on('flexdashboard:layoutcomplete', 
+    function() {
+      $('#cost').click(function() {
+        $('#md-cost').modal(); });
+  })
+})
+
+
+
+</script>
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(shiny)
+library(bsplus)
+library(leaflet)
+library(htmltools)
+library(plotly)
+
+# if(params %in% )is_gsa_page = 
+```
+
+Row {.sidebar data-width=150 data-padding=10}
+-----------------------------------------------------------------------
+
+
+```{r}
+# GSA dropdown
+tags$div(
+  class="dropdown",
+  tags$button(
+    class="dropbtn", "GSA"),
+  tags$div(
+    class = "dropdown-content",
+    tags$a(href = "https://www.richpauloo.com", "ALL"),
+    tags$a(href = "https://www.richpauloo.com", "GSA 1"),
+    tags$a(href = "https://www.richpauloo.com", "GSA 2"),
+    tags$a(href = "https://www.richpauloo.com", "GSA 3"),
+    tags$a(href = "https://www.richpauloo.com", "GSA 4"),
+    tags$a(href = "https://www.richpauloo.com", "GSA 5"),
+    tags$a(href = "https://www.richpauloo.com", "GSA 6"),
+    tags$a(href = "https://www.richpauloo.com", "GSA 7")
+    )
+)
+
+tags$br()
+tags$br()
+
+# groundwater level dropdown
+# if(is_gsa_page == TRUE){ evaluate }
+tags$div(
+  class="dropdown",
+  tags$button(
+    class="dropbtn", paste0("Groundwater scenario")),
+  tags$div(
+    class = "dropdown-content",
+    tags$a(href = "https://www.richpauloo.com", "Minimum Objective"),
+    tags$a(href = "https://www.richpauloo.com", "Minimum Threshold"),
+    tags$a(href = "https://www.richpauloo.com", "0 ft decline"),
+    tags$a(href = "https://www.richpauloo.com", "10 ft decline"),
+    tags$a(href = "https://www.richpauloo.com", "20 ft decline"),
+    tags$a(href = "https://www.richpauloo.com", "30 ft decline"),
+    tags$a(href = "https://www.richpauloo.com", "40 ft decline"),
+    tags$a(href = "https://www.richpauloo.com", "50 ft decline")
+    )
+)
+```
+
+
+<!-- Row {data-width=100} -->
+Row 
+-----------------------------------------------------------------------
+
+```{r}
+bs_modal(
+  id = "md-instructions",
+  title = "Using Markdown",
+  body = includeMarkdown(system.file("markdown","modal.md",package="bsplus"))
+)
+bs_modal(
+  id = "md-groundwater-level-decline",
+  title = "Using Markdown",
+  body = includeMarkdown(system.file("markdown","modal.md",package="bsplus"))
+)
+bs_modal(
+  id = "md-well-failures",
+  title = "Using Markdown",
+  body = includeMarkdown(system.file("markdown","modal.md",package="bsplus"))
+)
+bs_modal(
+  id = "md-percent-of-failing-wells",
+  title = "Using Markdown",
+  body = includeMarkdown(system.file("markdown","modal.md",package="bsplus"))
+)
+bs_modal(
+  id = "md-cost",
+  title = "Using Markdown",
+  body = includeMarkdown(system.file("markdown","modal.md",package="bsplus"))
+)
+```
+
+```{r, include=FALSE}
+bs_button("Click for modal", button_type = "primary") %>%
+  bs_attach_modal("md-instructions")
+bs_button("Click for modal", button_type = "primary") %>%
+  bs_attach_modal("md-groundwater-level-decline")
+bs_button("Click for modal", button_type = "primary") %>%
+  bs_attach_modal("md-well-failures")
+bs_button("Click for modal", button_type = "primary") %>%
+  bs_attach_modal("md-percent-of-failing-wells")
+bs_button("Click for modal", button_type = "primary") %>%
+  bs_attach_modal("md-cost")
+```
+
+
+### Groundwater level decline 
+```{r}
+valueBox("Min threshold", 
+         color = "primary", 
+         icon = "fa-arrow-alt-circle-down")
+```
+
+### Well failures 
+```{r}
+valueBox("5000-10000", color = "danger", icon = "fa-times-circle")
+```
+
+### Percent of failing wells
+```{r}
+valueBox("15-60", color = "warning", icon = "fa-percentage")
+```
+
+### Cost 
+```{r}
+valueBox("$1.2-1.3M", color = "success", icon = "fa-money-check-alt")
+```
+
+
+
+
+
+<!-- Row {data-width=400} -->
+Row
+-----------------------------------------------------------------------
+
+### Groundwater surface and wells
+
+```{r}
+leaflet(leaflet::breweries91) %>% addTiles() %>% addMarkers()
+```
+
+
+### Failure
+
+```{r}
+a <- list(
+  autotick = FALSE,
+  ticks = "outside",
+  tick0 = 0,
+  dtick = 0.25,
+  ticklen = 5,
+  tickwidth = 2,
+  tickcolor = toRGB("blue")
+)
+s <- seq(1, 4, by = 0.25)
+fig <- plot_ly(x = ~s, y = ~s)
+fig <- fig %>% layout(xaxis = a, yaxis = a)
+
+fig
+```
+
+
+
