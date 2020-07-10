@@ -204,7 +204,9 @@ p3 <- ggplot(zz, aes(fct_reorder(name, IQR), IQR)) +
 p3
 
 
+# ------------------------------------------------------------------------
 # gsas
+# ------------------------------------------------------------------------
 gsa <- shapefile(here("data","gsa_master","GSP_merc.shp"))
 gsa <- spTransform(gsa, prj)
 

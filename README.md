@@ -2,9 +2,7 @@
 
 Rich Pauloo, PhD [richpauloo at gmail dot com], *Larry Walker Associates, UC Davis*  
 Darcy Bostic, MS [email], *Pacific Institute, UC Davis*  
-Amanda Monaco, JD [email], *Leadership Counsel for Justice and Accountability*  
-Kaylon Hammond, JD [email], *Leadership Counsel for Justice and Accountability*  
- 
+
 
 ## Overview
 
@@ -25,9 +23,12 @@ About 1.5 million residents of California’s Central Valley rely on private dom
 * `01_sampling_distribution_MT_GWL_difference.R`: data cleaning, bootstrapping forecasted groundwater declines, generating plots `p1-p4`   
 * `02_preprocess_data_for_dashbard`: read in data saved in `01_...` and preprocess scpecifically for JAMstack   
 * `03_compare_domestic_and_MT_well_depths.R`: sanity check to ensure domestic well depths coincide with the ranges of groundwater level decline  
+* `04_model.R`: generate forecasts and assets used in the static pages  
 
-`/data`: data used in this project  
-`/jamstack`: code and files related to dashboard generation, which is hosted via Jekyll at [github.com/richpauloo/jbp](github.com/richpauloo/jbp)
+`/data`: raw data used by the code in this project  
+`/jamstack`: code and files related to dashboard generation, which is hosted via Jekyll at [github.com/richpauloo/jbp](github.com/richpauloo/jbp)  
+* `00_main.html`: main GSA landing pages  
+* `01_scen.html`: scenario specific pages  
 
 
 ## Processed data in `/data`:

@@ -1,5 +1,5 @@
 ---
-title: "GSA well failure - GSA 1"
+title: "GSA well failure"
 output: 
   flexdashboard::flex_dashboard:
     vertical_layout: fill
@@ -95,14 +95,43 @@ tags$div(
     class="dropbtn", "GSA"),
   tags$div(
     class = "dropdown-content",
-    tags$a(href = "https://www.richpauloo.com", "ALL"),
-    tags$a(href = "https://www.richpauloo.com", "GSA 1"),
-    tags$a(href = "https://www.richpauloo.com", "GSA 2"),
-    tags$a(href = "https://www.richpauloo.com", "GSA 3"),
-    tags$a(href = "https://www.richpauloo.com", "GSA 4"),
-    tags$a(href = "https://www.richpauloo.com", "GSA 5"),
-    tags$a(href = "https://www.richpauloo.com", "GSA 6"),
-    tags$a(href = "https://www.richpauloo.com", "GSA 7")
+    tags$a(href = "https://www.gsawellfailure.com/ALL/mt", "ALL"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/northern-central/mt", "Northern Central (DM)"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/farmers/mt", "Farmers (DM)"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/east-kaweah/mt", "East Kaweah"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/chowchilla/mt", "Chowchilla"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/madera-joint/mt", "Madera Joint"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/central-kings/mt", "Central Kings"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/north-fork-kings/mt", "North Fork Kings"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/south-kings/mt", "South Kings"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/mc-mullin/mt", "Mc Mullin"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/gravelly-ford-madera/mt", "Gravelly Ford (Madera)"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/pixley-tule/mt", "Pixley (Tule)"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/westside/mt", "Westside"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/greater-kaweah/mt", "Greater Kaweah"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/new-stone-madera/mt", "New Stone (Madera)"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/mid-kaweah/mt", "Mid Kaweah"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/aliso/mt", "Aliso (DM)"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/merced/mt", "Merced"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/kings-river-east/mt", "Kings River East"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/north-kings/mt", "North Kings"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/henry-miller-kern/mt", "Henry Miller (Kern)"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/grassland/mt", "Grassland (DM)"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/tulare-lake/mt", "Tulare Lake"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/east-tule/mt", "East Tule"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/olcese-kern/mt", "Olcese (Kern)"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/root-creek-madera/mt", "Root Creek (Madera)"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/buena-vista-kern/mt", "Buena Vista (Kern)"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/kern-river/mt", "Kern River"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/delano-earlimart-tule/mt", "Delano-Earlimart (Tule)"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/sjrec/mt", "SJREC (DM)"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/fresno-county/mt", "Fresno County (DM)"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/james-kings/mt", "James (Kings)"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/kern-groundwater-authority/mt", "Kern Groundwater Authority"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/eastern-san-joaquin/mt", "Eastern San Joaquin"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/alpaugh-tule/mt", "Alpaugh (Tule)"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/lower-tule-river/mt", "Lower Tule River"),
+    tags$a(href = "https://www.gsawellfailure.com/gsas/tri-county-tule/mt", "Tri-County (Tule)")
     )
 )
 
@@ -117,14 +146,20 @@ tags$div(
     class="dropbtn", paste0("Groundwater scenario")),
   tags$div(
     class = "dropdown-content",
-    tags$a(href = "https://www.richpauloo.com", "Minimum Objective"),
     tags$a(href = "https://www.richpauloo.com", "Minimum Threshold"),
     tags$a(href = "https://www.richpauloo.com", "0 ft decline"),
     tags$a(href = "https://www.richpauloo.com", "10 ft decline"),
     tags$a(href = "https://www.richpauloo.com", "20 ft decline"),
     tags$a(href = "https://www.richpauloo.com", "30 ft decline"),
     tags$a(href = "https://www.richpauloo.com", "40 ft decline"),
-    tags$a(href = "https://www.richpauloo.com", "50 ft decline")
+    tags$a(href = "https://www.richpauloo.com", "50 ft decline"),
+    tags$a(href = "https://www.richpauloo.com", "100 ft decline"),
+    tags$a(href = "https://www.richpauloo.com", "150 ft decline"),
+    tags$a(href = "https://www.richpauloo.com", "200 ft decline"),
+    tags$a(href = "https://www.richpauloo.com", "250 ft decline"),
+    tags$a(href = "https://www.richpauloo.com", "300 ft decline"),
+    tags$a(href = "https://www.richpauloo.com", "400 ft decline"),
+    tags$a(href = "https://www.richpauloo.com", "500 ft decline")
     )
 )
 ```
@@ -206,9 +241,23 @@ tags$div(
 Row
 -----------------------------------------------------------------------
 
-### Groundwater surface and wells
+```{r}
+bs_modal(
+  id = "md-instructions",
+  title = "Using Markdown",
+  body = includeMarkdown(system.file("markdown","modal.md",package="bsplus"))
+)
+```
+
+```{r, include = FALSE}
+bs_button("Click for modal", button_type = "primary") %>%
+  bs_attach_modal("md-instructions")
+```
+
+### GSAs and groundwater surfaces 
 
 ```{r}
+mtc <- ggplot(mtcars, aes(mpg, wt)) + geom_point() + labs(title="GSP NAME", subtitle = "N-M wells fail at min threshold \n$3 - 4M estimated cost")
 col <- rev(colormap::colormap(colormap::colormaps$magma, nshades = 20))
 pal <- colorNumeric(col, raster::values(gwl), na.color = "transparent")
 
@@ -226,8 +275,20 @@ leaflet(gsa) %>%
   setView(-119.7, 36.8, 7) %>% 
   
   # polygons
-  addPolygons(weight = 2, opacity = 1, fillOpacity = 0.1, 
-              group = "critical priority GSAs") %>% 
+  addPolygons(data = gsa, weight = 1, opacity = 1, fillOpacity = 0.1, 
+              group = "critical priority GSAs",
+              label = ~gsp_name, 
+              highlightOptions = 
+                highlightOptions(color = "black", weight = 2,
+                                 bringToFront = TRUE),
+              labelOptions = labelOptions(textsize = "13px"),               
+              popup = paste0("<em><b>", gsa$gsp_name, "</b></em><br>",
+                             "N-M wells fail at min threshold<br>",
+                             "$X-Y estimated cost<br>", 
+                             "<img", " src='",
+                             "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Rlogo.png/274px-Rlogo.png",
+                             "'>")
+              ) %>% 
   
   # groundwater level
   addRasterImage(gwl, opacity = 0.8, colors = pal, 
@@ -259,31 +320,14 @@ leaflet(gsa) %>%
   addEasyButton(easyButton(
     icon="fa-globe", title="Zoom to Level 1",
     onClick=JS("function(btn, map){ map.setView([36.8, -119.7], 7); }"),
-    position = "topleft")) %>% 
-  
-  # geocoding
-  leaflet.extras::addSearchOSM(options = list(position = "topright")) #%>% 
-  #leafem::addMouseCoordinates()
+    position = "topleft"))
 ```
 
 
-### Failure
+### Forecasted well failure rates
 
 ```{r}
-a <- list(
-  autotick = FALSE,
-  ticks = "outside",
-  tick0 = 0,
-  dtick = 0.25,
-  ticklen = 5,
-  tickwidth = 2,
-  tickcolor = toRGB("blue")
-)
-s <- seq(1, 4, by = 0.25)
-fig <- plot_ly(x = ~s, y = ~s)
-fig <- fig %>% layout(xaxis = a, yaxis = a)
-
-fig
+readr::read_rds("../plotly/all0.rds")
 ```
 
 
