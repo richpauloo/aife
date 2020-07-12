@@ -67,10 +67,10 @@ for(i in 1:length(decline_v)){
       geom_errorbar(color = cv) +
       labs(x = "Groundwater level decline (ft)", y = "Failure percentage") +
       scale_y_continuous(labels = scales::percent) +
-      theme_minimal(base_size = 15) + 
+      theme_minimal(base_size = 18) + 
       theme(panel.grid.minor = element_blank())
     
-    ggsave(here("ggplot", paste0(decline_v[i], "_", gsa_names[j], ".png")), p, height = 3, width = 4, dpi = 72)
+    ggsave(here("ggplot", paste0(decline_v[i], "_", gsa_names[j], ".png")), p, dpi = 72, height = 4, width = 5)
 #}}
     # plotly needs darker alpha...
     p  <- ggplot(l[[j]]$failp, 
