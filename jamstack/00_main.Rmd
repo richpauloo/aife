@@ -291,13 +291,8 @@ leaflet(gsa) %>%
                              "$X-Y estimated cost<br>", 
                              "<img", " src='",
                              paste0("https://raw.githubusercontent.com/richpauloo/aife/master/ggplot/", 0, "_", gsa_selected, ".png"),
-                             "'>"),
-              options = popupOptions(
-      closeButton = FALSE,
-      minWidth = 300,
-      maxWidth = 300
-    )
-              ) #%>% 
+                             "'>"))
+              #%>% 
   
   # groundwater level
   # addRasterImage(gwl, opacity = 0.8, colors = pal, 
