@@ -21,13 +21,17 @@ gsa_names <- gsa@data$gsp_name %>%
   str_remove_all(" dm") %>% 
   str_replace_all(" |-", "_") %>% 
   c("ALL", .)
-# for(i in 1:nrow(gsa)) {
-#   dir.create(paste0("~/Github/jbp/gsas/", gsa_names[i]))
-#   dir.create(paste0("~/Github/jbp/gsas/", gsa_names[i], "/mt"))
-#   for(j in 1:length(decline_v)){
-#     dir.create(paste0("~/Github/jbp/gsas/", gsa_names[i], "/", decline_v[j])) 
-#   }
-# }
+
+if(!dir.exists("~/Github/jbp/gsas")){
+  dir.create("~/Github/jbp/gsas")
+  for(i in 1:nrow(gsa)) {
+    dir.create(paste0("~/Github/jbp/gsas/", gsa_names[i]))
+    dir.create(paste0("~/Github/jbp/gsas/", gsa_names[i], "/mt"))
+    for(j in 1:length(decline_v)){
+      dir.create(paste0("~/Github/jbp/gsas/", gsa_names[i], "/", decline_v[j]))
+    }
+  }
+}
 
 # plotly buttons to remove
 buttons_to_remove <- 
@@ -42,22 +46,39 @@ buttons_to_remove <-
        "autoScale2d","zoomIn2d","zoomOut2d")
 
 # ------------------------------------------------------------------------
-# create all plotly output for each gwl decline scenario and GSA
+# plotly and ggplot png popups for each gwl decline scenario and GSA
 # ------------------------------------------------------------------------
+ndeclines = length(unique(l$ALL$failp$decline))
+
 for(i in 1:length(decline_v)){
-  
-  highlighted_data <- filter(l[[j]]$failp, decline == decline_v[i])
   
   for(j in 1:length(l)){
     
-    cv                    <- rep("gray60", 50) # grey 
-    cv[(decline_v[i]/10)] <- "black"
+    cv                    <- rep("gray60", ndeclines) # grey 
+    cv[(decline_v[i]/10)] <- "black" 
     
+    # popup
     p  <- ggplot(l[[j]]$failp, 
                  aes(x = decline, y = failp_mean, 
                      ymin = failp_low, ymax = failp_high)) +
-      geom_rect(aes(xmin = 0, xmax = decline_v[i], ymin = 0, ymax = 1), fill = "red", alpha = 0.15) +      
-      geom_point(aes(text=text), alpha=0, color=cv) +
+      geom_rect(aes(xmin = 0, xmax = decline_v[i], 
+                    ymin = 0, ymax = 1), fill = "red", alpha = 0.01) +      
+      geom_point(aes(text=text), alpha = 0, color = cv) +
+      geom_errorbar(color = cv) +
+      labs(x = "Groundwater level decline (ft)", y = "Failure percentage") +
+      scale_y_continuous(labels = scales::percent) +
+      theme_minimal() + 
+      theme(panel.grid.minor = element_blank())
+    
+    ggsave(here("ggplot", paste0(decline_v[i], "_", gsa_names[j], ".png")), p)
+
+    # plotly needs darker alpha...
+    p  <- ggplot(l[[j]]$failp, 
+                 aes(x = decline, y = failp_mean, 
+                     ymin = failp_low, ymax = failp_high)) +
+      geom_rect(aes(xmin = 0, xmax = decline_v[i], 
+                    ymin = 0, ymax = 1), fill = "red", alpha = 0.15) +      
+      geom_point(aes(text=text), alpha = 0, color = cv) +
       geom_errorbar(color = cv) +
       labs(x = "Groundwater level decline (ft)", y = "Failure percentage") +
       scale_y_continuous(labels = scales::percent) +
@@ -67,37 +88,121 @@ for(i in 1:length(decline_v)){
       layout(hovermode = "x unified") %>% 
       config(modeBarButtonsToRemove = buttons_to_remove,
              displaylogo = FALSE)
-    col_vec <- rep("rgba(192,192,192,0.3)", 50) # grey marker colors
-    col_vec[(decline_v[i]/10)] <- "rgba(255,0,0,0.3)"       # red marker for scenario
-    p2$x$data[[2]]$marker$color <- col_vec      # specify colors in plotly
-    p2
+    col_vec <- rep("rgba(192,192,192,0.3)", ndeclines) # grey markers
+    col_vec[(decline_v[i]/10)] <- "rgba(255,0,0,0.3)"  # red scenario marker
+    p2$x$data[[2]]$marker$color <- col_vec             # modify plotly
+
     write_rds(p2, here("plotly", paste0(decline_v[i], "_", gsa_names[j], ".rds")))
   }
 }
 
-
 # ------------------------------------------------------------------------
-# write all plots for main index popups that show the MT CIs per GSA
+# plotly and ggplot png popups of all MT CIs or range per GSA
 # ------------------------------------------------------------------------
-
 # bootstrapped and range output from `01_sampling_distribution...R`
-bs <- read_rds(here("code", "results", "MT_diffs_bootstrapped.rds"))
-rg <- read_rds(here("code", "results", "MT_diffs_range.rds"))
+bs  <- read_rds(here("code", "results", "MT_diffs_bootstrapped.rds"))
+rg  <- read_rds(here("code", "results", "MT_diffs_range.rds"))
+key <- read_csv(here("data", "gsa_key.csv")) %>% 
+  filter(!is.na(gsp_name))
 
-for(i in 1:length(l)) {
-  p <- ggplot(l[[j]]$failp, 
-              aes(x = decline, y = failp_mean, 
-                  ymin = failp_low, ymax = failp_high)) +
-    geom_rect(aes(xmin = mt_ci_low[i], xmax = mt_ci_up[i], 
-                  ymin = 0, ymax = 1, fill = "red", alpha = 0.3)) +
-    geom_point(aes(text=text), alpha=0) +
-    geom_errorbar() + 
+# sanity check is FALSE
+(length(bs) + length(rg)) == (length(gsa_names) - 1)
+
+gsa_names_model_order <- 
+  c(sapply(bs, function(x) x$name[1]),
+    sapply(rg, function(x) x$name[1])) %>% 
+    tolower() %>% 
+    str_remove_all("[\\(\\)]") %>% 
+    str_remove_all(" dm") %>% 
+    str_replace_all(" |-", "_") 
+
+# extract IRR of bootstrapped output and range of range output
+x1 <- map(bs, "z") %>% 
+  map(quantile, c(0.25, 0.75))  %>% 
+  map_df(bind_rows) %>% 
+  rename(q1 = `25%`, q2 = `75%`) %>% 
+  mutate(type = "IQR")
+x2 <- bind_rows(rg) %>% 
+  rename(q1 = z1, q2 = z2) %>% 
+  select(q1, q2) %>% 
+  mutate(type = "range")
+n <- c(map(bs, "n") %>% map(1) %>% unlist(),
+       map(rg, "n") %>% unlist())
+
+# construct gwl decline MT intervals and get the gsp names right!
+ivs <- bind_rows(x1, x2) %>% 
+  mutate(n = n,
+         name = gsa_names_model_order) %>% 
+  # somehow olcese sneaked in... remove it
+  filter(name %in% key$gsp_name_model) %>% 
+  left_join(key, by = c("name" = "gsp_name_model")) %>% 
+  select(-name) %>% 
+  left_join(tibble(name = gsa_names[-1], 
+                   full_name = names(l)[-1]),
+            by = c("gsp_name" = "name")) %>% 
+  mutate(low  = round(q1, -1), 
+         high = round(q2, -1))
+
+# sanity checks pass!
+ivs$gsp_name  %in% gsa_names
+ivs$full_name %in% names(l)[-1]
+
+# add ALL
+z   <- map(bs, "z") %>% unlist() %>% quantile(c(0.25,0.75))
+ncv <- map(bs, "n") %>% map(1) %>% unlist() %>% sum()
+ivs <- bind_rows(
+  tibble(q1=z[1], q2=z[2],type="IQR",n=ncv,
+         gsp_name="ALL",full_name="ALL",
+         low=round(z[1],-1), high=round(z[2],-1)),
+  ivs)
+
+# write the MT decline ggplots and plotly objects
+for(j in 1:nrow(ivs)){
+  
+  cv <- rep("gray60", ndeclines) # grey 
+  cv[ (seq(ivs$low[j], ivs$high[j], 10)/10) ] <- "black"
+  
+  # popup
+  # modeled results are out of order, so filter for the right gsa!
+  p  <- ggplot(l[[  ivs$full_name[j]  ]]$failp, 
+               aes(x = decline, y = failp_mean, 
+                   ymin = failp_low, ymax = failp_high)) +
+    geom_rect(aes(xmin = ivs$q1[j], xmax = ivs$q2[j], 
+                  ymin = 0, ymax = 1), fill = "red", alpha = 0.01) +      
+    geom_point(aes(text=text), alpha = 0, color = cv) +
+    geom_errorbar(color = cv) +
+    labs(x = "Groundwater level decline (ft)", y = "Failure percentage") +
+    scale_y_continuous(labels = scales::percent) +
+    theme_minimal() +
+    theme(panel.grid.minor = element_blank())
+  
+  ggsave(here("ggplot", paste0("mt_", ivs$gsp_name[j], ".png")), p)
+  
+  # plotly needs darker alpha...
+  p  <- ggplot(l[[  ivs$full_name[j]  ]]$failp, 
+               aes(x = decline, y = failp_mean, 
+                   ymin = failp_low, ymax = failp_high)) +
+    geom_rect(aes(xmin = ivs$q1[j], xmax = ivs$q2[j], 
+                  ymin = 0, ymax = 1), fill = "red", alpha = 0.15) +      
+    geom_point(aes(text=text), alpha = 0, color = cv) +
+    geom_errorbar(color = cv) +
     labs(x = "Groundwater level decline (ft)", y = "Failure percentage") +
     scale_y_continuous(labels = scales::percent) +
     theme_minimal()
   
-  ggsave(here("ggplot",""), p)
+  p2 <- ggplotly(p, tooltip = "text") %>% 
+    layout(hovermode = "x unified") %>% 
+    config(modeBarButtonsToRemove = buttons_to_remove,
+           displaylogo = FALSE)
+  col_vec <- rep("rgba(192,192,192,0.3)", ndeclines) # grey markers
+  # red scenario marker
+  col_vec[ (seq(ivs$low[j], ivs$high[j], 10)/10) ] <- "rgba(255,0,0,0.3)"  
+  p2$x$data[[2]]$marker$color <- col_vec             # modify plotly
+  
+  write_rds(p2, here("plotly", paste0("mt_", ivs$gsp_name[j], ".rds")))
 }
+
+
 
 
 # ------------------------------------------------------------------------

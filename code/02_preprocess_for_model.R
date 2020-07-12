@@ -30,8 +30,8 @@ d@data <- d@data %>%
 # TotalCompletedDepth is NA, make those == mean_ci_upper
 d$tot_depth_msh <- d@data$TotalCompletedDepth - 9.84252
 d$tot_depth_msh <- ifelse(
-  is.na(d@data$tot_depth_msh, d$mean_ci_upper, d@data$tot_depth_msh)
-  )
+  is.na(d@data$tot_depth_msh), d$mean_ci_upper, d@data$tot_depth_msh
+)
 
 # add 2019 groundwater level to wells
 d$gwl_2019 <- raster::extract(gwl, d) 

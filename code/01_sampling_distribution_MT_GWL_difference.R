@@ -80,8 +80,8 @@ d_19 <- projectRaster(d_19, crs = prj)
 
 # calculate avg spring and fall groundwater level and visualize
 d_avg <- mean(d_fa$Prediction, d_sp$Prediction, d_19$Prediction)
-spplot(d_fa$Prediction, main = "2018 Spring Interpolation (ft)")
-spplot(d_sp$Prediction, main = "2018 Fall Interpolation (ft)")
+#spplot(d_fa$Prediction, main = "2018 Spring Interpolation (ft)")
+#spplot(d_sp$Prediction, main = "2018 Fall Interpolation (ft)")
 spplot(d_avg, main = "Mean WSE (ft) \n(2018 and 2019)")
 
 
@@ -143,7 +143,7 @@ for(i in 1:length(l3)) {
   bs[[i]] <- tibble(
     z    = gen_sampling_dist_mean(l3[[i]]),
     n    = nrow(l3[[i]]),
-    name = l3[[i]]$shp_nam[1]
+    name = l3[[i]]$GSP_Name[1]
   )
 }
 
@@ -157,7 +157,7 @@ for(i in 1:length(l4)) {
     z1 = min(l4[[i]]$diff_MT_wse),
     z2  = max(l4[[i]]$diff_MT_wse),
     n     = nrow(l4[[i]]),
-    name  = l4[[i]]$shp_nam[1]
+    name  = l4[[i]]$GSP_Name[1]
   )
 }
 
