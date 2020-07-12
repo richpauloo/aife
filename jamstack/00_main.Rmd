@@ -77,8 +77,8 @@ library(htmltools)
 library(plotly)
 
 # read groundwater level and gsas
-gwl <- readr::read_rds(here::here("code", "results", "gwl_2019_avg_ll.rds"))
-gsa <- readr::read_rds(here::here("code", "results", "gsa_ll.rds"))
+#gwl <- readr::read_rds(here::here("code", "results", "gwl_2019_avg_ll.rds"))
+#gsa <- readr::read_rds(here::here("code", "results", "gsa_ll.rds"))
 
 # if(params %in% )is_gsa_page = 
 ```
@@ -246,6 +246,7 @@ bs_modal(
   id = "md-instructions",
   title = "Using Markdown",
   body = includeMarkdown(system.file("markdown","modal.md",package="bsplus"))
+  #body = includeMarkdown("~/Desktop/temp.md")
 )
 ```
 
@@ -256,7 +257,7 @@ bs_button("Click for modal", button_type = "primary") %>%
 
 ### GSAs and groundwater surfaces 
 
-```{r}
+```{r, eval=FALSE}
 mtc <- ggplot(mtcars, aes(mpg, wt)) + geom_point() + labs(title="GSP NAME", subtitle = "N-M wells fail at min threshold \n$3 - 4M estimated cost")
 col <- rev(colormap::colormap(colormap::colormaps$magma, nshades = 20))
 pal <- colorNumeric(col, raster::values(gwl), na.color = "transparent")
@@ -327,7 +328,7 @@ leaflet(gsa) %>%
 ### Forecasted well failure rates
 
 ```{r}
-readr::read_rds("../plotly/all0.rds")
+readr::read_rds("../plotly/10_ALL.rds")
 ```
 
 
