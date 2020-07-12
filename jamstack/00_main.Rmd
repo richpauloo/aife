@@ -77,8 +77,8 @@ library(htmltools)
 library(plotly)
 
 # read groundwater level and gsas
-#gwl <- readr::read_rds(here::here("code", "results", "gwl_2019_avg_ll.rds"))
-#gsa <- readr::read_rds(here::here("code", "results", "gsa_ll.rds"))
+gwl <- readr::read_rds(here::here("code", "results", "gwl_2019_avg_ll.rds"))
+gsa <- readr::read_rds(here::here("code", "results", "gsa_ll.rds"))
 
 # if(params %in% )is_gsa_page = 
 ```
@@ -257,13 +257,16 @@ bs_button("Click for modal", button_type = "primary") %>%
 
 ### GSAs and groundwater surfaces 
 
-```{r, eval=FALSE}
-mtc <- ggplot(mtcars, aes(mpg, wt)) + geom_point() + labs(title="GSP NAME", subtitle = "N-M wells fail at min threshold \n$3 - 4M estimated cost")
+```{r}
+# color palettes for gwl decline
 col <- rev(colormap::colormap(colormap::colormaps$magma, nshades = 20))
 pal <- colorNumeric(col, raster::values(gwl), na.color = "transparent")
 
 #pal2 <- colorNumeric(col, raster::values(gwl)/2, na.color = "transparent")
 gwl2 <- gwl/2
+
+decline = "mt"
+gsa_selected = "ALL"
 
 leaflet(gsa) %>% 
   
@@ -283,45 +286,50 @@ leaflet(gsa) %>%
                 highlightOptions(color = "black", weight = 2,
                                  bringToFront = TRUE),
               labelOptions = labelOptions(textsize = "13px"),               
-              popup = paste0("<em><b>", gsa$gsp_name, "</b></em><br>",
+              popup = paste0("<style> div.leaflet-popup-content {width:auto !important;}</style> <em><b>", gsa$gsp_name, "</b></em><br>",
                              "N-M wells fail at min threshold<br>",
                              "$X-Y estimated cost<br>", 
                              "<img", " src='",
-                             "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Rlogo.png/274px-Rlogo.png",
-                             "'>")
-              ) %>% 
+                             paste0("https://raw.githubusercontent.com/richpauloo/aife/master/ggplot/", 0, "_", gsa_selected, ".png"),
+                             "'>"),
+              options = popupOptions(
+      closeButton = FALSE,
+      minWidth = 300,
+      maxWidth = 300
+    )
+              ) #%>% 
   
   # groundwater level
-  addRasterImage(gwl, opacity = 0.8, colors = pal, 
-                 layerId = "2019", group = "2019 groundwater level") %>% 
-  addRasterImage(gwl2, opacity = 0.8, colors = pal, 
-                 layerId = "2040", group = "2040 min threshold") %>% 
-  addLegend(pal = pal, values = raster::values(gwl), 
-            title    = "Groundwater <br>level (ft. BLS)",
-            position = "bottomright") %>% 
-  
-  # raster value display
-  leafem::addMouseCoordinates() %>%
-  leafem::addImageQuery(gwl, type="mousemove", layerId = "2019", 
-                        group = "2019 groundwater level", prefix = "",
-                        digits = 2, position = "bottomright") %>% 
-  leafem::addImageQuery(gwl2, type="mousemove", layerId = "2040", 
-                        group = "2040 min threshold", prefix = "",
-                        digits = 2, position = "bottomright") %>% 
-
-  # layer control
-  addLayersControl(
-    overlayGroups = c("critical priority GSAs"),
-    baseGroups    = c("2019 groundwater level", "2040 min threshold"),
-    options       = layersControlOptions(collapsed = FALSE, 
-                                         position = "bottomleft")
-  ) %>%
-  
-  # zoom to home
-  addEasyButton(easyButton(
-    icon="fa-globe", title="Zoom to Level 1",
-    onClick=JS("function(btn, map){ map.setView([36.8, -119.7], 7); }"),
-    position = "topleft"))
+  # addRasterImage(gwl, opacity = 0.8, colors = pal, 
+  #                layerId = "2019", group = "2019 groundwater level") %>% 
+  # addRasterImage(gwl2, opacity = 0.8, colors = pal, 
+  #                layerId = "2040", group = "2040 min threshold") %>% 
+  # addLegend(pal = pal, values = raster::values(gwl), 
+  #           title    = "Groundwater <br>level (ft. BLS)",
+  #           position = "bottomright") %>% 
+  # 
+  # # raster value display
+  # leafem::addMouseCoordinates() %>%
+  # leafem::addImageQuery(gwl, type="mousemove", layerId = "2019", 
+  #                       group = "2019 groundwater level", prefix = "",
+  #                       digits = 2, position = "bottomright") %>% 
+  # leafem::addImageQuery(gwl2, type="mousemove", layerId = "2040", 
+  #                       group = "2040 min threshold", prefix = "",
+  #                       digits = 2, position = "bottomright") %>% 
+  # 
+  # # layer control
+  # addLayersControl(
+  #   overlayGroups = c("critical priority GSAs"),
+  #   baseGroups    = c("2019 groundwater level", "2040 min threshold"),
+  #   options       = layersControlOptions(collapsed = FALSE, 
+  #                                        position = "bottomleft")
+  # ) %>%
+  # 
+  # # zoom to home
+  # addEasyButton(easyButton(
+  #   icon="fa-globe", title="Zoom to Level 1",
+  #   onClick=JS("function(btn, map){ map.setView([36.8, -119.7], 7); }"),
+  #   position = "topleft"))
 ```
 
 
