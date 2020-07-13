@@ -175,7 +175,7 @@ tags$div(
 Row
 -----------------------------------------------------------------------
 
-```{r bs modal}
+```{r}
 bs_modal(
   id = "md-instructions",
   title = "Using Markdown",
@@ -203,7 +203,7 @@ bs_modal(
 )
 ```
 
-```{r bs modal 2, include=FALSE}
+```{r, include=FALSE}
 bs_button("Click for modal", button_type = "primary") %>%
   bs_attach_modal("md-instructions")
 bs_button("Click for modal", button_type = "primary") %>%
@@ -218,26 +218,27 @@ bs_button("Click for modal", button_type = "primary") %>%
 
 
 ### Groundwater level decline
-```{r gwl decline}
+```{r}
 valueBox("Min threshold",
          color = "primary",
          icon = "ion-arrow-down-a")
 ```
 
 ### Well failures
-```{r count of well failures}
+```{r}
 valueBox("5000-10000", color = "danger", icon = "fa-times-circle")
 ```
 
 ### Percent of failing wells
-```{r well failure percent}
+```{r}
 valueBox("15-60", color = "warning", icon = "fa-percent")
 ```
 
 ### Cost
-```{r cost}
+```{r}
 valueBox("$1.2-1.3M", color = "success", icon = "ion-cash")
 ```
+
 
 
 Row
@@ -262,13 +263,13 @@ gsa_names <- gsa@data$gsp_name %>%
 l <- vector("list", length(gsa_names))
 for(i in 1:length(gsa_names)){
   l[[i]] <- 
-    read_rds(paste0("~/Github/aife/plotly/100_", gsa_names[i], ".rds")) %>% 
+    read_rds(paste0("~/Github/aife/plotly/mt_", gsa_names[i], ".rds")) %>% 
     as.tags() %>%
     {tags$div(style="width:270px; height:220px;", .)} %>%
     as.character() %>% 
     stringr::str_replace("height:400px","height:100%")
   l[[i]] <- 
-    paste0("<em><b>", "GSA NAME", "</b></em><br>",
+    paste0("<em><b>", gsa@data$gsp_name[i], "</b></em><br>",
            "N-M wells fail at min threshold<br>",
            "$X-Y estimated cost<br>",
            l[[i]]
@@ -307,7 +308,7 @@ leaflet(gsa) %>%
   addLayersControl(
     overlayGroups = c("critical priority GSAs"),
     baseGroups    = c("2019 groundwater level", "2040 min threshold"),
-    options       = layersControlOptions(collapsed = FALSE,
+    options       = layersControlOptions(collapsed = TRUE,
                                          position = "bottomleft")
   ) %>%
   
@@ -342,7 +343,7 @@ leaflet(gsa) %>%
 
 ### Forecasted well failure rates
 ```{r, plot}
-readr::read_rds("../plotly/10_ALL.rds")
+readr::read_rds("../plotly/mt_ALL.rds")
 ```
 
 
