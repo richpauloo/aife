@@ -46,7 +46,7 @@ buttons_to_remove <-
        "autoScale2d","zoomIn2d","zoomOut2d")
 
 # ------------------------------------------------------------------------
-# plotly and ggplot png popups for each gwl decline scenario and GSA
+# plotly popups for each gwl decline scenario and GSA
 # ------------------------------------------------------------------------
 ndeclines = length(unique(l$ALL$failp$decline))
 
@@ -56,22 +56,7 @@ for(i in 1:length(decline_v)){
     
     cv                    <- rep("gray60", ndeclines) # grey 
     cv[(decline_v[i]/10)] <- "black" 
-    
-    # popup
-    p  <- ggplot(l[[j]]$failp, 
-                 aes(x = decline, y = failp_mean, 
-                     ymin = failp_low, ymax = failp_high)) +
-      geom_rect(aes(xmin = 0, xmax = decline_v[i], 
-                    ymin = 0, ymax = 1), fill = "red", alpha = 0.01) +      
-      geom_point(aes(text=text), alpha = 0, color = cv) +
-      geom_errorbar(color = cv) +
-      labs(x = "Groundwater level decline (ft)", y = "Failure percentage") +
-      scale_y_continuous(labels = scales::percent) +
-      theme_minimal(base_size = 18) + 
-      theme(panel.grid.minor = element_blank())
-    
-    ggsave(here("ggplot", paste0(decline_v[i], "_", gsa_names[j], ".png")), p, dpi = 72, height = 4, width = 5)
-#}}
+
     # plotly needs darker alpha...
     p  <- ggplot(l[[j]]$failp, 
                  aes(x = decline, y = failp_mean, 
@@ -97,7 +82,7 @@ for(i in 1:length(decline_v)){
 }
 
 # ------------------------------------------------------------------------
-# plotly and ggplot png popups of all MT CIs or range per GSA
+# plotly popups of all MT CIs or range per GSA
 # ------------------------------------------------------------------------
 # bootstrapped and range output from `01_sampling_distribution...R`
 bs  <- read_rds(here("code", "results", "MT_diffs_bootstrapped.rds"))
@@ -162,23 +147,8 @@ for(j in 1:nrow(ivs)){
   cv <- rep("gray60", ndeclines) # grey 
   cv[ (seq(ivs$low[j], ivs$high[j], 10)/10) ] <- "black"
   
-  # popup
   # modeled results are out of order, so filter for the right gsa!
-  p  <- ggplot(l[[  ivs$full_name[j]  ]]$failp, 
-               aes(x = decline, y = failp_mean, 
-                   ymin = failp_low, ymax = failp_high)) +
-    geom_rect(aes(xmin = ivs$q1[j], xmax = ivs$q2[j], 
-                  ymin = 0, ymax = 1), fill = "red", alpha = 0.01) +      
-    geom_point(aes(text=text), alpha = 0, color = cv) +
-    geom_errorbar(color = cv) +
-    labs(x = "Groundwater level decline (ft)", y = "Failure percentage") +
-    scale_y_continuous(labels = scales::percent) +
-    theme_minimal() +
-    theme(panel.grid.minor = element_blank())
-  
-  ggsave(here("ggplot", paste0("mt_", ivs$gsp_name[j], ".png")), p)
-  
-  # plotly needs darker alpha...
+  # plotly 
   p  <- ggplot(l[[  ivs$full_name[j]  ]]$failp, 
                aes(x = decline, y = failp_mean, 
                    ymin = failp_low, ymax = failp_high)) +

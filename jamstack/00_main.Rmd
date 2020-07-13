@@ -74,11 +74,17 @@ library(shiny)
 library(bsplus)
 library(leaflet)
 library(htmltools)
+library(htmlwidgets)
 library(plotly)
+library(stringr)
+library(readr)
+library(here)
 
 # read groundwater level and gsas
 gwl <- readr::read_rds(here::here("code", "results", "gwl_2019_avg_ll.rds"))
 gsa <- readr::read_rds(here::here("code", "results", "gsa_ll.rds"))
+
+source(here("jamstack", "etc", "functions.R"))
 
 # if(params %in% )is_gsa_page = 
 ```
@@ -87,7 +93,7 @@ Row {.sidebar data-width=150 data-padding=10}
 -----------------------------------------------------------------------
 
 
-```{r}
+```{r sidebar downdown menus}
 # GSA dropdown
 tags$div(
   class="dropdown",
@@ -166,98 +172,79 @@ tags$div(
 
 
 <!-- Row {data-width=100} -->
-<!-- Row -->
-<!-- ----------------------------------------------------------------------- -->
-
-<!-- ```{r} -->
-<!-- bs_modal( -->
-<!--   id = "md-instructions", -->
-<!--   title = "Using Markdown", -->
-<!--   body = includeMarkdown(system.file("markdown","modal.md",package="bsplus")) -->
-<!-- ) -->
-<!-- bs_modal( -->
-<!--   id = "md-groundwater-level-decline", -->
-<!--   title = "Using Markdown", -->
-<!--   body = includeMarkdown(system.file("markdown","modal.md",package="bsplus")) -->
-<!-- ) -->
-<!-- bs_modal( -->
-<!--   id = "md-well-failures", -->
-<!--   title = "Using Markdown", -->
-<!--   body = includeMarkdown(system.file("markdown","modal.md",package="bsplus")) -->
-<!-- ) -->
-<!-- bs_modal( -->
-<!--   id = "md-percent-of-failing-wells", -->
-<!--   title = "Using Markdown", -->
-<!--   body = includeMarkdown(system.file("markdown","modal.md",package="bsplus")) -->
-<!-- ) -->
-<!-- bs_modal( -->
-<!--   id = "md-cost", -->
-<!--   title = "Using Markdown", -->
-<!--   body = includeMarkdown(system.file("markdown","modal.md",package="bsplus")) -->
-<!-- ) -->
-<!-- ``` -->
-
-<!-- ```{r, include=FALSE} -->
-<!-- bs_button("Click for modal", button_type = "primary") %>% -->
-<!--   bs_attach_modal("md-instructions") -->
-<!-- bs_button("Click for modal", button_type = "primary") %>% -->
-<!--   bs_attach_modal("md-groundwater-level-decline") -->
-<!-- bs_button("Click for modal", button_type = "primary") %>% -->
-<!--   bs_attach_modal("md-well-failures") -->
-<!-- bs_button("Click for modal", button_type = "primary") %>% -->
-<!--   bs_attach_modal("md-percent-of-failing-wells") -->
-<!-- bs_button("Click for modal", button_type = "primary") %>% -->
-<!--   bs_attach_modal("md-cost") -->
-<!-- ``` -->
-
-
-<!-- ### Groundwater level decline  -->
-<!-- ```{r} -->
-<!-- valueBox("Min threshold",  -->
-<!--          color = "primary",  -->
-<!--          icon = "fa-arrow-alt-circle-down") -->
-<!-- ``` -->
-
-<!-- ### Well failures  -->
-<!-- ```{r} -->
-<!-- valueBox("5000-10000", color = "danger", icon = "fa-times-circle") -->
-<!-- ``` -->
-
-<!-- ### Percent of failing wells -->
-<!-- ```{r} -->
-<!-- valueBox("15-60", color = "warning", icon = "fa-percentage") -->
-<!-- ``` -->
-
-<!-- ### Cost  -->
-<!-- ```{r} -->
-<!-- valueBox("$1.2-1.3M", color = "success", icon = "fa-money-check-alt") -->
-<!-- ``` -->
-
-
-
-
-
-<!-- Row {data-width=400} -->
 Row
 -----------------------------------------------------------------------
 
-```{r}
+```{r bs modal}
 bs_modal(
   id = "md-instructions",
   title = "Using Markdown",
   body = includeMarkdown(system.file("markdown","modal.md",package="bsplus"))
-  #body = includeMarkdown("~/Desktop/temp.md")
+)
+bs_modal(
+  id = "md-groundwater-level-decline",
+  title = "Using Markdown",
+  body = includeMarkdown(system.file("markdown","modal.md",package="bsplus"))
+)
+bs_modal(
+  id = "md-well-failures",
+  title = "Using Markdown",
+  body = includeMarkdown(system.file("markdown","modal.md",package="bsplus"))
+)
+bs_modal(
+  id = "md-percent-of-failing-wells",
+  title = "Using Markdown",
+  body = includeMarkdown(system.file("markdown","modal.md",package="bsplus"))
+)
+bs_modal(
+  id = "md-cost",
+  title = "Using Markdown",
+  body = includeMarkdown(system.file("markdown","modal.md",package="bsplus"))
 )
 ```
 
-```{r, include = FALSE}
+```{r bs modal 2, include=FALSE}
 bs_button("Click for modal", button_type = "primary") %>%
   bs_attach_modal("md-instructions")
+bs_button("Click for modal", button_type = "primary") %>%
+  bs_attach_modal("md-groundwater-level-decline")
+bs_button("Click for modal", button_type = "primary") %>%
+  bs_attach_modal("md-well-failures")
+bs_button("Click for modal", button_type = "primary") %>%
+  bs_attach_modal("md-percent-of-failing-wells")
+bs_button("Click for modal", button_type = "primary") %>%
+  bs_attach_modal("md-cost")
 ```
 
-### GSAs and groundwater surfaces 
 
-```{r}
+### Groundwater level decline
+```{r gwl decline}
+valueBox("Min threshold",
+         color = "primary",
+         icon = "ion-arrow-down-a")
+```
+
+### Well failures
+```{r count of well failures}
+valueBox("5000-10000", color = "danger", icon = "fa-times-circle")
+```
+
+### Percent of failing wells
+```{r well failure percent}
+valueBox("15-60", color = "warning", icon = "fa-percent")
+```
+
+### Cost
+```{r cost}
+valueBox("$1.2-1.3M", color = "success", icon = "ion-cash")
+```
+
+
+Row
+-----------------------------------------------------------------------
+
+### GSAs and groundwater surfaces 
+```{r, leaflet}
 # color palettes for gwl decline
 col <- rev(colormap::colormap(colormap::colormaps$magma, nshades = 20))
 pal <- colorNumeric(col, raster::values(gwl), na.color = "transparent")
@@ -265,18 +252,71 @@ pal <- colorNumeric(col, raster::values(gwl), na.color = "transparent")
 #pal2 <- colorNumeric(col, raster::values(gwl)/2, na.color = "transparent")
 gwl2 <- gwl/2
 
-decline = "mt"
-gsa_selected = "ALL"
+gsa_names <- gsa@data$gsp_name %>% 
+  tolower() %>% 
+  str_remove_all("[\\(\\)]") %>% 
+  str_remove_all(" dm") %>% 
+  str_replace_all(" |-", "_") 
 
+# read all plotly in for testing
+l <- vector("list", length(gsa_names))
+for(i in 1:length(gsa_names)){
+  l[[i]] <- 
+    read_rds(paste0("~/Github/aife/plotly/100_", gsa_names[i], ".rds")) %>% 
+    as.tags() %>%
+    {tags$div(style="width:270px; height:220px;", .)} %>%
+    as.character() %>% 
+    stringr::str_replace("height:400px","height:100%")
+  l[[i]] <- 
+    paste0("<em><b>", "GSA NAME", "</b></em><br>",
+           "N-M wells fail at min threshold<br>",
+           "$X-Y estimated cost<br>",
+           l[[i]]
+    )
+}
+
+
+# test
 leaflet(gsa) %>% 
   
   # tiles
   addProviderTiles(providers$CartoDB,             group = "Light") %>% 
-  #addProviderTiles(providers$CartoDB.DarkMatter,  group = "Dark") %>% 
-  #addProviderTiles(providers$Esri.WorldStreetMap, group = "Street") %>% 
   
   # center
   setView(-119.7, 36.8, 7) %>% 
+  
+  # groundwater level
+  addRasterImage(gwl, opacity = 0.8, colors = pal,
+                 layerId = "2019", group = "2019 groundwater level") %>%
+  addRasterImage(gwl2, opacity = 0.8, colors = pal,
+                 layerId = "2040", group = "2040 min threshold") %>%
+  addLegend(pal = pal, values = raster::values(gwl),
+            title    = "Groundwater <br>level (ft. BLS)",
+            position = "bottomright") %>%
+  
+  # raster value display
+  leafem::addMouseCoordinates() %>%
+  leafem::addImageQuery(gwl, type="mousemove", layerId = "2019",
+                        group = "2019 groundwater level", prefix = "",
+                        digits = 2, position = "bottomright") %>%
+  leafem::addImageQuery(gwl2, type="mousemove", layerId = "2040",
+                        group = "2040 min threshold", prefix = "",
+                        digits = 2, position = "bottomright") %>%
+  
+  # layer control
+  addLayersControl(
+    overlayGroups = c("critical priority GSAs"),
+    baseGroups    = c("2019 groundwater level", "2040 min threshold"),
+    options       = layersControlOptions(collapsed = FALSE,
+                                         position = "bottomleft")
+  ) %>%
+  
+  # zoom to home
+  addEasyButton(easyButton(
+    icon="fa-globe", title="Zoom to Level 1",
+    onClick=JS("function(btn, map){ map.setView([36.8, -119.7], 7); }"),
+    position = "topleft")
+  ) %>% 
   
   # polygons
   addPolygons(data = gsa, weight = 1, opacity = 1, fillOpacity = 0.1, 
@@ -286,51 +326,22 @@ leaflet(gsa) %>%
                 highlightOptions(color = "black", weight = 2,
                                  bringToFront = TRUE),
               labelOptions = labelOptions(textsize = "13px"),               
-              popup = paste0("<style> div.leaflet-popup-content {width:auto !important;}</style> <em><b>", gsa$gsp_name, "</b></em><br>",
-                             "N-M wells fail at min threshold<br>",
-                             "$X-Y estimated cost<br>", 
-                             "<img", " src='",
-                             paste0("https://raw.githubusercontent.com/richpauloo/aife/master/ggplot/", 0, "_", gsa_selected, ".png"),
-                             "'>"))
-              #%>% 
+              popup = l
+  ) %>% 
   
-  # groundwater level
-  # addRasterImage(gwl, opacity = 0.8, colors = pal, 
-  #                layerId = "2019", group = "2019 groundwater level") %>% 
-  # addRasterImage(gwl2, opacity = 0.8, colors = pal, 
-  #                layerId = "2040", group = "2040 min threshold") %>% 
-  # addLegend(pal = pal, values = raster::values(gwl), 
-  #           title    = "Groundwater <br>level (ft. BLS)",
-  #           position = "bottomright") %>% 
-  # 
-  # # raster value display
-  # leafem::addMouseCoordinates() %>%
-  # leafem::addImageQuery(gwl, type="mousemove", layerId = "2019", 
-  #                       group = "2019 groundwater level", prefix = "",
-  #                       digits = 2, position = "bottomright") %>% 
-  # leafem::addImageQuery(gwl2, type="mousemove", layerId = "2040", 
-  #                       group = "2040 min threshold", prefix = "",
-  #                       digits = 2, position = "bottomright") %>% 
-  # 
-  # # layer control
-  # addLayersControl(
-  #   overlayGroups = c("critical priority GSAs"),
-  #   baseGroups    = c("2019 groundwater level", "2040 min threshold"),
-  #   options       = layersControlOptions(collapsed = FALSE, 
-  #                                        position = "bottomleft")
-  # ) %>%
-  # 
-  # # zoom to home
-  # addEasyButton(easyButton(
-  #   icon="fa-globe", title="Zoom to Level 1",
-  #   onClick=JS("function(btn, map){ map.setView([36.8, -119.7], 7); }"),
-  #   position = "topleft"))
+  onRender(
+    "function(el,x) {
+    this.on('popupopen', function() {HTMLWidgets.staticRender(); remove()})
+    }"
+  ) %>%
+  add_deps("plotly") %>%
+  htmltools::attachDependencies(plotly:::plotlyMainBundle(), append = TRUE) %>%
+  htmltools::attachDependencies(crosstalk::crosstalkLibs(),  append = TRUE) %>%
+  browsable()
 ```
 
-
 ### Forecasted well failure rates
-
-```{r}
+```{r, plot}
 readr::read_rds("../plotly/10_ALL.rds")
 ```
 
