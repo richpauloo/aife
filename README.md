@@ -37,6 +37,10 @@ About 1.5 million residents of California’s Central Valley rely on private dom
 * `gsa.rds`: critical priority GSA polygons (output from `rmapshaper::ms_simplify()` to reduce file size) containing monitoring well locations. Output from `code/01_sampling_distribution_MT_GWL.R`.  
 * `gwl_2019_avg_ll.rds`: 2019 average kriged groundwater level data.  
 
+## TODO:
+
+Spring and Fall groundwater levels are taken from Pauloo (2020). Darcy implemented this code in `data/4Interpolationinterpolate_cgwl_mts_CVcobs.R`, which should be genralized into a kriging pipeline in `code/06_kriging.R` for future updates to the "present day" groundwater level and the "MT surface".
+
 
 ## LICENSE
 

@@ -1,0 +1,110 @@
+Department of Water Resources
+Groundwater Information Center Interactive Map Application
+
+Readme_20170517.txt
+  
+Last revised: 05/17/2017
+
+This document contains the following information:
+   1) Download file type
+   2) Description of data
+   3) Conditions of Use
+   4) GIS Groundwater Level Data type Explanation
+	a) Depth Below Ground Surface
+	b) Groundwater Elevation
+	c) Groundwater Change in Elevation
+
+****************************************************************************************
+
+1) Download file type
+
+The files located in this .zip folder were originally downloaded from the California Department of Water Resources Groundwater Information Center Interactive Map Application.  Data downloads as .zip files.  To access the data, the dowloaded .zip files must first be unzipped.  
+
+Most files downloaded from the GIC Interactive map application are ESRI shapefiles.  For more information about the use of ESRI shapefiles, see "http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html#//005600000002000000.htm" or "http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf" 
+
+****************************************************************************************
+
+2) Description of data
+
+The data layers were originally prepared using ESRI ArcMap v.10.2.  The metadata for these files is being developed, and is currently limited.
+
+Downloaded shapefiles are provided in the WGS 1984 Web Mercator projection.  For more details, see "http://resources.arcgis.com/en/help/main/10.1/index.html#//003r00000001000000"
+
+Where available, Latitude and Longitude coordinates in the attribute table are shown as Geographic Coordinate System NAD83 (please note that this differs from the projection used by the shapefile).
+
+****************************************************************************************
+
+3) Conditions of Use
+
+All information provided by the Department of Water Resources on its Web pages and Internet sites, is made available to provide immediate access for the convenience of interested persons. While the Department believes the information to be reliable, human or mechanical error remains a possibility. Therefore, the Department does not guarantee the accuracy, completeness, timeliness, or correct sequencing of the information. Neither the Department of Water Resources nor any of the sources of the information shall be responsible for any errors or omissions, or for the use or results obtained from the use of this information. Other specific cautionary notices may be included on other Web pages maintained by the Department.
+
+****************************************************************************************
+
+4) GIS Groundwater Level Data type Explanation
+
+	a) Depth Below Ground Surface
+These layers show the depth to groundwater below the ground surface. Depth information is represented in feet below the ground surface. Increasing values indicate increasing depth to groundwater (or deeper/lower water levels). Negative values indicate that the groundwater level is above ground surface.
+
+Points show the depth to groundwater values collected from wells. The contours and color ramp layers provide a smoothed approximation of the groundwater level “surface” based on the measurement data. The measurement values may not exactly match the contour or color ramp values because of the surface and contour smoothing process.
+
+Water level measurements are selected based on measurement date and well construction information (where available) and approximate groundwater levels in the unconfined to uppermost semi-confined aquifers.
+
+Layer Attribute Explanation:
+Site Code: Unique Well ID
+Local Well Name: Well ID defined by local agency or well owner
+State Well Number: DWR State Well Number
+WCR Number: Well Completion Report number (DWR form 188) 
+Well Use: Intended use of well
+Msmt Date: Date water level measurement was collected
+Msmt Agency: Agency that collected the water level measurement
+WSEL: Groundwater Surface Elevation (ft-msl), NAVD88
+DGBS: Groundwater Depth Below Ground Surface – (ft), NAVD88
+Reference Point Elevation: Elevation of measurement reference point (ft-msl) 
+Ground Surface Elevation: Elevation of ground surface at well (ft-msl) 
+Msmt Issue: Questionable measurement comment
+Msmt Comment: General measurement comment
+Latitude: Latitude, NAD83
+Longitude: Longitude, NAD83
+Link: Hyperlink to well information in the DWR Water Data Library 
+
+
+	b) Groundwater Elevation
+These layers show groundwater elevation. Groundwater elevations are shown as feet above or below mean sea level (positive values indicate groundwater elevations above means sea level, negative values indicate groundwater elevations below mean sea level).
+
+Points show the depth to groundwater values collected from wells. The contours and color ramp layers provide a smoothed approximation of the groundwater elevation “surface” based on the measurement data. The measurement values may not exactly match the contour or color ramp values because of the surface and contour smoothing process.
+
+Water level measurements are selected based on measurement date and well construction information (when available) and approximate groundwater elevations in the unconfined to uppermost semi-confined aquifers.
+
+Layer Attribute Explanation:
+Site Code: Unique Well ID
+Local Well Name: Well ID defined by local agency or well owner
+State Well Number: DWR State Well Number
+WCR Number: Well Completion Report number (DWR form 188) 
+Well Use: Intended use of well
+Msmt Date: Date water level measurement was collected
+Msmt Agency: Agency that collected the water level measurement
+WSEL: Groundwater Surface Elevation (ft-msl), NAVD88
+DGBS: Groundwater Depth Below Ground Surface – (ft), NAVD88
+Reference Point Elevation: Elevation of measurement reference point (ft-msl) 
+Ground Surface Elevation: Elevation of ground surface at well (ft-msl) 
+Msmt Issue: Questionable measurement comment
+Msmt Comment: General measurement comment
+Latitude: Latitude, NAD83
+Longitude: Longitude, NAD83
+Link: Hyperlink to well information in the DWR Water Data Library 
+Back to top
+
+
+	c) Groundwater Elevation Change
+These layers show changes in groundwater levels over time. Each point shows the calculated difference between the measured groundwater levels from the selected time period. The change in groundwater level is plotted on the map only if a measurement exists in both time periods at a well.
+
+The colored points in the measurements layer show the location of all wells where the groundwater level change is determined. The contours and color ramp layers approximate change in the groundwater levels for the unconfined to uppermost semi-confined aquifers and is based on a subset of all of the measurement points, which were selected based on measurement date and well construction information (where available).
+
+Layer Attribute Explanation:
+Site Code: Unique Well ID
+Local Well Name: Well ID defined by local agency or well owner
+State Well Number: DWR State Well Number
+WCR Number: Well Completion Report number (DWR form 188) 
+Well Use: Intended use of well
+WSEL_Change: Differnece in water level between the early and late water level measurements WSEL_early: Groundwater Surface Elevation (ft-msl) of "early" measurement
+	
