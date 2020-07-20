@@ -6,8 +6,8 @@ output:
     orientation: rows
     navbar:
       - { title: "Instructions",  align: right}
-      - { title: "About", href: "https://google.com", align: right}
-      - { icon: "fa-github", href: "https://google.com", align: right}
+      - { title: "About", href: "https://www.gsawellfailure.com", align: right}
+      - { icon: "fa-github", href: "https://www.github.com/richpauloo/aife", align: right}
     css: etc/w3.css
     self_contained: false
     #logo: etc/cwq_8_pixels.png
@@ -17,55 +17,50 @@ output:
 <!-- a wee bit of JS that allows a modal popup when the first -->
 <!-- list element of the navbar (Instructions) is clicked -->
 <!-- adapted from: https://github.com/rstudio/flexdashboard/issues/208 -->
+
 <script>
-$('.navbar-brand').wrap('<a href="http://www.google.com">');
-
-$(document).ready(function() {
-  $('#dashboard-container').on('flexdashboard:layoutcomplete', 
-    function() {
-      $('#navbar li:nth-child(1)').click(function() {
-        $('#md-instructions').modal(); });
+  $('.navbar-brand').wrap('<a href="http://www.gsawellfailure.com">');
+  
+  <!-- modal popup when valueboxes are clicked -->
+  $(document).ready(function() {
+    $('#dashboard-container').on('flexdashboard:layoutcomplete', 
+      function() {
+        $('#navbar li:nth-child(1)').click(function() {
+          $('#md-instructions').modal(); });
+    })
   })
-})
-
-<!-- modal popup when valueboxes are clicked -->
-$(document).ready(function() {
-  $('#dashboard-container').on('flexdashboard:layoutcomplete', 
-    function() {
-      $('#groundwater-level-decline').click(function() {
-        $('#md-groundwater-level-decline').modal(); });
+  
+  $(document).ready(function() {
+    $('#dashboard-container').on('flexdashboard:layoutcomplete', 
+      function() {
+        $('#groundwater-level-decline').click(function() {
+          $('#md-groundwater-level-decline').modal(); });
+    })
   })
-})
-
-<!-- modal popup when valueboxes are clicked -->
-$(document).ready(function() {
-  $('#dashboard-container').on('flexdashboard:layoutcomplete', 
-    function() {
-      $('#well-failures').click(function() {
-        $('#md-well-failures').modal(); });
+  
+  $(document).ready(function() {
+    $('#dashboard-container').on('flexdashboard:layoutcomplete', 
+      function() {
+        $('#well-failures').click(function() {
+          $('#md-well-failures').modal(); });
+    })
   })
-})
-
-<!-- modal popup when valueboxes are clicked -->
-$(document).ready(function() {
-  $('#dashboard-container').on('flexdashboard:layoutcomplete', 
-    function() {
-      $('#percent-of-failing-wells').click(function() {
-        $('#md-percent-of-failing-wells').modal(); });
+  
+  $(document).ready(function() {
+    $('#dashboard-container').on('flexdashboard:layoutcomplete', 
+      function() {
+        $('#percent-of-failing-wells').click(function() {
+          $('#md-percent-of-failing-wells').modal(); });
+    })
   })
-})
-
-<!-- modal popup when valueboxes are clicked -->
-$(document).ready(function() {
-  $('#dashboard-container').on('flexdashboard:layoutcomplete', 
-    function() {
-      $('#cost').click(function() {
-        $('#md-cost').modal(); });
+  
+  $(document).ready(function() {
+    $('#dashboard-container').on('flexdashboard:layoutcomplete', 
+      function() {
+        $('#cost').click(function() {
+          $('#md-cost').modal(); });
+    })
   })
-})
-
-
-
 </script>
 
 ```{r setup, include=FALSE}
@@ -79,14 +74,29 @@ library(plotly)
 library(stringr)
 library(readr)
 library(here)
+library(leafem)
 
-# read groundwater level and gsas
-gwl <- readr::read_rds(here::here("code", "results", "gwl_2019_avg_ll.rds"))
-gsa <- readr::read_rds(here::here("code", "results", "gsa_ll.rds"))
+# read current groundwater level, mt surface, and gsas
+gwl <- read_rds(here("code", "results", "gwl_2019_avg_ll.rds"))
+mts <- read_rds(here("code", "results", "mt_surface_cv.rds"))
+gsa <- read_rds(here("code", "results", "gsa_ll.rds"))
 
+# store Rmd params as global variables
+selected_gsa     <- "ALL" #params$gsa
+selected_decline <- "mt"  #params$decline
+
+# root url for links
+root <- "https://www.gsawellfailure.com/gsas/"
+
+# value box data
+if(selected_decline == "mt") { vb1 = "Min threshold" }
+if(selected_decline != "mt") { vb1 = paste0(selected_decline, " ft.") }
+# vb2 = filter(results_df, gwl_decline == selected_decline) %>% pull(n_fail)
+# vb3 = filter(results_df, gwl_decline == selected_decline) %>% pull(p_fail)
+# vb4 = filter(results_df, gwl_decline == selected_decline) %>% pull(cost)
+
+# utility functions
 source(here("jamstack", "etc", "functions.R"))
-
-# if(params %in% )is_gsa_page = 
 ```
 
 Row {.sidebar data-width=150 data-padding=10}
@@ -101,43 +111,43 @@ tags$div(
     class="dropbtn", "GSA"),
   tags$div(
     class = "dropdown-content",
-    tags$a(href = "https://www.gsawellfailure.com/ALL/mt", "ALL"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/northern-central/mt", "Northern Central (DM)"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/farmers/mt", "Farmers (DM)"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/east-kaweah/mt", "East Kaweah"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/chowchilla/mt", "Chowchilla"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/madera-joint/mt", "Madera Joint"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/central-kings/mt", "Central Kings"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/north-fork-kings/mt", "North Fork Kings"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/south-kings/mt", "South Kings"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/mc-mullin/mt", "Mc Mullin"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/gravelly-ford-madera/mt", "Gravelly Ford (Madera)"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/pixley-tule/mt", "Pixley (Tule)"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/westside/mt", "Westside"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/greater-kaweah/mt", "Greater Kaweah"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/new-stone-madera/mt", "New Stone (Madera)"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/mid-kaweah/mt", "Mid Kaweah"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/aliso/mt", "Aliso (DM)"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/merced/mt", "Merced"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/kings-river-east/mt", "Kings River East"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/north-kings/mt", "North Kings"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/henry-miller-kern/mt", "Henry Miller (Kern)"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/grassland/mt", "Grassland (DM)"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/tulare-lake/mt", "Tulare Lake"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/east-tule/mt", "East Tule"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/olcese-kern/mt", "Olcese (Kern)"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/root-creek-madera/mt", "Root Creek (Madera)"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/buena-vista-kern/mt", "Buena Vista (Kern)"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/kern-river/mt", "Kern River"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/delano-earlimart-tule/mt", "Delano-Earlimart (Tule)"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/sjrec/mt", "SJREC (DM)"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/fresno-county/mt", "Fresno County (DM)"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/james-kings/mt", "James (Kings)"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/kern-groundwater-authority/mt", "Kern Groundwater Authority"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/eastern-san-joaquin/mt", "Eastern San Joaquin"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/alpaugh-tule/mt", "Alpaugh (Tule)"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/lower-tule-river/mt", "Lower Tule River"),
-    tags$a(href = "https://www.gsawellfailure.com/gsas/tri-county-tule/mt", "Tri-County (Tule)")
+    tags$a(href = paste0(root, "ALL/", selected_decline), "ALL"),
+    tags$a(href = paste0(root, "northern-central/", selected_decline), "Northern Central (DM)"),
+    tags$a(href = paste0(root, "farmers/", selected_decline), "Farmers (DM)"),
+    tags$a(href = paste0(root, "east-kaweah/", selected_decline), "East Kaweah"),
+    tags$a(href = paste0(root, "chowchilla/", selected_decline), "Chowchilla"),
+    tags$a(href = paste0(root, "madera-joint/", selected_decline), "Madera Joint"),
+    tags$a(href = paste0(root, "central-kings/", selected_decline), "Central Kings"),
+    tags$a(href = paste0(root, "north-fork-kings/", selected_decline), "North Fork Kings"),
+    tags$a(href = paste0(root, "south-kings/", selected_decline), "South Kings"),
+    tags$a(href = paste0(root, "mc-mullin/", selected_decline), "Mc Mullin"),
+    tags$a(href = paste0(root, "gravelly-ford-madera/", selected_decline), "Gravelly Ford (Madera)"),
+    tags$a(href = paste0(root, "pixley-tule/", selected_decline), "Pixley (Tule)"),
+    tags$a(href = paste0(root, "westside/", selected_decline), "Westside"),
+    tags$a(href = paste0(root, "greater-kaweah/", selected_decline), "Greater Kaweah"),
+    tags$a(href = paste0(root, "new-stone-madera/", selected_decline), "New Stone (Madera)"),
+    tags$a(href = paste0(root, "mid-kaweah/", selected_decline), "Mid Kaweah"),
+    tags$a(href = paste0(root, "aliso/", selected_decline), "Aliso (DM)"),
+    tags$a(href = paste0(root, "merced/", selected_decline), "Merced"),
+    tags$a(href = paste0(root, "kings-river-east/", selected_decline), "Kings River East"),
+    tags$a(href = paste0(root, "north-kings/", selected_decline), "North Kings"),
+    tags$a(href = paste0(root, "henry-miller-kern/", selected_decline), "Henry Miller (Kern)"),
+    tags$a(href = paste0(root, "grassland/", selected_decline), "Grassland (DM)"),
+    tags$a(href = paste0(root, "tulare-lake/", selected_decline), "Tulare Lake"),
+    tags$a(href = paste0(root, "east-tule/", selected_decline), "East Tule"),
+    tags$a(href = paste0(root, "olcese-kern/", selected_decline), "Olcese (Kern)"),
+    tags$a(href = paste0(root, "root-creek-madera/", selected_decline), "Root Creek (Madera)"),
+    tags$a(href = paste0(root, "buena-vista-kern/", selected_decline), "Buena Vista (Kern)"),
+    tags$a(href = paste0(root, "kern-river/", selected_decline), "Kern River"),
+    tags$a(href = paste0(root, "delano-earlimart-tule/", selected_decline), "Delano-Earlimart (Tule)"),
+    tags$a(href = paste0(root, "sjrec/", selected_decline), "SJREC (DM)"),
+    tags$a(href = paste0(root, "fresno-county/", selected_decline), "Fresno County (DM)"),
+    tags$a(href = paste0(root, "james-kings/", selected_decline), "James (Kings)"),
+    tags$a(href = paste0(root, "kern-groundwater-authority/", selected_decline), "Kern Groundwater Authority"),
+    tags$a(href = paste0(root, "eastern-san-joaquin/", selected_decline), "Eastern San Joaquin"),
+    tags$a(href = paste0(root, "alpaugh-tule/", selected_decline), "Alpaugh (Tule)"),
+    tags$a(href = paste0(root, "lower-tule-river/", selected_decline), "Lower Tule River"),
+    tags$a(href = paste0(root, "tri-county-tule/", selected_decline), "Tri-County (Tule)")
     )
 )
 
@@ -145,27 +155,26 @@ tags$br()
 tags$br()
 
 # groundwater level dropdown
-# if(is_gsa_page == TRUE){ evaluate }
 tags$div(
   class="dropdown",
   tags$button(
     class="dropbtn", paste0("Groundwater scenario")),
   tags$div(
     class = "dropdown-content",
-    tags$a(href = "https://www.richpauloo.com", "Minimum Threshold"),
-    tags$a(href = "https://www.richpauloo.com", "0 ft decline"),
-    tags$a(href = "https://www.richpauloo.com", "10 ft decline"),
-    tags$a(href = "https://www.richpauloo.com", "20 ft decline"),
-    tags$a(href = "https://www.richpauloo.com", "30 ft decline"),
-    tags$a(href = "https://www.richpauloo.com", "40 ft decline"),
-    tags$a(href = "https://www.richpauloo.com", "50 ft decline"),
-    tags$a(href = "https://www.richpauloo.com", "100 ft decline"),
-    tags$a(href = "https://www.richpauloo.com", "150 ft decline"),
-    tags$a(href = "https://www.richpauloo.com", "200 ft decline"),
-    tags$a(href = "https://www.richpauloo.com", "250 ft decline"),
-    tags$a(href = "https://www.richpauloo.com", "300 ft decline"),
-    tags$a(href = "https://www.richpauloo.com", "400 ft decline"),
-    tags$a(href = "https://www.richpauloo.com", "500 ft decline")
+    tags$a(href = paste0(root, selected_gsa, "/", "mt"),  "Minimum Threshold"),
+    tags$a(href = paste0(root, selected_gsa, "/", "0"),   "0 ft decline"),
+    tags$a(href = paste0(root, selected_gsa, "/", "10"),  "10 ft decline"),
+    tags$a(href = paste0(root, selected_gsa, "/", "20"),  "20 ft decline"),
+    tags$a(href = paste0(root, selected_gsa, "/", "30"),  "30 ft decline"),
+    tags$a(href = paste0(root, selected_gsa, "/", "40"),  "40 ft decline"),
+    tags$a(href = paste0(root, selected_gsa, "/", "50"),  "50 ft decline"),
+    tags$a(href = paste0(root, selected_gsa, "/", "100"), "100 ft decline"),
+    tags$a(href = paste0(root, selected_gsa, "/", "150"), "150 ft decline"),
+    tags$a(href = paste0(root, selected_gsa, "/", "200"), "200 ft decline"),
+    tags$a(href = paste0(root, selected_gsa, "/", "250"), "250 ft decline"),
+    tags$a(href = paste0(root, selected_gsa, "/", "300"), "300 ft decline"),
+    tags$a(href = paste0(root, selected_gsa, "/", "400"), "400 ft decline"),
+    tags$a(href = paste0(root, selected_gsa, "/", "500"), "500 ft decline")
     )
 )
 ```
@@ -176,6 +185,7 @@ Row
 -----------------------------------------------------------------------
 
 ```{r}
+# markdown files for methods behind each of the reported statistics, obtained when clicking value boxes
 bs_modal(
   id = "md-instructions",
   title = "Using Markdown",
@@ -204,6 +214,7 @@ bs_modal(
 ```
 
 ```{r, include=FALSE}
+# continuation of the above
 bs_button("Click for modal", button_type = "primary") %>%
   bs_attach_modal("md-instructions")
 bs_button("Click for modal", button_type = "primary") %>%
@@ -219,24 +230,30 @@ bs_button("Click for modal", button_type = "primary") %>%
 
 ### Groundwater level decline
 ```{r}
-valueBox("Min threshold",
+valueBox(vb1,
          color = "primary",
          icon = "ion-arrow-down-a")
 ```
 
 ### Well failures
 ```{r}
-valueBox("5000-10000", color = "danger", icon = "fa-times-circle")
+valueBox("5000-10000", #vb2,
+         color = "danger", 
+         icon = "fa-times-circle")
 ```
 
 ### Percent of failing wells
 ```{r}
-valueBox("15-60", color = "warning", icon = "fa-percent")
+valueBox("15-60", #vb2,
+         color = "warning", 
+         icon = "fa-percent")
 ```
 
 ### Cost
 ```{r}
-valueBox("$1.2-1.3M", color = "success", icon = "ion-cash")
+valueBox("$1.2-1.3M", #vb2,
+         color = "success", 
+         icon = "ion-cash")
 ```
 
 
@@ -248,10 +265,7 @@ Row
 ```{r, leaflet}
 # color palettes for gwl decline
 col <- rev(colormap::colormap(colormap::colormaps$magma, nshades = 20))
-pal <- colorNumeric(col, raster::values(gwl), na.color = "transparent")
-
-#pal2 <- colorNumeric(col, raster::values(gwl)/2, na.color = "transparent")
-gwl2 <- gwl/2
+pal <- colorNumeric(col, raster::values(mts), na.color = "transparent")
 
 gsa_names <- gsa@data$gsp_name %>% 
   tolower() %>% 
@@ -259,8 +273,9 @@ gsa_names <- gsa@data$gsp_name %>%
   str_remove_all(" dm") %>% 
   str_replace_all(" |-", "_") 
 
-# read all plotly in for testing
-l <- vector("list", length(gsa_names))
+# read all plotly plots in
+if(selected_gsa == "ALL"){
+  l <- vector("list", length(gsa_names))
 for(i in 1:length(gsa_names)){
   l[[i]] <- 
     read_rds(paste0("~/Github/aife/plotly/mt_", gsa_names[i], ".rds")) %>% 
@@ -269,19 +284,26 @@ for(i in 1:length(gsa_names)){
     as.character() %>% 
     stringr::str_replace("height:400px","height:100%")
   l[[i]] <- 
-    paste0("<em><b>", gsa@data$gsp_name[i], "</b></em><br>",
+    paste0("<em><b>", 
+           tags$a(gsa@data$gsp_name[i], 
+                  href = 
+                    paste0(root, gsa_names[i], "/", selected_decline)
+                  ),
+           "</b></em><br>",
            "N-M wells fail at min threshold<br>",
            "$X-Y estimated cost<br>",
            l[[i]]
     )
 }
+}
 
 
-# test
+# map 
 leaflet(gsa) %>% 
   
   # tiles
-  addProviderTiles(providers$CartoDB,             group = "Light") %>% 
+  addProviderTiles(providers$CartoDB,             
+                   group = "Light") %>% 
   
   # center
   setView(-119.7, 36.8, 7) %>% 
@@ -289,9 +311,9 @@ leaflet(gsa) %>%
   # groundwater level
   addRasterImage(gwl, opacity = 0.8, colors = pal,
                  layerId = "2019", group = "2019 groundwater level") %>%
-  addRasterImage(gwl2, opacity = 0.8, colors = pal,
+  addRasterImage(mts, opacity = 0.8, colors = pal,
                  layerId = "2040", group = "2040 min threshold") %>%
-  addLegend(pal = pal, values = raster::values(gwl),
+  addLegend(pal = pal, values = raster::values(mts),
             title    = "Groundwater <br>level (ft. BLS)",
             position = "bottomright") %>%
   
@@ -300,7 +322,7 @@ leaflet(gsa) %>%
   leafem::addImageQuery(gwl, type="mousemove", layerId = "2019",
                         group = "2019 groundwater level", prefix = "",
                         digits = 2, position = "bottomright") %>%
-  leafem::addImageQuery(gwl2, type="mousemove", layerId = "2040",
+  leafem::addImageQuery(mts, type="mousemove", layerId = "2040",
                         group = "2040 min threshold", prefix = "",
                         digits = 2, position = "bottomright") %>%
   
@@ -326,7 +348,7 @@ leaflet(gsa) %>%
               highlightOptions = 
                 highlightOptions(color = "black", weight = 2,
                                  bringToFront = TRUE),
-              labelOptions = labelOptions(textsize = "13px"),               
+              labelOptions = labelOptions(textsize = "13px"),
               popup = l
   ) %>% 
   
@@ -343,7 +365,7 @@ leaflet(gsa) %>%
 
 ### Forecasted well failure rates
 ```{r, plot}
-readr::read_rds("../plotly/mt_ALL.rds")
+readr::read_rds(paste0("../plotly/", selected_decline, "_", selected_gsa, ".rds"))
 ```
 
 
