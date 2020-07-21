@@ -12,6 +12,9 @@ output:
     self_contained: false
     #logo: etc/cwq_8_pixels.png
     #favicon: etc/cwq_8_pixels.png
+params: 
+  selected_gsa: "hold"
+  selected_decline: "hold"
 ---
 
 <!-- a wee bit of JS that allows a modal popup when the first -->
@@ -82,21 +85,41 @@ mts <- read_rds(here("code", "results", "mt_surface_cv.rds"))
 gsa <- read_rds(here("code", "results", "gsa_ll.rds"))
 
 # store Rmd params as global variables
-selected_gsa     <- "ALL" #params$gsa
-selected_decline <- "mt"  #params$decline
+selected_gsa     <- "tri_county_tule"#params$selected_gsa
+selected_decline <- "0"#params$selected_decline
 
-# root url for links
-root <- "https://www.gsawellfailure.com/gsas/"
+# read model output and filter to the correct gsa and decline
+# d <- read_rds(here("code", "results", "model_results.rds")) %>% 
+#   filter(gwl_decline == selected_decline & gsa == selected_gsa)
+
+# read model output well data
+# wells <- read_rds(here("code", "results", "well_results.rds")) %>% 
+#   filter(gwl_decline == selected_decline & gsa == selected_gsa)
 
 # value box data
 if(selected_decline == "mt") { vb1 = "Min threshold" }
 if(selected_decline != "mt") { vb1 = paste0(selected_decline, " ft.") }
-# vb2 = filter(results_df, gwl_decline == selected_decline) %>% pull(n_fail)
-# vb3 = filter(results_df, gwl_decline == selected_decline) %>% pull(p_fail)
-# vb4 = filter(results_df, gwl_decline == selected_decline) %>% pull(cost)
+# vb2 = filter(d, gwl_decline == selected_decline) %>% pull(n_fail)
+# vb3 = filter(d, gwl_decline == selected_decline) %>% pull(p_fail)
+# vb4 = filter(d, gwl_decline == selected_decline) %>% pull(cost)
+
+# gsa names
+gsa_names <- gsa@data$gsp_name %>% 
+  tolower() %>% 
+  str_remove_all("[\\(\\)]") %>% 
+  str_remove_all(" dm") %>% 
+  str_replace_all(" |-", "_") 
+
+# filter gsa polygons to selected_gsa
+if(selected_gsa != "ALL") {
+  gsa <- gsa[which(gsa_names == selected_gsa), ]
+}
 
 # utility functions
 source(here("jamstack", "etc", "functions.R"))
+  
+# root url for links
+root <- "https://www.gsawellfailure.com/gsas/"
 ```
 
 Row {.sidebar data-width=150 data-padding=10}
@@ -267,36 +290,37 @@ Row
 col <- rev(colormap::colormap(colormap::colormaps$magma, nshades = 20))
 pal <- colorNumeric(col, raster::values(mts), na.color = "transparent")
 
-gsa_names <- gsa@data$gsp_name %>% 
-  tolower() %>% 
-  str_remove_all("[\\(\\)]") %>% 
-  str_remove_all(" dm") %>% 
-  str_replace_all(" |-", "_") 
-
 # read all plotly plots in
-if(selected_gsa == "ALL"){
+if(selected_gsa == "ALL") {
   l <- vector("list", length(gsa_names))
-for(i in 1:length(gsa_names)){
-  l[[i]] <- 
-    read_rds(paste0("~/Github/aife/plotly/mt_", gsa_names[i], ".rds")) %>% 
-    as.tags() %>%
-    {tags$div(style="width:270px; height:220px;", .)} %>%
-    as.character() %>% 
-    stringr::str_replace("height:400px","height:100%")
-  l[[i]] <- 
-    paste0("<em><b>", 
-           tags$a(gsa@data$gsp_name[i], 
-                  href = 
-                    paste0(root, gsa_names[i], "/", selected_decline)
-                  ),
-           "</b></em><br>",
-           "N-M wells fail at min threshold<br>",
-           "$X-Y estimated cost<br>",
-           l[[i]]
-    )
-}
+  for(i in 1:length(gsa_names)){
+    l[[i]] <- 
+      read_rds(paste0("~/Github/aife/plotly/mt_", gsa_names[i], ".rds")) %>% 
+      as.tags() %>%
+      {tags$div(style="width:270px; height:220px;", .)} %>%
+      as.character() %>% 
+      stringr::str_replace("height:400px","height:100%")
+    l[[i]] <- 
+      paste0("<em><b>", 
+             tags$a(gsa@data$gsp_name[i], 
+                    href = 
+                      paste0(root, gsa_names[i], "/", selected_decline)
+                    ),
+             "</b></em><br>",
+             "N-M wells fail at min threshold<br>",
+             "$X-Y estimated cost<br>",
+             l[[i]]
+      )
+  }
 }
 
+if(selected_gsa != "ALL") { l <- NULL}
+
+# setZoom parameters
+xy        <- sp::bbox(gsa) %>% apply(1, mean)
+names(xy) <- NULL
+xy        <- xy + c(0.4, 0.2)
+zoom      <- ifelse(selected_gsa == "ALL", 7, 8)
 
 # map 
 leaflet(gsa) %>% 
@@ -304,9 +328,6 @@ leaflet(gsa) %>%
   # tiles
   addProviderTiles(providers$CartoDB,             
                    group = "Light") %>% 
-  
-  # center
-  setView(-119.7, 36.8, 7) %>% 
   
   # groundwater level
   addRasterImage(gwl, opacity = 0.8, colors = pal,
@@ -334,15 +355,24 @@ leaflet(gsa) %>%
                                          position = "bottomleft")
   ) %>%
   
-  # zoom to home
+  # center
+  # setView(-119.7, 36.8, 7) %>% 
+  setView(xy[1], xy[2], zoom) %>% 
+  
+  # zoom to center
   addEasyButton(easyButton(
-    icon="fa-globe", title="Zoom to Level 1",
-    onClick=JS("function(btn, map){ map.setView([36.8, -119.7], 7); }"),
+    icon="fa-globe", title="Zoom to center",
+    onClick=JS(
+      paste0("function(btn, map){ map.setView([",
+             #"36.8, -119.7], 7)",
+             xy[2], ",", xy[1], "],", zoom, ")",
+             "; }")
+      ),
     position = "topleft")
   ) %>% 
   
   # polygons
-  addPolygons(data = gsa, weight = 1, opacity = 1, fillOpacity = 0.1, 
+  addPolygons(data = gsa, weight = 1, opacity = 1, fillOpacity = 0.1,
               group = "critical priority GSAs",
               label = ~gsp_name, 
               highlightOptions = 
