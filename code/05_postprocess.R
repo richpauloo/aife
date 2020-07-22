@@ -22,17 +22,6 @@ gsa_names <- gsa@data$gsp_name %>%
   str_replace_all(" |-", "_") %>% 
   c("ALL", .)
 
-if(!dir.exists("~/Github/jbp/gsas")){
-  dir.create("~/Github/jbp/gsas")
-  for(i in 1:nrow(gsa)) {
-    dir.create(paste0("~/Github/jbp/gsas/", gsa_names[i]))
-    dir.create(paste0("~/Github/jbp/gsas/", gsa_names[i], "/mt"))
-    for(j in 1:length(decline_v)){
-      dir.create(paste0("~/Github/jbp/gsas/", gsa_names[i], "/", decline_v[j]))
-    }
-  }
-}
-
 # plotly buttons to remove
 buttons_to_remove <- 
   list("zoom2d", "select2d", "lasso2d", "autoscale",
