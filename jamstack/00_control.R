@@ -54,8 +54,8 @@ if(!dir.exists("~/Github/jbp/gsas")){
 # ------------------------------------------------------------------------
 # write the index.html files
 # ------------------------------------------------------------------------
-for(i in 1:2){#:length(gsa_names)) {
-  for(j in 1:2){#:length(decline_v)) {
+for(i in 1:length(gsa_names)) {
+  for(j in 1:length(decline_v)) {
     write_html_files(gsa_names[i], decline_v[j])
     
     # move index_files to top level directory
