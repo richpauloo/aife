@@ -313,7 +313,9 @@ if(selected_gsa == "ALL") {
       paste0("<em><b>", 
              tags$a(gsa@data$gsp_name[i], 
                     href = 
-                      paste0(root, gsa_names[i], "/", selected_decline)
+                      paste0(root, 
+                             str_replace_all(gsa_names[i],"_","-"),
+                                             "/", selected_decline)
                     ),
              "</b></em><br>",
              "N-M wells fail at ", selected_decline_ft ,"<br>",
