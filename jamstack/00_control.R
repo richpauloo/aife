@@ -57,7 +57,7 @@ if(!dir.exists("~/Github/jbp/gsas")){
 
 
 # ------------------------------------------------------------------------
-# write the index.html files
+# write the index.html files - takes about 30 min for ~500 files
 # ------------------------------------------------------------------------
 for(i in 1:length(gsa_names)) {
   for(j in 1:length(decline_v)) {
@@ -92,3 +92,4 @@ for(i in 1:length(gsa_names)) {
   }
 }
 # gsa_names[1]; decline_v[1]
+
