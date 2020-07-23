@@ -9,7 +9,10 @@ library(tidyverse)
 write_html_files <- function(x, y) {
   rmarkdown::render(
     input          = here("jamstack", "01_index.Rmd"), 
-    output_dir     = paste0(site_dir, x, "/", y),
+    output_dir     = paste0(site_dir, 
+                            str_replace_all(x,"_","-"), 
+                            "/", 
+                            y),
     output_file    = "index.html",
     params         = list(selected_gsa = x, selected_decline = y),
     output_options = list(self_contained = FALSE, 
@@ -36,6 +39,8 @@ decline_v <- c(0,10,20,30,40,50,100,150,200,250,300,400,500)
 gsa_names <- c("ALL", gsa_names)
 decline_v <- c("mt" , decline_v)
 
+gsa_names_url <- str_replace_all(gsa_names, "_", "-")
+
 
 # ------------------------------------------------------------------------
 # create directory structure
@@ -43,9 +48,9 @@ decline_v <- c("mt" , decline_v)
 if(!dir.exists("~/Github/jbp/gsas")){
   dir.create("~/Github/jbp/gsas")
   for(i in 1:length(gsa_names)) {
-    dir.create(paste0("~/Github/jbp/gsas/", gsa_names[i]))
+    dir.create(paste0("~/Github/jbp/gsas/", gsa_names_url[i]))
     for(j in 1:length(decline_v)){
-      dir.create(paste0("~/Github/jbp/gsas/", gsa_names[i], "/", decline_v[j]))
+      dir.create(paste0("~/Github/jbp/gsas/", gsa_names_url[i], "/", decline_v[j]))
     }
   }
 }
@@ -63,9 +68,9 @@ for(i in 1:length(gsa_names)) {
       if( !dir.exists("~/Github/jbp/index_files") ) {
         dir.create("~/Github/jbp/index_files")
       }
-      file.copy(paste0(site_dir, gsa_names[i], "/", decline_v[j], "/index_files"),
+      file.copy(paste0(site_dir, gsa_names_url[i], "/", decline_v[j], "/index_files"),
                 paste0("~/Github/jbp/"), recursive = TRUE)
-      lines <- read_lines(paste0(site_dir, gsa_names[i], "/", decline_v[j], "/index.html"))
+      lines <- read_lines(paste0(site_dir, gsa_names_url[i], "/", decline_v[j], "/index.html"))
       replace <- lines[str_which(lines, "X2019|X2040")]
       # write the ALL/mt index to the root directory
       lines %>% 
@@ -75,14 +80,14 @@ for(i in 1:length(gsa_names)) {
     
     # find file, read it in, and change paths to reference the index_files that
     # were moved above. pay special attention to the hashed groundwater level id
-    file_loc <-  paste0(site_dir, gsa_names[i], "/", decline_v[j], "/index.html")
+    file_loc <-  paste0(site_dir, gsa_names_url[i], "/", decline_v[j], "/index.html")
     lines    <- read_lines(file_loc)
     lines[str_which(lines, "X2019|X2040")] <- replace
     lines %>% 
       str_replace_all('script src="index_files', 'script src="../../../index_files') %>%
       str_replace_all('link href="index_files',  'link href="../../../index_files') %>% 
       write_lines(file_loc)
-    unlink(paste0(site_dir, gsa_names[i], "/", decline_v[j], "/index_files"),
+    unlink(paste0(site_dir, gsa_names_url[i], "/", decline_v[j], "/index_files"),
            recursive=TRUE)
   }
 }
