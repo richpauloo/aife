@@ -8,8 +8,9 @@ output:
       - { title: "Instructions",  align: right}
       - { title: "About", href: "https://www.gsawellfailure.com", align: right}
       - { icon: "fa-github", href: "https://www.github.com/richpauloo/aife", align: right}
-    css: etc/w3.css
-    self_contained: false
+    #css: /Users/richpauloo/Github/aife/jamstack/etc/w3.css
+    #self_contained: false
+    #lib_dir: libs
     #logo: etc/cwq_8_pixels.png
     #favicon: etc/cwq_8_pixels.png
 params: 
@@ -85,8 +86,11 @@ mts <- read_rds(here("code", "results", "mt_surface_cv.rds"))
 gsa <- read_rds(here("code", "results", "gsa_ll.rds"))
 
 # store Rmd params as global variables
-selected_gsa     <- "tri_county_tule"#params$selected_gsa
-selected_decline <- "0"#params$selected_decline
+selected_gsa     <- params$selected_gsa #"tri_county_tule"
+selected_decline <- params$selected_decline #"0"
+selected_decline_ft <- ifelse(selected_decline != "mt",
+                              paste0(selected_decline, " ft. of decline"),
+                              "Minimum Threshold")
 
 # read model output and filter to the correct gsa and decline
 # d <- read_rds(here("code", "results", "model_results.rds")) %>% 
@@ -284,7 +288,7 @@ valueBox("$1.2-1.3M", #vb2,
 Row
 -----------------------------------------------------------------------
 
-### GSAs and groundwater surfaces 
+### `r ifelse(selected_gsa != "mt", paste0(gsa@data$gsp_name, " GSA and groundwater levels"), "All critical priority GSAs and groundwater levels")`
 ```{r, leaflet}
 # color palettes for gwl decline
 col <- rev(colormap::colormap(colormap::colormaps$magma, nshades = 20))
@@ -295,7 +299,11 @@ if(selected_gsa == "ALL") {
   l <- vector("list", length(gsa_names))
   for(i in 1:length(gsa_names)){
     l[[i]] <- 
-      read_rds(paste0("~/Github/aife/plotly/mt_", gsa_names[i], ".rds")) %>% 
+      read_rds(
+        paste0("~/Github/aife/plotly/",
+               selected_decline,"_", gsa_names[i], ".rds"
+        )
+      ) %>% 
       as.tags() %>%
       {tags$div(style="width:270px; height:220px;", .)} %>%
       as.character() %>% 
@@ -307,7 +315,7 @@ if(selected_gsa == "ALL") {
                       paste0(root, gsa_names[i], "/", selected_decline)
                     ),
              "</b></em><br>",
-             "N-M wells fail at min threshold<br>",
+             "N-M wells fail at ", selected_decline_ft ,"<br>",
              "$X-Y estimated cost<br>",
              l[[i]]
       )
@@ -337,15 +345,6 @@ leaflet(gsa) %>%
   addLegend(pal = pal, values = raster::values(mts),
             title    = "Groundwater <br>level (ft. BLS)",
             position = "bottomright") %>%
-  
-  # raster value display
-  leafem::addMouseCoordinates() %>%
-  leafem::addImageQuery(gwl, type="mousemove", layerId = "2019",
-                        group = "2019 groundwater level", prefix = "",
-                        digits = 2, position = "bottomright") %>%
-  leafem::addImageQuery(mts, type="mousemove", layerId = "2040",
-                        group = "2040 min threshold", prefix = "",
-                        digits = 2, position = "bottomright") %>%
   
   # layer control
   addLayersControl(
@@ -382,6 +381,16 @@ leaflet(gsa) %>%
               popup = l
   ) %>% 
   
+  # raster value display
+  leafem::addMouseCoordinates() %>%
+  leafem::addImageQuery(gwl, type="mousemove", layerId = "2019",
+                        group = "2019 groundwater level", prefix = "",
+                        digits = 2, position = "bottomright") %>%
+  leafem::addImageQuery(mts, type="mousemove", layerId = "2040",
+                        group = "2040 min threshold", prefix = "",
+                        digits = 2, position = "bottomright") %>% 
+  
+  # JS for polygon popups
   onRender(
     "function(el,x) {
     this.on('popupopen', function() {HTMLWidgets.staticRender(); remove()})
@@ -393,7 +402,7 @@ leaflet(gsa) %>%
   browsable()
 ```
 
-### Forecasted well failure rates
+### `r ifelse(selected_gsa != "ALL", paste0("Forecasted well failure rates for ", gsa@data$gsp_name), "Forecasted well failure rates for all critical priority GSAs")`
 ```{r, plot}
 readr::read_rds(paste0("../plotly/", selected_decline, "_", selected_gsa, ".rds"))
 ```
