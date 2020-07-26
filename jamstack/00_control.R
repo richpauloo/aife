@@ -6,7 +6,7 @@ library(here)
 library(tidyverse)
 
 # function to generate CCR index.htmls  
-write_html_files <- function(x, y) {
+write_html_files <- function(x, y, w, z) {
   rmarkdown::render(
     input          = here("jamstack", "01_index.Rmd"), 
     output_dir     = paste0(site_dir, 
@@ -14,7 +14,8 @@ write_html_files <- function(x, y) {
                             "/", 
                             y),
     output_file    = "index.html",
-    params         = list(selected_gsa = x, selected_decline = y),
+    params         = list(selected_gsa = x, selected_decline = y,
+                          gsa_names_full = w, decline_v_full = z),
     output_options = list(self_contained = FALSE, 
                           #lib_dir = "../../../libs/",
                           css     = "../../../etc/w3.css")
@@ -39,19 +40,29 @@ decline_v <- c(0,10,20,30,40,50,100,150,200,250,300,400,500)
 gsa_names <- c("ALL", gsa_names)
 decline_v <- c("mt" , decline_v)
 
+# full GSA names and GWL decline scenarios for the report title
+gsa_names_full <- 
+  c("ALL", 
+    read_rds(here("code", "results", "gsa_ll.rds"))@data$gsp_name
+  )
+decline_v_full <- 
+  c("Min Threshold", paste0(decline_v[2:length(decline_v)], " ft."))
+
 gsa_names_url <- str_replace_all(gsa_names, "_", "-")
 
 
 # ------------------------------------------------------------------------
 # create directory structure
 # ------------------------------------------------------------------------
-if(!dir.exists("~/Github/jbp/gsas")){
-  dir.create("~/Github/jbp/gsas")
-  for(i in 1:length(gsa_names)) {
-    dir.create(paste0("~/Github/jbp/gsas/", gsa_names_url[i]))
-    for(j in 1:length(decline_v)){
-      dir.create(paste0("~/Github/jbp/gsas/", gsa_names_url[i], "/", decline_v[j]))
-    }
+unlink("~/Github/jbp/gsas", recursive = TRUE)
+dir.create("~/Github/jbp/gsas")
+for(i in 1:length(gsa_names)) {
+  dir.create(paste0("~/Github/jbp/gsas/", gsa_names_url[i]))
+  for(j in 1:length(decline_v)){
+    dir.create(paste0("~/Github/jbp/gsas/", 
+                      gsa_names_url[i], "/",
+                      decline_v[j])
+    )
   }
 }
 
@@ -59,9 +70,10 @@ if(!dir.exists("~/Github/jbp/gsas")){
 # ------------------------------------------------------------------------
 # write the index.html files - takes about 30 min for ~500 files
 # ------------------------------------------------------------------------
-for(i in 1:length(gsa_names)) {
-  for(j in 1:length(decline_v)) {
-    write_html_files(gsa_names[i], decline_v[j])
+for(i in 1:2){#length(gsa_names)) {
+  for(j in 1:2){#length(decline_v)) {
+    write_html_files(gsa_names[i], decline_v[j],
+                     gsa_names_full[i], decline_v_full[j])
     
     # move index_files to top level directory
     if(i == 1 & j == 1) {

@@ -1,5 +1,5 @@
 ---
-title: "GSA well failure"
+title: '`r paste0("GSA well failure ", " /  ", params$gsa_names_full, "  /  ", params$decline_v_full)`'
 output: 
   flexdashboard::flex_dashboard:
     vertical_layout: fill
@@ -14,8 +14,10 @@ output:
     #logo: etc/cwq_8_pixels.png
     #favicon: etc/cwq_8_pixels.png
 params: 
-  selected_gsa: "hold"
+  selected_gsa:     "hold"
   selected_decline: "hold"
+  gsa_names_full:   "hold"
+  decline_v_full:   "hold"
 ---
 
 <!-- a wee bit of JS that allows a modal popup when the first -->
