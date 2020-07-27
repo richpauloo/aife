@@ -88,9 +88,9 @@ mts <- read_rds(here("code", "results", "mt_surface_cv.rds"))
 gsa <- read_rds(here("code", "results", "gsa_ll.rds"))
 
 # store Rmd params as global variables
-selected_gsa     <- params$selected_gsa #"tri_county_tule"
+selected_gsa     <- "ALL"#params$selected_gsa #"tri_county_tule"
 selected_gsa_url <- str_replace_all(selected_gsa, "_", "-")
-selected_decline <- params$selected_decline #"0"
+selected_decline <- "mt"#params$selected_decline #"0"
 selected_decline_ft <- ifelse(selected_decline != "mt",
                               paste0(selected_decline, " ft. of decline"),
                               "Minimum Threshold")
@@ -294,8 +294,9 @@ Row
 ### `r ifelse(selected_gsa != "mt", paste0(gsa@data$gsp_name, " GSA and groundwater levels"), "All critical priority GSAs and groundwater levels")`
 ```{r, leaflet}
 # color palettes for gwl decline
-col <- rev(colormap::colormap(colormap::colormaps$magma, nshades = 20))
-pal <- colorNumeric(col, raster::values(mts), na.color = "transparent")
+col <- rev(colormap::colormap(colormap::colormaps$magma, nshades = 100))
+# hack the color pal to include values in both scales (use -10)
+pal <- colorNumeric(col, c(-10,raster::values(mts)), na.color = "transparent")
 
 # read all plotly plots in
 if(selected_gsa == "ALL") {
@@ -336,17 +337,17 @@ xy        <- xy + c(0.4, 0.2)
 zoom      <- ifelse(selected_gsa == "ALL", 7, 8)
 
 # map 
-leaflet(gsa) %>% 
+leaflet() %>% 
   
   # tiles
-  addProviderTiles(providers$CartoDB,             
-                   group = "Light") %>% 
+  addProviderTiles("CartoDB") %>% 
   
   # groundwater level
-  addRasterImage(gwl, opacity = 0.8, colors = pal,
+  addRasterImage(gwl, opacity = 0.8, colors = pal, 
                  layerId = "2019", group = "2019 groundwater level") %>%
-  addRasterImage(mts, opacity = 0.8, colors = pal,
+  addRasterImage(mts, opacity = 0.8, colors = pal, 
                  layerId = "2040", group = "2040 min threshold") %>%
+
   addLegend(pal = pal, values = raster::values(mts),
             title    = "Groundwater <br>level (ft. BLS)",
             position = "bottomright") %>%
@@ -355,7 +356,7 @@ leaflet(gsa) %>%
   addLayersControl(
     overlayGroups = c("critical priority GSAs"),
     baseGroups    = c("2019 groundwater level", "2040 min threshold"),
-    options       = layersControlOptions(collapsed = TRUE,
+    options       = layersControlOptions(collapsed = FALSE,
                                          position = "bottomleft")
   ) %>%
   
@@ -375,6 +376,9 @@ leaflet(gsa) %>%
     position = "topleft")
   ) %>% 
   
+  # full screen
+  leaflet.extras::addFullscreenControl(position = "topleft") %>% 
+
   # polygons
   addPolygons(data = gsa, weight = 1, opacity = 1, fillOpacity = 0.1,
               group = "critical priority GSAs",
@@ -393,7 +397,7 @@ leaflet(gsa) %>%
                         digits = 2, position = "bottomright") %>%
   leafem::addImageQuery(mts, type="mousemove", layerId = "2040",
                         group = "2040 min threshold", prefix = "",
-                        digits = 2, position = "bottomright") %>% 
+                        digits = 2, position = "bottomright") %>%
   
   # JS for polygon popups
   onRender(
