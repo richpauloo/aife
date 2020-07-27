@@ -7,7 +7,8 @@ library(raster)
 library(tidyverse)
 
 # cost per failed well in millions
-cost_per_failed_well <- 3000/1e6
+cost_per_well_lowering    <- 100 # USD $100 / ft
+cost_per_well_replacement <- 115 * 100 # USD $115 / ft for 100 ft
 
 # read wells, initial groundwater level conditions, and gsas
 d   <- read_rds(here("code", "results", "dom_wells_ll.rds"))
@@ -23,6 +24,11 @@ gsa <- readr::read_rds(here::here("code", "results", "gsa_ll.rds"))
 # vector of groundwater level declines.
 # then, subset for individual GSAs and calculate stats there.
 # dropdown menu should provide 10 bins
+
+# debugging
+# selected_gsp = "ALL"
+# decline = seq(10, 500, 10)
+# j=1
 
 run_model <- function(d, selected_gsp, decline){
 
@@ -42,9 +48,22 @@ run_model <- function(d, selected_gsp, decline){
              "active","failing"
              ) %>% 
       as.data.frame() %>% 
-      setNames(paste0("high_", decline[j])) 
+      setNames(paste0("high_", decline[j])) %>% 
+      mutate(
+        lowering_cost = 
+          (d@data$tot_depth_msh - d@data$mean_ci_lower) *
+           cost_per_well_lowering
+      ) 
+    # only enforce a lowering cost if the well fails at the pump_loc
+    result_pump_loc$lowering_cost <- 
+      ifelse(
+        result_pump_loc[, paste0("high_", decline[j])] == "active",
+        0, result_pump_loc$lowering_cost
+      )
+    names(result_pump_loc)[2] <- paste0("lowering_cost_", decline[j])
     
-    # low estimate of well failure (total completed depth + min suction head)
+    # low estimate of well failure (total completed depth + 
+    # min net positive suction head of 3 meters)
     result_tot_dpth <- 
       ifelse(d@data$tot_depth_msh >= (d@data$gwl_2019 + decline[j]), 
              "active","failing"
@@ -53,7 +72,27 @@ run_model <- function(d, selected_gsp, decline){
       setNames(paste0("low_", decline[j]))
     
     # bind to d
-    d@data <- cbind.data.frame(d@data, result_pump_loc, result_tot_dpth)
+    d@data <- cbind.data.frame(d@data, result_pump_loc, result_tot_dpth) 
+    
+    # calculate total cost and bind to d, then rename
+    total_cost <- 
+      tibble(
+        h  = d@data[,paste0("high_", decline[j])],
+        l  = d@data[,paste0("low_", decline[j])],
+        lc = d@data[,paste0("lowering_cost_", decline[j])]
+      ) %>% 
+      mutate(
+        total_cost = 
+          ifelse(
+            h == "failing" & l == "failing", 
+            lc + cost_per_well_replacement, 
+            lc
+          )
+        ) %>% 
+      pull(total_cost)
+    
+    d@data$total_cost <- total_cost
+    names(d@data)[length(d@data)] <- paste0("total_cost_", decline[j])
     
     # for sanity checking & debugging
     #lapply(list(result_pump_loc, result_tot_dpth), table)
@@ -67,29 +106,36 @@ run_model <- function(d, selected_gsp, decline){
   failp <- dplyr::select(d@data, matches("low_|high_")) %>% 
     apply(2, function(x) length(x[x == "failing"])/nrow(d)) 
   
+  # sum high and low total_cost per gsa nd decline scenario
+  tot_cost <- dplyr::select(d@data, matches("total_cost_")) %>% 
+    apply(2, sum) 
+  
   # create errorbar dataframe for ggplot/plotly
   edf <- tibble(decline    = decline, 
                 failn_high = failn[seq(1,length(failn),2)],
                 failn_low  = failn[seq(2,length(failn),2)],
                 failp_high = failp[seq(1,length(failp),2)],
                 failp_low  = failp[seq(2,length(failp),2)]) %>% 
-    mutate(cost_low  = failn_low  * cost_per_failed_well,
-           cost_high = failn_high * cost_per_failed_well) %>%
+    mutate(cost_low  = failn_low  * cost_per_well_replacement,
+           cost_high = tot_cost) %>%
     mutate(failp_mean = (failp_high + failp_low)/2) %>% 
     mutate(text = paste0("<em>groundwater decline:</em> ", 
                          decline, " ft<br>",
                          
                          "<em>failure count:</em> ", 
-                         failn_low, " - ", 
-                         failn_high, "br>",
+                         format(failn_low, big.mark = ","), " - ", 
+                         format(failn_high, big.mark = ","), "<br>",
                          
                          "<em>failure rate:</em> ", 
                          round(100 * failp_low, 1), " - ", 
                          round(100 * failp_high, 1), " %<br>",
                          
                          "<em>estimated cost:</em> $", 
-                         round(cost_low, 1), " - ", 
-                         round(cost_high, 1), "M")
+                         formatC(round((cost_low  / 1e6), 1), 
+                                 format="f", digits=1), " - ", 
+                         formatC(round((cost_high / 1e6), 1), 
+                                 format="f", digits=1), 
+                         "M")
     )
   
   return(list(failp = edf, sp = d))
