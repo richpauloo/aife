@@ -359,8 +359,8 @@ if(selected_gsa == "ALL") {
                                              "/", selected_decline)
                     ),
              "</b></em><br>",
-             "N-M wells fail at ", selected_decline_ft ,"<br>",
-             "$X-Y estimated cost<br>",
+             vb2, " wells fail at ", selected_decline_ft ,"<br>",
+             vb4, " estimated cost<br>",
              pop[[i]]
       )
   }
