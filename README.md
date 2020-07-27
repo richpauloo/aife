@@ -8,7 +8,9 @@ Darcy Bostic, MS [email], *Pacific Institute, UC Davis*
 
 This is the project repository for [gsawellfailure.com](www.gsawellfailure.com), made possible with support from the AI for Earth Innovation Program Grant provided by Global Wildlife Conservation and Microsoft Corporation. [See press release](https://www.globalwildlife.org/press/winners-of-ai-for-earth-innovation-grants-poised-to-address-urgent-environmental-challenges-with-creative-use-of-technology/).  
 
-This work further extends the domestic well failure modeling published in [Pauloo, et al (2020)](https://iopscience.iop.org/article/10.1088/1748-9326/ab6f10), and [Bostic, et al (2020)](WF_report).
+This work further extends the domestic well failure modeling published in [Pauloo, et al (2020)](https://iopscience.iop.org/article/10.1088/1748-9326/ab6f10), and [Bostic, et al (2020)](WF_report).  
+
+If you've reached this site looking for the static site at [gsawellfailure.com](gsawellfailure.com), see [this Github repository](https://github.com/richpauloo/jbp).  
 
 
 ## Project summary
@@ -24,6 +26,8 @@ About 1.5 million residents of California’s Central Valley rely on private dom
 * `02_preprocess_data_for_dashbard`: read in data saved in `01_...` and preprocess scpecifically for JAMstack   
 * `03_compare_domestic_and_MT_well_depths.R`: sanity check to ensure domestic well depths coincide with the ranges of groundwater level decline  
 * `04_model.R`: generate forecasts and assets used in the static pages  
+* `05_postprocess.R`: postprocess model results from `04_model.R` into plotly popups for main page  
+* `06_kriging.R`: krige present day groundwater level and 2040 MT surface
 
 `/data`: raw data used by the code in this project  
 `/jamstack`: code and files related to dashboard generation, which is hosted via Jekyll at [github.com/richpauloo/jbp](github.com/richpauloo/jbp)  
@@ -33,8 +37,8 @@ About 1.5 million residents of California’s Central Valley rely on private dom
 
 ## Processed data in `/data`:
 
-* `dom_wells.rds`: domestic wells in critical-priority GSAs and within a 28 year retirement age* with selected data (`wcr_num, lat, lon, pump_loc_low, pump_loc_up, TotalCompletedDepth`). Derived from [published data here (`domcv6_mean_gw_with_beta_GF_CI.rds`)](https://datadryad.org/stash/dataset/doi:10.25338/B8Q31D). `year` data was removed to reduce file size.  
-* `gsa.rds`: critical priority GSA polygons (output from `rmapshaper::ms_simplify()` to reduce file size) containing monitoring well locations. Output from `code/01_sampling_distribution_MT_GWL.R`.  
+* `dom_wells_ll.rds`: domestic wells in critical-priority GSAs and within a 28 year retirement age* with selected data (`wcr_num, lat, lon, pump_loc_low, pump_loc_up, TotalCompletedDepth`). Derived from [published data here (`domcv6_mean_gw_with_beta_GF_CI.rds`)](https://datadryad.org/stash/dataset/doi:10.25338/B8Q31D). `year` data was removed to reduce file size. CRS in LL.  
+* `gsa_ll.rds`: critical priority GSA polygons (output from `rmapshaper::ms_simplify()` to reduce file size) containing monitoring well locations. Output from `code/01_sampling_distribution_MT_GWL.R`. CRS in LL.  
 * `gwl_2019_avg_ll.rds`: 2019 average kriged groundwater level data.  
 
 ## TODO:
