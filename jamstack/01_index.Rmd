@@ -82,33 +82,71 @@ library(readr)
 library(here)
 library(leafem)
 
-# read current groundwater level, mt surface, and gsas
+# read current groundwater level, mt surface, gsas, model output
 gwl <- read_rds(here("code", "results", "gwl_2019_avg_ll.rds"))
 mts <- read_rds(here("code", "results", "mt_surface_cv.rds"))
 gsa <- read_rds(here("code", "results", "gsa_ll.rds"))
+l   <- read_rds(here("code", "results", "model_output.rds"))
+l   <- l[ params$gsa_names_full ][[1]]$failp
+# l   <- l[ "ALL" ][[1]]$failp # debugging
+ivs <- read_rds(here("code","results","ivs.rds")) %>% 
+  filter(gsp_name == params$selected_gsa)
+  # filter(gsp_name == "ALL") # debugging
+
 
 # store Rmd params as global variables
-selected_gsa     <- "ALL"#params$selected_gsa #"tri_county_tule"
+selected_gsa     <- params$selected_gsa #"tri_county_tule" # debugging
 selected_gsa_url <- str_replace_all(selected_gsa, "_", "-")
-selected_decline <- "mt"#params$selected_decline #"0"
+selected_decline <- params$selected_decline #"0"  # debugging
 selected_decline_ft <- ifelse(selected_decline != "mt",
                               paste0(selected_decline, " ft. of decline"),
                               "Minimum Threshold")
 
-# read model output and filter to the correct gsa and decline
-# d <- read_rds(here("code", "results", "model_results.rds")) %>% 
-#   filter(gwl_decline == selected_decline & gsa == selected_gsa)
+# value box data for declines %in% 10 - 500 ft
+if(selected_decline != "mt") { 
+  vb1 = paste0(selected_decline, " ft.") 
+  vbd <- filter(l, decline == selected_decline) %>% 
+    mutate(
+      vb2 = paste0(failn_low, "-", failn_high),
+      vb3 = paste0(formatC(round(failp_low*100,  1), format="f", digits=1), "-", 
+                   formatC(round(failp_high*100, 1), format="f", digits=1)),
+      vb4 = paste0(formatC(round(cost_low/ 1e6, 1), format="f", digits=1), "-", 
+                   formatC(round(cost_high/1e6, 1), format="f", digits=1))
+    )
+  vb2 = vbd$vb2
+  vb3 = vbd$vb3
+  vb4 = paste0("$", vbd$vb4, "M")
+}
 
-# read model output well data
-# wells <- read_rds(here("code", "results", "well_results.rds")) %>% 
-#   filter(gwl_decline == selected_decline & gsa == selected_gsa)
+# value box data for declines == 0 ft 
+if(selected_decline == 0) { 
+  vb2 = "0 ft."
+  vb2 = "0"
+  vb3 = "0" 
+  vb4 = "$0" 
+}
 
-# value box data
-if(selected_decline == "mt") { vb1 = "Min threshold" }
-if(selected_decline != "mt") { vb1 = paste0(selected_decline, " ft.") }
-# vb2 = filter(d, gwl_decline == selected_decline) %>% pull(n_fail)
-# vb3 = filter(d, gwl_decline == selected_decline) %>% pull(p_fail)
-# vb4 = filter(d, gwl_decline == selected_decline) %>% pull(cost)
+# value box data for declines == mt
+if(selected_decline == "mt") { 
+  vb1 = "Min threshold" 
+  vbd_low = filter(l, decline ==ivs$low) %>% 
+    mutate(
+      vb2 = failn_low,
+      vb3 = formatC(round(failp_low*100,  1), format="f", digits=1),
+      vb4 = formatC(round(cost_low/ 1e6,  1), format="f", digits=1)
+    ) %>% 
+    select(vb2:vb4)
+  vbd_high = filter(l, decline ==ivs$high) %>% 
+    mutate(
+      vb2 = failn_high,
+      vb3 = formatC(round(failp_high*100,  1), format="f", digits=1),
+      vb4 = formatC(round(cost_high/ 1e6,  1), format="f", digits=1)
+    ) %>% 
+    select(vb2:vb4)
+  vb2 = paste0(vbd_low$vb2, "-", vbd_high$vb2)
+  vb3 = paste0(vbd_low$vb3, "-", vbd_high$vb3)
+  vb4 = paste0("$", vbd_low$vb4, "-", vbd_high$vb4, "M")
+}
 
 # gsa names
 gsa_names <- gsa@data$gsp_name %>% 
@@ -267,21 +305,21 @@ valueBox(vb1,
 
 ### Well failures
 ```{r}
-valueBox("5000-10000", #vb2,
+valueBox(vb2,
          color = "danger", 
          icon = "fa-times-circle")
 ```
 
 ### Percent of failing wells
 ```{r}
-valueBox("15-60", #vb2,
+valueBox(vb3,
          color = "warning", 
          icon = "fa-percent")
 ```
 
 ### Cost
 ```{r}
-valueBox("$1.2-1.3M", #vb2,
+valueBox(vb4,
          color = "success", 
          icon = "ion-cash")
 ```
@@ -300,9 +338,9 @@ pal <- colorNumeric(col, c(-10,raster::values(mts)), na.color = "transparent")
 
 # read all plotly plots in
 if(selected_gsa == "ALL") {
-  l <- vector("list", length(gsa_names))
+  pop <- vector("list", length(gsa_names))
   for(i in 1:length(gsa_names)){
-    l[[i]] <- 
+    pop[[i]] <- 
       read_rds(
         paste0("~/Github/aife/plotly/",
                selected_decline,"_", gsa_names[i], ".rds"
@@ -312,7 +350,7 @@ if(selected_gsa == "ALL") {
       {tags$div(style="width:270px; height:220px;", .)} %>%
       as.character() %>% 
       stringr::str_replace("height:400px","height:100%")
-    l[[i]] <- 
+    pop[[i]] <- 
       paste0("<em><b>", 
              tags$a(gsa@data$gsp_name[i], 
                     href = 
@@ -323,12 +361,12 @@ if(selected_gsa == "ALL") {
              "</b></em><br>",
              "N-M wells fail at ", selected_decline_ft ,"<br>",
              "$X-Y estimated cost<br>",
-             l[[i]]
+             pop[[i]]
       )
   }
 }
 
-if(selected_gsa != "ALL") { l <- NULL}
+if(selected_gsa != "ALL") { pop <- NULL}
 
 # setZoom parameters
 xy        <- sp::bbox(gsa) %>% apply(1, mean)
@@ -369,7 +407,6 @@ leaflet() %>%
     icon="fa-globe", title="Zoom to center",
     onClick=JS(
       paste0("function(btn, map){ map.setView([",
-             #"36.8, -119.7], 7)",
              xy[2], ",", xy[1], "],", zoom, ")",
              "; }")
       ),
@@ -387,17 +424,17 @@ leaflet() %>%
                 highlightOptions(color = "black", weight = 2,
                                  bringToFront = TRUE),
               labelOptions = labelOptions(textsize = "13px"),
-              popup = l
+              popup = pop
   ) %>% 
   
   # raster value display
   leafem::addMouseCoordinates() %>%
-  leafem::addImageQuery(gwl, type="mousemove", layerId = "2019",
-                        group = "2019 groundwater level", prefix = "",
-                        digits = 2, position = "bottomright") %>%
-  leafem::addImageQuery(mts, type="mousemove", layerId = "2040",
-                        group = "2040 min threshold", prefix = "",
-                        digits = 2, position = "bottomright") %>%
+  # leafem::addImageQuery(gwl, layerId = "2019",
+  #                       group = "2019 groundwater level", prefix = "",
+  #                       digits = 2, position = "bottomright") %>%
+  # leafem::addImageQuery(mts, layerId = "2040",
+  #                       group = "2040 min threshold", prefix = "",
+  #                       digits = 2, position = "bottomright") %>%
   
   # JS for polygon popups
   onRender(
