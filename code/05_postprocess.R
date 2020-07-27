@@ -161,7 +161,7 @@ for(j in 1:nrow(ivs)){
   write_rds(p2, here("plotly", paste0("mt_", ivs$gsp_name[j], ".rds")))
 }
 
-
+write_rds(ivs, here("code","results","ivs.rds"))
 
 
 # ------------------------------------------------------------------------
