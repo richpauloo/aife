@@ -54,6 +54,8 @@ gsa_names_url <- str_replace_all(gsa_names, "_", "-")
 # ------------------------------------------------------------------------
 # create directory structure
 # ------------------------------------------------------------------------
+unlink("~/Github/jbp/index.html")
+unlink("~/Github/jbp/index_files", recursive = TRUE)
 unlink("~/Github/jbp/gsas", recursive = TRUE)
 dir.create("~/Github/jbp/gsas")
 for(i in 1:length(gsa_names)) {
@@ -70,8 +72,8 @@ for(i in 1:length(gsa_names)) {
 # ------------------------------------------------------------------------
 # write the index.html files - takes about 30 min for ~500 files
 # ------------------------------------------------------------------------
-for(i in 1:2){#length(gsa_names)) {
-  for(j in 1:2){#length(decline_v)) {
+for(i in 1:length(gsa_names)) {
+  for(j in 1:length(decline_v)) {
     write_html_files(gsa_names[i], decline_v[j],
                      gsa_names_full[i], decline_v_full[j])
     
