@@ -6,7 +6,7 @@ output:
     orientation: rows
     navbar:
       - { title: "Instructions",  align: right}
-      - { title: "About", href: "https://www.gsawellfailure.com", align: right}
+      - { title: "About", align: right}
       - { icon: "fa-github", href: "https://www.github.com/richpauloo/aife", align: right}
     #css: /Users/richpauloo/Github/aife/jamstack/etc/w3.css
     #self_contained: false
@@ -25,9 +25,10 @@ params:
 <!-- adapted from: https://github.com/rstudio/flexdashboard/issues/208 -->
 
 <script>
+
   $('.navbar-brand').wrap('<a href="http://www.gsawellfailure.com">');
   
-  <!-- modal popup when valueboxes are clicked -->
+  <!-- modal popup when navbar list elements are clicked -->
   $(document).ready(function() {
     $('#dashboard-container').on('flexdashboard:layoutcomplete', 
       function() {
@@ -39,6 +40,15 @@ params:
   $(document).ready(function() {
     $('#dashboard-container').on('flexdashboard:layoutcomplete', 
       function() {
+        $('#navbar li:nth-child(2)').click(function() {
+          $('#md-about').modal(); });
+    })
+  })
+  
+  <!-- modal popup when valueBoxes are clicked -->
+  $(document).ready(function() {
+    $('#dashboard-container').on('flexdashboard:layoutcomplete', 
+      function() {
         $('#groundwater-level-decline').click(function() {
           $('#md-groundwater-level-decline').modal(); });
     })
@@ -47,24 +57,24 @@ params:
   $(document).ready(function() {
     $('#dashboard-container').on('flexdashboard:layoutcomplete', 
       function() {
-        $('#well-failures').click(function() {
-          $('#md-well-failures').modal(); });
+        $('#well-failure-count').click(function() {
+          $('#md-well-failure-count').modal(); });
     })
   })
   
   $(document).ready(function() {
     $('#dashboard-container').on('flexdashboard:layoutcomplete', 
       function() {
-        $('#percent-of-failing-wells').click(function() {
-          $('#md-percent-of-failing-wells').modal(); });
+        $('#well-failure-percent').click(function() {
+          $('#md-well-failure-percent').modal(); });
     })
   })
   
   $(document).ready(function() {
     $('#dashboard-container').on('flexdashboard:layoutcomplete', 
       function() {
-        $('#cost').click(function() {
-          $('#md-cost').modal(); });
+        $('#cost-estimate').click(function() {
+          $('#md-cost-estimate').modal(); });
     })
   })
 </script>
@@ -129,7 +139,7 @@ if(selected_decline == 0) {
 # value box data for declines == mt
 if(selected_decline == "mt") { 
   vb1 = "Min threshold" 
-  vbd_low = filter(l, decline ==ivs$low) %>% 
+  vbd_low = filter(l, decline == ivs$low) %>% 
     mutate(
       vb2 = failn_low,
       vb3 = formatC(round(failp_low*100,  1), format="f", digits=1),
@@ -256,28 +266,39 @@ Row
 # markdown files for methods behind each of the reported statistics, obtained when clicking value boxes
 bs_modal(
   id = "md-instructions",
-  title = "Using Markdown",
-  body = includeMarkdown(system.file("markdown","modal.md",package="bsplus"))
+  title = htmltools::HTML('<h1>Instructions</h1>'),
+  body = includeMarkdown(here("jamstack", "etc", "instructions.md")),
+  size = "large"
+)
+bs_modal(
+  id = "md-about",
+  title = htmltools::HTML('<h1>About</h1>'),
+  body = includeMarkdown(here("jamstack", "etc", "about.md")),
+  size = "large"
 )
 bs_modal(
   id = "md-groundwater-level-decline",
-  title = "Using Markdown",
-  body = includeMarkdown(system.file("markdown","modal.md",package="bsplus"))
+  title = htmltools::HTML('<h1 style="color:cornflowerblue"><i class="fas fa-arrow-down"></i> Groundwater level decline</h1>'),
+  body = includeMarkdown(here("jamstack", "etc", "groundwater_level_decline.md")),
+  size = "large"
 )
 bs_modal(
-  id = "md-well-failures",
-  title = "Using Markdown",
-  body = includeMarkdown(system.file("markdown","modal.md",package="bsplus"))
+  id = "md-well-failure-count",
+  title = htmltools::HTML('<h1 style="color:#fb4f73"><i class="fas fa-times-circle"></i> Well failure count</h1>'),
+  body = includeMarkdown(here("jamstack", "etc", "well_failure_count.md")), 
+  size = "large"
 )
 bs_modal(
-  id = "md-percent-of-failing-wells",
-  title = "Using Markdown",
-  body = includeMarkdown(system.file("markdown","modal.md",package="bsplus"))
+  id = "md-well-failure-percent",
+  title = htmltools::HTML('<h1 style="color:sandybrown"><i class="fas fa-percent"></i> Well failure percent</h1>'),
+  body = includeMarkdown(here("jamstack", "etc", "well_failure_percent.md")),
+  size = "large"
 )
 bs_modal(
-  id = "md-cost",
-  title = "Using Markdown",
-  body = includeMarkdown(system.file("markdown","modal.md",package="bsplus"))
+  id = "md-cost-estimate",
+  title = htmltools::HTML('<h1 style="color:darkseagreen"><i class="fas fa-money-check-alt"></i> Cost estimate</h1>'),
+  body = includeMarkdown(here("jamstack", "etc", "cost_estimate.md")),
+  size = "large"
 )
 ```
 
@@ -286,13 +307,15 @@ bs_modal(
 bs_button("Click for modal", button_type = "primary") %>%
   bs_attach_modal("md-instructions")
 bs_button("Click for modal", button_type = "primary") %>%
+  bs_attach_modal("md-about")
+bs_button("Click for modal", button_type = "primary") %>%
   bs_attach_modal("md-groundwater-level-decline")
 bs_button("Click for modal", button_type = "primary") %>%
-  bs_attach_modal("md-well-failures")
+  bs_attach_modal("md-well-failure-count")
 bs_button("Click for modal", button_type = "primary") %>%
-  bs_attach_modal("md-percent-of-failing-wells")
+  bs_attach_modal("md-well-failure-percent")
 bs_button("Click for modal", button_type = "primary") %>%
-  bs_attach_modal("md-cost")
+  bs_attach_modal("md-cost-estimate")
 ```
 
 
@@ -301,27 +324,29 @@ bs_button("Click for modal", button_type = "primary") %>%
 valueBox(vb1,
          color = "primary",
          icon = "ion-arrow-down-a")
+         # icon = "fa-arrow-down")
 ```
 
-### Well failures
+### Well failure count
 ```{r}
 valueBox(vb2,
          color = "danger", 
          icon = "fa-times-circle")
 ```
 
-### Percent of failing wells
+### Well failure percent
 ```{r}
 valueBox(vb3,
          color = "warning", 
          icon = "fa-percent")
 ```
 
-### Cost
+### Cost estimate
 ```{r}
 valueBox(vb4,
          color = "success", 
          icon = "ion-cash")
+         # icon = "fa-money-check-alt")
 ```
 
 
@@ -359,13 +384,12 @@ if(selected_gsa == "ALL") {
                                              "/", selected_decline)
                     ),
              "</b></em><br>",
-             vb2, " wells fail at ", selected_decline_ft ,"<br>",
-             vb4, " estimated cost<br>",
              pop[[i]]
       )
   }
 }
 
+# remove popups for individual GSAs
 if(selected_gsa != "ALL") { pop <- NULL}
 
 # setZoom parameters
@@ -373,6 +397,10 @@ xy        <- sp::bbox(gsa) %>% apply(1, mean)
 names(xy) <- NULL
 xy        <- xy + c(0.4, 0.2)
 zoom      <- ifelse(selected_gsa == "ALL", 7, 8)
+
+# overlayGroups label depends on the selected_gsa
+if(selected_gsa == "ALL"){og <- "critical priority GSAs"}
+if(selected_gsa != "ALL"){og <- params$gsa_names_full}
 
 # map 
 leaflet() %>% 
@@ -392,7 +420,7 @@ leaflet() %>%
   
   # layer control
   addLayersControl(
-    overlayGroups = c("critical priority GSAs"),
+    overlayGroups = og,
     baseGroups    = c("2019 groundwater level", "2040 min threshold"),
     options       = layersControlOptions(collapsed = FALSE,
                                          position = "bottomleft")
@@ -418,7 +446,7 @@ leaflet() %>%
 
   # polygons
   addPolygons(data = gsa, weight = 1, opacity = 1, fillOpacity = 0.1,
-              group = "critical priority GSAs",
+              group = og,
               label = ~gsp_name, 
               highlightOptions = 
                 highlightOptions(color = "black", weight = 2,
