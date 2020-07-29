@@ -89,6 +89,8 @@ for(i in 1:length(gsa_names)) {
       # write the ALL/mt index to the root directory
       lines %>% 
         str_replace_all('href="../../../etc/w3.css"', 'href="etc/w3.css"') %>% 
+        str_replace_all('/Users/richpauloo/Github/aife/jamstack/etc/',
+                        'etc/') %>% 
         write_lines("~/Github/jbp/index.html")
     }
     
@@ -100,6 +102,7 @@ for(i in 1:length(gsa_names)) {
     lines %>% 
       str_replace_all('script src="index_files', 'script src="../../../index_files') %>%
       str_replace_all('link href="index_files',  'link href="../../../index_files') %>% 
+      str_replace_all('/Users/richpauloo/Github/aife/jamstack/etc/','../../../etc/') %>% 
       write_lines(file_loc)
     unlink(paste0(site_dir, gsa_names_url[i], "/", decline_v[j], "/index_files"),
            recursive=TRUE)
