@@ -2,4 +2,4 @@
 
 #### <i class="fas fa-angle-double-right fa-lg"></i> **Intrepretation**  
 
-The `Well failure percent` is simply the number of failing wells divided by the total number of wells in the `selected GSA(s).`
+The `Well failure percent` is the `Well failure count` divided by the total number of wells for the selected `GSA`(s) and `Groundwater scenario`.  
