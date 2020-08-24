@@ -24,18 +24,18 @@ Results shown correspond to the GSA, circled in <a style="color:red;">red</a>, a
 
 Controls are labeled in the image and described below: 
 
-1. Groundwater level decline scenario, well failure count and percent, and cost estimate. Click to view methods.  
-2. Map controls to click:  
-  - zoom in/out  
-  - full screen mode  
-  - zoom back to home  
-  - groundwater depth in feet below land surface (BLS) legend  
-  - toggle between 2019 groundwater level and 2040 minimum threshold surface, and toggle GSA boundaries  
-3. Hover for info. All forecasted well failures at various levels of groundwater level decline for the selected GSA are shown. The width of the bars shows the forcasted range of well failure. The red shaded area shows the selected groundwater level decline.  
-
 <center>
   <img src="etc/inst_3.png" style="width: 75%">
 </center>
+
+1. `Groundwater level decline`, `Well failure count`, `Well failure percent`, and `Cost estimate` for the selected scenario. Click buttons to view methods.  
+2. Map controls:  
+  - zoom in/out  
+  - full screen mode  
+  - zoom to home  
+  - groundwater depth in feet below land surface (BLS)    
+  - toggle data layers    
+3. Hover for info. All forecasted well failures at various levels of groundwater level decline for the selected GSA are shown. The width of the bars shows the forecasted well failure range. The red shaded area shows the selected groundwater level decline.  
 
 <br>
 
@@ -46,5 +46,3 @@ On the [main page showing all GSAs](https://www.gsawellfailure.com), click on a 
 <center>
   <img src="etc/inst_4.png" style="width: 75%">
 </center>
-
-
