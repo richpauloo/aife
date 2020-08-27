@@ -23,7 +23,7 @@ d <- d[d@data$year >= (2020-31), ]
 
 # select and rename desired data
 d@data <- d@data %>% 
-  dplyr::select(WCRNumber, mean_ci_upper, mean_ci_lower, TotalCompletedDepth) 
+  dplyr::select(WCRNumber, mean_ci_upper, pump_loc, mean_ci_lower, TotalCompletedDepth) 
 
 # add minimum suction head of 3m above total completed depth to wells
 # and for the 4% of wells where the tot_depth_msh == NA because the 
