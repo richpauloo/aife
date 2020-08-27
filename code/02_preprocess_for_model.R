@@ -36,10 +36,11 @@ d$tot_depth_msh <- ifelse(
 # add 2019 groundwater level to wells
 d$gwl_2019 <- raster::extract(gwl, d) 
 
-# remove [652] wells that are dry at the start of the simulation
+# remove [957] wells that are dry at the start of the simulation
+# based on total completed depth plus operating margin
 d <- d[d$tot_depth_msh >= d$gwl_2019 | is.na(d$tot_depth_msh), ]
 
-# filter 44 wells with bad data (0.2%)
+# filter [584] wells with bad data 
 d <- d[d@data$tot_depth_msh > d@data$mean_ci_upper | is.na(d$tot_depth_msh), ]
 
 # clean up GSAs
