@@ -22,9 +22,12 @@ prj <- CRS("+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_
 # TO DO: include code to create this object, because over time, this area
 # will change as MT wells are added and removed
 interp_boundary <- read_rds(here("data", "4Interpolation", "Data", "interpolation_buffer_CVcobs.rds"))
-r      <- raster(interp_boundary)           
+interp_boundary <- readr::read_rds(here::here("code", "results", "gsa_ll.rds")) %>% 
+  as("SpatialPolygons") %>% spTransform(., prj)
+r      <- raster(extent(interp_boundary))           
 res(r) <- 5000                 # 5000 meters
 g      <- as(r, "SpatialGrid") # convert raster to spatial grid object
+crs(g) <- prj
 
 # MT data that needs to be subset to GSPs in the central valley
 mt     <- read_rds(here("data", "4Interpolation", "Data", "all_mts.rds"))
