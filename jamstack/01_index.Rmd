@@ -182,7 +182,6 @@ root <- "https://www.gsawellfailure.com/gsas/"
 Row {.sidebar data-width=150 data-padding=10}
 -----------------------------------------------------------------------
 
-
 ```{r sidebar downdown menus}
 # GSA dropdown
 tags$div(
@@ -356,7 +355,7 @@ valueBox(vb4,
 Row
 -----------------------------------------------------------------------
 
-### `r ifelse(selected_gsa != "mt", paste0(gsa@data$gsp_name, " GSA and groundwater levels"), "All critical priority GSAs and groundwater levels")`
+### `r ifelse(selected_gsa != "ALL", paste0(gsa@data$gsp_name, " GSA and groundwater levels"), "All critical priority GSAs and groundwater levels")`
 ```{r, leaflet}
 # color palettes for gwl decline
 col <- rev(colormap::colormap(colormap::colormaps$magma, nshades = 100))
