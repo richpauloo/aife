@@ -15,9 +15,6 @@ d   <- read_rds(here("code", "results", "dom_wells_ll.rds"))
 gwl <- readr::read_rds(here::here("code", "results", "gwl_2019_avg_ll.rds"))
 gsa <- readr::read_rds(here::here("code", "results", "gsa_ll.rds"))
 
-# remove wells dry at the start of the simulation
-d <- d[d@data$gwl_2019 < d@data$mean_ci_lower, ]
-
 
 # ------------------------------------------------------------------------
 # determine how many gwl decline scenarios are needed for each GSA
@@ -145,8 +142,8 @@ run_model <- function(d, selected_gsp, decline){
 }
 
 # sanity checks
-#length(unique(gsa@data$gsp_name)) == length(unique(d@data$gsp_name))
-#unique(gsa@data$gsp_name) %in% unique(d@data$gsp_name) 
+length(unique(gsa@data$gsp_name)) == length(unique(d@data$gsp_name))
+unique(gsa@data$gsp_name) %in% unique(d@data$gsp_name) 
 
 # iterate function over gsa names
 gsa_names_full <- c("ALL", unique(gsa$gsp_name))
