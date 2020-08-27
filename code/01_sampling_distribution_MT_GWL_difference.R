@@ -107,17 +107,6 @@ for(i in 1:length(l)){
   l[[i]]$diff_MT_wse <- ifelse(l[[i]]$diff_MT_wse < 0, NA, l[[i]]$diff_MT_wse)
 }
 
-# sanity check: MTs
-# for(i in 1:length(l)){l[[i]] <- l[[i]][c("geometry","MT_dtw")]}
-# l <- do.call(rbind, l)
-# d <- read_rds(here("code", "results", "dom_wells_ll.rds"))
-# mts <- read_rds(here("data","4Interpolation","Output","minthreshinterpolation_CV.rds"))
-# temp <- raster::extract(mts$Prediction, as(d,"SpatialPointsDataFrame"), sp=TRUE)@data
-# temp$res_high <- ifelse(temp$mean_ci_lower >= temp$Prediction, "active", "failing")
-# temp$res_low  <- ifelse(temp$TotalCompletedDepth >= temp$Prediction, "active", "failing")
-# table(temp$res_low)
-# table(temp$res_high)
-
 # 6.4 % of MT wells have a diff_MT_wse < 0, and these wells are neglected.
 # In the code, this means we assign them a diff_MT_wse == NA, which is 
 # filtered out in the next code block before bootstrapping
