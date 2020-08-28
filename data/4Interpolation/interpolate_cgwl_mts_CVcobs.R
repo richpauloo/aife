@@ -15,18 +15,18 @@ merc <- crs("+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y
 
 # load data
 # shapefile names
-fall <- list.files("Data/Fall_2018_Elevation_Points/", pattern = "\\.shp$")
-spring <- list.files("Data/Spring_2018_Elevation_Points/", pattern = "\\.shp$")
+fall <- list.files(here("data","4Interpolation","Data","Fall_2018_Elevation_Points"), pattern = "\\.shp$")
+spring <- list.files(here("data","4Interpolation","Data","Spring_2018_Elevation_Points"), pattern = "\\.shp$")
 
 # data list
-falll = shapefile(file.path("Data/Fall_2018_Elevation_Points/", fall))
-springg = shapefile(file.path("Data/Spring_2018_Elevation_Points/", spring))
+falll = shapefile(file.path(here("data","4Interpolation","Data","Fall_2018_Elevation_Points/"), fall))
+springg = shapefile(file.path(here("data","4Interpolation","Data"), "Spring_2018_Elevation_Points", spring))
 
 f <- spTransform(falll, merc) # change the crs of each points dataframe
 sp <- spTransform(springg, merc)
 
 # GSP outline
-interp_boundary <- read_rds("Data/interpolation_buffer_CVcobs.rds")
+interp_boundary <- read_rds(here("data","4Interpolation","Data","interpolation_buffer_CVcobs.rds"))
 interp_boundary <- spTransform(interp_boundary, merc) # transform central valley shapefile
 
 #### interpolation ####
@@ -164,8 +164,8 @@ ok_sp$ci_lower <- ok_sp$Prediction - (1.96 * sqrt(ok_sp$Variance))
 #readr::write_rds(ok_sp, "Output/spring18_interp_CV.rds")
 
 #### FALL AND SPRING 2019 KRIGING ####
-d  <- read_csv("4Interpolation/Data/Fall_Spring_2019_InterpolationPoints/measurements.csv")
-d2 <- read_csv("4Interpolation/Data/Fall_Spring_2019_InterpolationPoints/stations.csv")
+d  <- read_csv(here("data","4Interpolation","Data","Fall_Spring_2019_InterpolationPoints","measurements.csv"))
+d2 <- read_csv(here("data","4Interpolation","Data","Fall_Spring_2019_InterpolationPoints","stations.csv"))
 
 # subset measurements to 2019
 d <- filter(d, lubridate::year(MSMT_DATE) == 2019) %>% 
@@ -276,7 +276,7 @@ plot(gsps, add=T)
 
 #### Interpolate MTs ####
 # subset pts to the central valley polygon
-mt <- read_rds("Data/all_mts.rds")
+mt <- read_rds(here("data","4Interpolation","Data","all_mts.rds"))
 subset_gsp_outline <- function(x){x[interp_boundary, ]}
 mt_gsp_outline <- subset_gsp_outline(mt) 
 
@@ -348,7 +348,7 @@ ok_mt$ci_upper <- ok_mt$Prediction + (1.96 * sqrt(ok_mt$Variance))
 ok_mt$ci_lower <- ok_mt$Prediction - (1.96 * sqrt(ok_mt$Variance))
 
 plot(ok_mt$Prediction)
-#write_rds(ok_mt, "Output/minthreshinterpolation_CV.rds")
+write_rds(ok_mt, here("data","4Interpolation","Output","minthreshinterpolation_CV.rds"))
 
 ba <- brick(d_avg$layer, ok_mt$Prediction)
 names(ba) <- c("Current GWL", "MT GWL")

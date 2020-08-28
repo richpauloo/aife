@@ -98,11 +98,13 @@ mts <- read_rds(here("code", "results", "mt_surface_cv.rds"))
 gsa <- read_rds(here("code", "results", "gsa_ll.rds"))
 l   <- read_rds(here("code", "results", "model_output.rds"))
 l   <- l[ params$gsa_names_full ][[1]]$failp
-# l   <- l[ "ALL" ][[1]]$failp # debugging
-ivs <- read_rds(here("code","results","ivs.rds")) %>% 
-  filter(gsp_name == params$selected_gsa)
+#l   <- l[ "ALL" ][[1]]$failp # debugging
+# ivs <- read_rds(here("code","results","ivs.rds")) %>% 
+#   filter(gsp_name == params$selected_gsa)
   # filter(gsp_name == "ALL") # debugging
-
+mtfs <- read_rds(here("code", "results", "mt_fail_summary_for_index.rds")) %>% 
+  filter(gsp_name == params$selected_gsa) 
+  #filter(gsp_name == "ALL") # debugging
 
 # store Rmd params as global variables
 selected_gsa     <- params$selected_gsa #"tri_county_tule" # debugging
@@ -139,16 +141,16 @@ if(selected_decline == 0) {
 # value box data for declines == mt
 if(selected_decline == "mt") { 
   vb1 = "Min threshold" 
-  vbd_low = filter(l, decline == ivs$low) %>% 
+  vbd_low = mtfs %>% 
     mutate(
-      vb2 = failn_low,
+      vb2 = low,
       vb3 = formatC(round(failp_low*100,  1), format="f", digits=1),
       vb4 = formatC(round(cost_low/ 1e6,  1), format="f", digits=1)
     ) %>% 
     select(vb2:vb4)
-  vbd_high = filter(l, decline ==ivs$high) %>% 
+  vbd_high = mtfs %>% 
     mutate(
-      vb2 = failn_high,
+      vb2 = high,
       vb3 = formatC(round(failp_high*100,  1), format="f", digits=1),
       vb4 = formatC(round(cost_high/ 1e6,  1), format="f", digits=1)
     ) %>% 
@@ -179,7 +181,6 @@ root <- "https://www.gsawellfailure.com/gsas/"
 
 Row {.sidebar data-width=150 data-padding=10}
 -----------------------------------------------------------------------
-
 
 ```{r sidebar downdown menus}
 # GSA dropdown
@@ -354,7 +355,7 @@ valueBox(vb4,
 Row
 -----------------------------------------------------------------------
 
-### `r ifelse(selected_gsa != "mt", paste0(gsa@data$gsp_name, " GSA and groundwater levels"), "All critical priority GSAs and groundwater levels")`
+### `r ifelse(selected_gsa != "ALL", paste0(gsa@data$gsp_name, " GSA and groundwater levels"), "All critical priority GSAs and groundwater levels")`
 ```{r, leaflet}
 # color palettes for gwl decline
 col <- rev(colormap::colormap(colormap::colormaps$magma, nshades = 100))

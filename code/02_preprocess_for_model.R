@@ -23,7 +23,7 @@ d <- d[d@data$year >= (2020-31), ]
 
 # select and rename desired data
 d@data <- d@data %>% 
-  dplyr::select(WCRNumber, mean_ci_upper, mean_ci_lower, TotalCompletedDepth) 
+  dplyr::select(WCRNumber, mean_ci_upper, pump_loc, mean_ci_lower, TotalCompletedDepth) 
 
 # add minimum suction head of 3m above total completed depth to wells
 # and for the 4% of wells where the tot_depth_msh == NA because the 
@@ -36,10 +36,11 @@ d$tot_depth_msh <- ifelse(
 # add 2019 groundwater level to wells
 d$gwl_2019 <- raster::extract(gwl, d) 
 
-# remove [652] wells that are dry at the start of the simulation
+# remove [957] wells that are dry at the start of the simulation
+# based on total completed depth plus operating margin
 d <- d[d$tot_depth_msh >= d$gwl_2019 | is.na(d$tot_depth_msh), ]
 
-# filter 44 wells with bad data (0.2%)
+# filter [584] wells with bad data 
 d <- d[d@data$tot_depth_msh > d@data$mean_ci_upper | is.na(d$tot_depth_msh), ]
 
 # clean up GSAs

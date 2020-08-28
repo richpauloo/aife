@@ -107,7 +107,6 @@ for(i in 1:length(l)){
   l[[i]]$diff_MT_wse <- ifelse(l[[i]]$diff_MT_wse < 0, NA, l[[i]]$diff_MT_wse)
 }
 
-
 # 6.4 % of MT wells have a diff_MT_wse < 0, and these wells are neglected.
 # In the code, this means we assign them a diff_MT_wse == NA, which is 
 # filtered out in the next code block before bootstrapping
