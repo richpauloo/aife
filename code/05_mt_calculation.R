@@ -1,9 +1,9 @@
 # ------------------------------------------------------------------------
-# We relate the MT scenario to the arbitray decline scenarios NOT by the
+# We relate the MT scenario to the arbitrary decline scenarios NOT by the
 # bootstrapped IQR of declines (which was a nice experiment), but RATHER
 # by the nfail at the MT surface, which is more accurate. Thus, we compute
-# failure at the MT surface herein, and split the nfail range per GSA
-# for plotly and the dashboards
+# failure at the MT surface, then split the nfail range per GSA for plotly 
+# and the dashboards
 # ------------------------------------------------------------------------
 library(tidyverse)
 library(sp)
@@ -16,8 +16,9 @@ d   <- read_rds(here("code", "results", "dom_wells_ll.rds"))
 d <- raster::extract(mts$Prediction, d, sp = TRUE)
 d <- d[ !is.na(d@data$Prediction), ]
 
-d$fail_high <- ifelse(d$mean_ci_lower >= d$Prediction, FALSE, TRUE)
-d$fail_low  <- ifelse(d$TotalCompletedDepth >= d$Prediction, FALSE, TRUE)
+# failure range based on uncertainty in pump location estimate
+d$fail_high <- ifelse(d$mean_ci_lower >= d$Prediction, FALSE, TRUE) # previously, mean_ci_lower
+d$fail_low  <- ifelse(d$mean_ci_upper >= d$Prediction, FALSE, TRUE)
 
 cat(table(d$fail_low)[2],"-", table(d$fail_high)[2], "failing, and", nrow(d), "total wells to begin with.")
 # this lines up better with EKI's numbers

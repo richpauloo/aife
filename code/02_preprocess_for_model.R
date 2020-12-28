@@ -17,7 +17,7 @@ gsa <- spTransform(gsa, prj)
 # subset points to gsa
 d <- d[gsa, ]
 
-# apply a 31 year retirement age following the mean retirement ages found by
+ # apply a 31 year retirement age following the mean retirement ages found by
 # Pauloo et al (2020) (28 yrs) and Gailey et al (2019) (33 yrs)
 d <- d[d@data$year >= (2020-31), ]
 
@@ -28,7 +28,8 @@ d@data <- d@data %>%
 # add minimum suction head of 3m above total completed depth to wells
 # and for the 4% of wells where the tot_depth_msh == NA because the 
 # TotalCompletedDepth is NA, make those == mean_ci_upper
-d$tot_depth_msh <- d@data$TotalCompletedDepth - 9.84252
+msh = 30 # ft
+d$tot_depth_msh <- d@data$TotalCompletedDepth - msh # previously 3 ft = 9.84252
 d$tot_depth_msh <- ifelse(
   is.na(d@data$tot_depth_msh), d$mean_ci_upper, d@data$tot_depth_msh
 )
@@ -38,10 +39,12 @@ d$gwl_2019 <- raster::extract(gwl, d)
 
 # remove [957] wells that are dry at the start of the simulation
 # based on total completed depth plus operating margin
-d <- d[d$tot_depth_msh >= d$gwl_2019 | is.na(d$tot_depth_msh), ]
+# d <- d[d$tot_depth_msh >= d$gwl_2019 | is.na(d$tot_depth_msh), ]
+# based on pump_loc
+d <- d[d$pump_loc >= d$gwl_2019 | is.na(d$tot_depth_msh), ]
 
 # filter [584] wells with bad data 
-d <- d[d@data$tot_depth_msh > d@data$mean_ci_upper | is.na(d$tot_depth_msh), ]
+# d <- d[d@data$tot_depth_msh > d@data$mean_ci_upper | is.na(d$tot_depth_msh), ]
 
 # clean up GSAs
 gsa@data <- gsa@data %>% 
@@ -58,8 +61,13 @@ d   <- spTransform(d,   CRS(ll))
 gsa <- spTransform(gsa, CRS(ll))
 gwl <- projectRaster(gwl, crs = CRS(ll))
 
-# remove "Olcese (Kern)" GSP because it has 0 domestic wells and is super tiny
-gsa <- gsa[gsa@data$gsp_name != "Olcese (Kern)", ]
+# remove a few GSAs because they have < 10 wells
+rm_gsas_low_n <- c("New Stone (Madera)","Aliso (DM)","Farmers (DM)", 
+                   "Henry Miller (Kern)", "Alpaugh (Tule)",
+                   "Tri-County (Tule)", "Gravelly Ford (Madera)", 
+                   "Root Creek (Madera)", "Fresno County (DM)",
+                   "Delano-Earlimart (Tule)","Olcese (Kern)")
+gsa <- gsa[!gsa@data$gsp_name %in% rm_gsas_low_n, ]
 
 # save for static site generation
 write_rds(d,   here("code", "results", "dom_wells_ll.rds"))

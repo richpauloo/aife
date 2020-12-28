@@ -98,18 +98,18 @@ mts <- read_rds(here("code", "results", "mt_surface_cv.rds"))
 gsa <- read_rds(here("code", "results", "gsa_ll.rds"))
 l   <- read_rds(here("code", "results", "model_output.rds"))
 l   <- l[ params$gsa_names_full ][[1]]$failp
-#l   <- l[ "ALL" ][[1]]$failp # debugging
-# ivs <- read_rds(here("code","results","ivs.rds")) %>% 
-#   filter(gsp_name == params$selected_gsa)
-  # filter(gsp_name == "ALL") # debugging
+# l   <- l[ "ALL" ][[1]]$failp # debugging
+# ivs <- read_rds(here("code","results","ivs.rds")) %>%
+  # filter(gsp_name == params$selected_gsa)
+# filter(gsp_name == "ALL") # debugging
 mtfs <- read_rds(here("code", "results", "mt_fail_summary_for_index.rds")) %>% 
   filter(gsp_name == params$selected_gsa) 
   #filter(gsp_name == "ALL") # debugging
 
 # store Rmd params as global variables
-selected_gsa     <- params$selected_gsa #"tri_county_tule" # debugging
+selected_gsa     <- params$selected_gsa #"ALL" # debugging
 selected_gsa_url <- str_replace_all(selected_gsa, "_", "-")
-selected_decline <- params$selected_decline #"0"  # debugging
+selected_decline <- params$selected_decline #"mt"  # debugging
 selected_decline_ft <- ifelse(selected_decline != "mt",
                               paste0(selected_decline, " ft. of decline"),
                               "Minimum Threshold")
@@ -147,14 +147,14 @@ if(selected_decline == "mt") {
       vb3 = formatC(round(failp_low*100,  1), format="f", digits=1),
       vb4 = formatC(round(cost_low/ 1e6,  1), format="f", digits=1)
     ) %>% 
-    select(vb2:vb4)
+    dplyr::select(vb2:vb4)
   vbd_high = mtfs %>% 
     mutate(
       vb2 = high,
       vb3 = formatC(round(failp_high*100,  1), format="f", digits=1),
       vb4 = formatC(round(cost_high/ 1e6,  1), format="f", digits=1)
     ) %>% 
-    select(vb2:vb4)
+    dplyr::select(vb2:vb4)
   vb2 = paste0(vbd_low$vb2, "-", vbd_high$vb2)
   vb3 = paste0(vbd_low$vb3, "-", vbd_high$vb3)
   vb4 = paste0("$", vbd_low$vb4, "-", vbd_high$vb4, "M")
@@ -191,42 +191,41 @@ tags$div(
   tags$div(
     class = "dropdown-content",
     tags$a(href = paste0(root, "ALL/", selected_decline), "ALL"),
-    tags$a(href = paste0(root, "northern-central/", selected_decline), "Northern Central (DM)"),
-    tags$a(href = paste0(root, "farmers/", selected_decline), "Farmers (DM)"),
-    tags$a(href = paste0(root, "east-kaweah/", selected_decline), "East Kaweah"),
-    tags$a(href = paste0(root, "chowchilla/", selected_decline), "Chowchilla"),
-    tags$a(href = paste0(root, "madera-joint/", selected_decline), "Madera Joint"),
-    tags$a(href = paste0(root, "central-kings/", selected_decline), "Central Kings"),
-    tags$a(href = paste0(root, "north-fork-kings/", selected_decline), "North Fork Kings"),
-    tags$a(href = paste0(root, "south-kings/", selected_decline), "South Kings"),
-    tags$a(href = paste0(root, "mc-mullin/", selected_decline), "Mc Mullin"),
-    tags$a(href = paste0(root, "gravelly-ford-madera/", selected_decline), "Gravelly Ford (Madera)"),
-    tags$a(href = paste0(root, "pixley-tule/", selected_decline), "Pixley (Tule)"),
-    tags$a(href = paste0(root, "westside/", selected_decline), "Westside"),
-    tags$a(href = paste0(root, "greater-kaweah/", selected_decline), "Greater Kaweah"),
-    tags$a(href = paste0(root, "new-stone-madera/", selected_decline), "New Stone (Madera)"),
-    tags$a(href = paste0(root, "mid-kaweah/", selected_decline), "Mid Kaweah"),
-    tags$a(href = paste0(root, "aliso/", selected_decline), "Aliso (DM)"),
-    tags$a(href = paste0(root, "merced/", selected_decline), "Merced"),
-    tags$a(href = paste0(root, "kings-river-east/", selected_decline), "Kings River East"),
-    tags$a(href = paste0(root, "north-kings/", selected_decline), "North Kings"),
-    tags$a(href = paste0(root, "henry-miller-kern/", selected_decline), "Henry Miller (Kern)"),
-    tags$a(href = paste0(root, "grassland/", selected_decline), "Grassland (DM)"),
-    tags$a(href = paste0(root, "tulare-lake/", selected_decline), "Tulare Lake"),
-    tags$a(href = paste0(root, "east-tule/", selected_decline), "East Tule"),
-    tags$a(href = paste0(root, "olcese-kern/", selected_decline), "Olcese (Kern)"),
-    tags$a(href = paste0(root, "root-creek-madera/", selected_decline), "Root Creek (Madera)"),
-    tags$a(href = paste0(root, "buena-vista-kern/", selected_decline), "Buena Vista (Kern)"),
-    tags$a(href = paste0(root, "kern-river/", selected_decline), "Kern River"),
-    tags$a(href = paste0(root, "delano-earlimart-tule/", selected_decline), "Delano-Earlimart (Tule)"),
-    tags$a(href = paste0(root, "sjrec/", selected_decline), "SJREC (DM)"),
-    tags$a(href = paste0(root, "fresno-county/", selected_decline), "Fresno County (DM)"),
-    tags$a(href = paste0(root, "james-kings/", selected_decline), "James (Kings)"),
-    tags$a(href = paste0(root, "kern-groundwater-authority/", selected_decline), "Kern Groundwater Authority"),
-    tags$a(href = paste0(root, "eastern-san-joaquin/", selected_decline), "Eastern San Joaquin"),
-    tags$a(href = paste0(root, "alpaugh-tule/", selected_decline), "Alpaugh (Tule)"),
-    tags$a(href = paste0(root, "lower-tule-river/", selected_decline), "Lower Tule River"),
-    tags$a(href = paste0(root, "tri-county-tule/", selected_decline), "Tri-County (Tule)")
+    tags$a(href = paste0(root, "aliso", selected_decline), "Aliso (DM)"),
+    tags$a(href = paste0(root, "alpaugh_tule", selected_decline), "Alpaugh (Tule)"),
+    tags$a(href = paste0(root, "buena_vista_kern", selected_decline), "Buena Vista (Kern)"),
+    tags$a(href = paste0(root, "central_kings", selected_decline), "Central Kings"),
+    tags$a(href = paste0(root, "chowchilla", selected_decline), "Chowchilla"),
+    tags$a(href = paste0(root, "delano_earlimart_tule", selected_decline), "Delano-Earlimart (Tule)"),
+    tags$a(href = paste0(root, "east_kaweah", selected_decline), "East Kaweah"),
+    tags$a(href = paste0(root, "east_tule", selected_decline), "East Tule"),
+    tags$a(href = paste0(root, "eastern_san_joaquin", selected_decline), "Eastern San Joaquin"),
+    tags$a(href = paste0(root, "farmers", selected_decline), "Farmers (DM)"),
+    tags$a(href = paste0(root, "fresno_county", selected_decline), "Fresno County (DM)"),
+    tags$a(href = paste0(root, "grassland", selected_decline), "Grassland (DM)"),
+    tags$a(href = paste0(root, "gravelly_ford_madera", selected_decline), "Gravelly Ford (Madera)"),
+    tags$a(href = paste0(root, "greater_kaweah", selected_decline), "Greater Kaweah"),
+    tags$a(href = paste0(root, "henry_miller_kern", selected_decline), "Henry Miller (Kern)"),
+    tags$a(href = paste0(root, "james_kings", selected_decline), "James (Kings)"),
+    tags$a(href = paste0(root, "kern_groundwater_authority", selected_decline), "Kern Groundwater Authority"),
+    tags$a(href = paste0(root, "kern_river", selected_decline), "Kern River"),
+    tags$a(href = paste0(root, "kings_river_east", selected_decline), "Kings River East"),
+    tags$a(href = paste0(root, "lower_tule_river", selected_decline), "Lower Tule River"),
+    tags$a(href = paste0(root, "madera_joint", selected_decline), "Madera Joint"),
+    tags$a(href = paste0(root, "mc_mullin", selected_decline), "Mc Mullin"),
+    tags$a(href = paste0(root, "merced", selected_decline), "Merced"),
+    tags$a(href = paste0(root, "mid_kaweah", selected_decline), "Mid Kaweah"),
+    tags$a(href = paste0(root, "new_stone_madera", selected_decline), "New Stone (Madera)"),
+    tags$a(href = paste0(root, "north_fork_kings", selected_decline), "North Fork Kings"),
+    tags$a(href = paste0(root, "north_kings", selected_decline), "North Kings"),
+    tags$a(href = paste0(root, "northern_central", selected_decline), "Northern Central (DM)"),
+    tags$a(href = paste0(root, "pixley_tule", selected_decline), "Pixley (Tule)"),
+    tags$a(href = paste0(root, "root_creek_madera", selected_decline), "Root Creek (Madera)"),
+    tags$a(href = paste0(root, "sjrec", selected_decline), "SJREC (DM)"),
+    tags$a(href = paste0(root, "south_kings", selected_decline), "South Kings"),
+    tags$a(href = paste0(root, "tri_county_tule", selected_decline), "Tri-County (Tule)"),
+    tags$a(href = paste0(root, "tulare_lake", selected_decline), "Tulare Lake"),
+    tags$a(href = paste0(root, "westside", selected_decline), "Westside")
     )
 )
 
@@ -251,9 +250,7 @@ tags$div(
     tags$a(href = paste0(root, selected_gsa_url, "/", "150"), "150 ft decline"),
     tags$a(href = paste0(root, selected_gsa_url, "/", "200"), "200 ft decline"),
     tags$a(href = paste0(root, selected_gsa_url, "/", "250"), "250 ft decline"),
-    tags$a(href = paste0(root, selected_gsa_url, "/", "300"), "300 ft decline"),
-    tags$a(href = paste0(root, selected_gsa_url, "/", "400"), "400 ft decline"),
-    tags$a(href = paste0(root, selected_gsa_url, "/", "500"), "500 ft decline")
+    tags$a(href = paste0(root, selected_gsa_url, "/", "300"), "300 ft decline")
     )
 )
 ```
@@ -368,7 +365,7 @@ if(selected_gsa == "ALL") {
   for(i in 1:length(gsa_names)){
     pop[[i]] <- 
       read_rds(
-        paste0("~/Github/aife/plotly/",
+        paste0("~/Documents/Github/aife/plotly/",
                selected_decline,"_", gsa_names[i], ".rds"
         )
       ) %>% 
