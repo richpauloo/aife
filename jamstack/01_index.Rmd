@@ -1,12 +1,15 @@
 ---
-title: '`r paste0("GSA well failure ", " /  ", params$gsa_names_full, "  /  ", params$decline_v_full)`'
+# title: '`r paste0("GSA well failure ", " /  ", params$gsa_names_full, "  /  ", params$decline_v_full)`'
+title: "GSA Well Failure"
 output: 
   flexdashboard::flex_dashboard:
     vertical_layout: fill
     orientation: rows
     navbar:
-      - { title: "Instructions",  align: right}
-      - { title: "About", align: right}
+      - { title: "How to use this website",  align: left}
+      - { title: "Methodology", align: left}
+      - { title: "Data", align: left}
+      - { title: "About", align: left}
       - { icon: "fa-github", href: "https://www.github.com/richpauloo/aife", align: right}
     #css: /Users/richpauloo/Github/aife/jamstack/etc/w3.css
     #self_contained: false
@@ -23,6 +26,7 @@ params:
 <!-- a wee bit of JS that allows a modal popup when the first -->
 <!-- list element of the navbar (Instructions) is clicked -->
 <!-- adapted from: https://github.com/rstudio/flexdashboard/issues/208 -->
+
 
 <script>
 
@@ -41,6 +45,22 @@ params:
     $('#dashboard-container').on('flexdashboard:layoutcomplete', 
       function() {
         $('#navbar li:nth-child(2)').click(function() {
+          $('#md-methodology').modal(); });
+    })
+  })
+  
+  $(document).ready(function() {
+    $('#dashboard-container').on('flexdashboard:layoutcomplete', 
+      function() {
+        $('#navbar li:nth-child(3)').click(function() {
+          $('#md-data').modal(); });
+    })
+  })
+  
+  $(document).ready(function() {
+    $('#dashboard-container').on('flexdashboard:layoutcomplete', 
+      function() {
+        $('#navbar li:nth-child(4)').click(function() {
           $('#md-about').modal(); });
     })
   })
@@ -77,7 +97,24 @@ params:
           $('#md-cost-estimate').modal(); });
     })
   })
+  
+  $(document).ready(function() {
+    $('#dashboard-container').on('flexdashboard:layoutcomplete', 
+      function() {
+        $('#plot-description').click(function() {
+          $('#md-plot-description').modal(); });
+    })
+  })
+  
+  $(document).ready(function() {
+    $('#dashboard-container').on('flexdashboard:layoutcomplete', 
+      function() {
+        $('#map-description').click(function() {
+          $('#md-map-description').modal(); });
+    })
+  })
 </script>
+
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
@@ -94,7 +131,8 @@ library(leafem)
 
 # read current groundwater level, mt surface, gsas, model output
 gwl <- read_rds(here("code", "results", "gwl_2019_avg_ll.rds"))
-mts <- read_rds(here("code", "results", "mt_surface_cv.rds"))
+mts <- read_rds(here("code", "results", "mt_surface_cv.rds")) %>% projectRaster(to = gwl)
+gwl <- mask(gwl, mts) # mask 2019 values to 2040 raster
 gsa <- read_rds(here("code", "results", "gsa_ll.rds"))
 l   <- read_rds(here("code", "results", "model_output.rds"))
 l   <- l[ params$gsa_names_full ][[1]]$failp
@@ -187,7 +225,7 @@ Row {.sidebar data-width=150 data-padding=10}
 tags$div(
   class="dropdown",
   tags$button(
-    class="dropbtn", "GSA"),
+    class="dropbtn", "Select a GSA"),
   tags$div(
     class = "dropdown-content",
     tags$a(href = paste0(root, "ALL/", selected_decline), "ALL"),
@@ -236,7 +274,7 @@ tags$br()
 tags$div(
   class="dropdown",
   tags$button(
-    class="dropbtn", paste0("Groundwater scenario")),
+    class="dropbtn", paste0("Select a groundwater scenario")),
   tags$div(
     class = "dropdown-content",
     tags$a(href = paste0(root, selected_gsa_url, "/", "mt"),  "Minimum Threshold"),
@@ -264,8 +302,20 @@ Row
 # markdown files for methods behind each of the reported statistics, obtained when clicking value boxes
 bs_modal(
   id = "md-instructions",
-  title = htmltools::HTML('<h1>Instructions</h1>'),
+  title = htmltools::HTML('<h1>How to use this website</h1>'),
   body = includeMarkdown(here("jamstack", "etc", "instructions.md")),
+  size = "large"
+)
+bs_modal(
+  id = "md-methodology",
+  title = htmltools::HTML('<h1>Science and methodology</h1>'),
+  body = includeMarkdown(here("jamstack", "etc", "methodology.md")),
+  size = "large"
+)
+bs_modal(
+  id = "md-data",
+  title = htmltools::HTML('<h1>Data access</h1>'),
+  body = includeMarkdown(here("jamstack", "etc", "data.md")),
   size = "large"
 )
 bs_modal(
@@ -298,12 +348,28 @@ bs_modal(
   body = includeMarkdown(here("jamstack", "etc", "cost_estimate.md")),
   size = "large"
 )
+bs_modal(
+  id = "md-plot-description",
+  title = htmltools::HTML('<h1 style="color:grey"><i class="fas fa-question-circle"></i> Forecasted percentage of dry wells</h1>'),
+  body = includeMarkdown(here("jamstack", "etc", "plot_description.md")),
+  size = "large"
+)
+bs_modal(
+  id = "md-map-description",
+  title = htmltools::HTML('<h1 style="color:grey"><i class="fas fa-question-circle"></i> Critical priority GSAs and groundwater levels</h1>'),
+  body = includeMarkdown(here("jamstack", "etc", "map_description.md")),
+  size = "large"
+)
 ```
 
 ```{r, include=FALSE}
 # continuation of the above
 bs_button("Click for modal", button_type = "primary") %>%
   bs_attach_modal("md-instructions")
+bs_button("Click for modal", button_type = "primary") %>%
+  bs_attach_modal("md-methodology")
+bs_button("Click for modal", button_type = "primary") %>%
+  bs_attach_modal("md-data")
 bs_button("Click for modal", button_type = "primary") %>%
   bs_attach_modal("md-about")
 bs_button("Click for modal", button_type = "primary") %>%
@@ -314,6 +380,10 @@ bs_button("Click for modal", button_type = "primary") %>%
   bs_attach_modal("md-well-failure-percent")
 bs_button("Click for modal", button_type = "primary") %>%
   bs_attach_modal("md-cost-estimate")
+bs_button("Click for modal", button_type = "primary") %>%
+  bs_attach_modal("md-plot-description")
+bs_button("Click for modal", button_type = "primary") %>%
+  bs_attach_modal("md-map-description")
 ```
 
 
@@ -352,10 +422,11 @@ valueBox(vb4,
 Row
 -----------------------------------------------------------------------
 
-### `r ifelse(selected_gsa != "ALL", paste0(gsa@data$gsp_name, " GSA and groundwater levels"), "All critical priority GSAs and groundwater levels")`
+### `r ifelse(selected_gsa != "ALL", paste0("<font size='+1.5'><button type='button' style='border:none; background-color: Transparent;' data-toggle='modal' data-target='#md-map-description'><i class='fas fa-question-circle'></i></button> ", gsa@data$gsp_name, " GSA and groundwater levels</font>"), "<font size='+1.5'><button type='button' style='border:none; background-color: Transparent;' data-toggle='modal' data-target='#md-map-description'><i class='fas fa-question-circle'></i></button> All critical priority GSAs and groundwater levels</font>")`
 ```{r, leaflet}
 # color palettes for gwl decline
-col <- rev(colormap::colormap(colormap::colormaps$magma, nshades = 100))
+# col <- rev(colormap::colormap(colormap::colormaps$magma, nshades = 100))
+col <- rev(colormap::colormap(colormap::colormaps$portland, reverse=TRUE, nshades = 50))
 # hack the color pal to include values in both scales (use -10)
 pal <- colorNumeric(col, c(-10,raster::values(mts)), na.color = "transparent")
 
@@ -374,14 +445,14 @@ if(selected_gsa == "ALL") {
       as.character() %>% 
       stringr::str_replace("height:400px","height:100%")
     pop[[i]] <- 
-      paste0("<em><b>", 
+      paste0("<center><em><b><font size='+1'>", 
              tags$a(gsa@data$gsp_name[i], 
                     href = 
                       paste0(root, 
                              str_replace_all(gsa_names[i],"_","-"),
                                              "/", selected_decline)
                     ),
-             "</b></em><br>",
+             "</font></b></em></center>",
              pop[[i]]
       )
   }
@@ -407,11 +478,10 @@ leaflet() %>%
   addProviderTiles("CartoDB") %>% 
   
   # groundwater level
-  addRasterImage(gwl, opacity = 0.8, colors = pal, 
-                 layerId = "2019", group = "2019 groundwater level") %>%
   addRasterImage(mts, opacity = 0.8, colors = pal, 
                  layerId = "2040", group = "2040 min threshold") %>%
-
+  addRasterImage(gwl, opacity = 0.8, colors = pal, 
+                 layerId = "2019", group = "2019 groundwater level") %>%
   addLegend(pal = pal, values = raster::values(mts),
             title    = "Groundwater <br>level (ft. BLS)",
             position = "bottomright") %>%
@@ -419,7 +489,7 @@ leaflet() %>%
   # layer control
   addLayersControl(
     overlayGroups = og,
-    baseGroups    = c("2019 groundwater level", "2040 min threshold"),
+    baseGroups    = c("2040 min threshold", "2019 groundwater level"),
     options       = layersControlOptions(collapsed = FALSE,
                                          position = "bottomleft")
   ) %>%
@@ -446,8 +516,9 @@ leaflet() %>%
   addPolygons(data = gsa, weight = 1, opacity = 1, fillOpacity = 0.1,
               group = og,
               label = ~gsp_name, 
+              color = "black",
               highlightOptions = 
-                highlightOptions(color = "black", weight = 2,
+                highlightOptions(color = "white", weight = 2,
                                  bringToFront = TRUE),
               labelOptions = labelOptions(textsize = "13px"),
               popup = pop
@@ -455,6 +526,11 @@ leaflet() %>%
   
   # raster value display
   leafem::addMouseCoordinates() %>%
+    onRender("
+        function() {
+            $('.leaflet-control-layers-list').prepend('<label style=\"text-align:center\">TOGGLE OPTIONS<hr></label>');
+        }
+    ") %>% 
   # leafem::addImageQuery(gwl, layerId = "2019",
   #                       group = "2019 groundwater level", prefix = "",
   #                       digits = 2, position = "bottomright") %>%
@@ -474,7 +550,7 @@ leaflet() %>%
   browsable()
 ```
 
-### `r ifelse(selected_gsa != "ALL", paste0("Forecasted well failure rates for ", gsa@data$gsp_name), "Forecasted well failure rates for all critical priority GSAs")`
+### `r ifelse(selected_gsa != "ALL", paste0("<font size='+1.5'><button type='button' style='border:none; background-color: Transparent;' data-toggle='modal' data-target='#md-plot-description'><i class='fas fa-question-circle'></i></button> Forecasted percentage of dry wells for ", gsa@data$gsp_name, "GSA</font>"), "<font size='+1.5'><button type='button' style='border:none; background-color: Transparent;' data-toggle='modal' data-target='#md-plot-description'><i class='fas fa-question-circle'></i></button> Forecasted percentage of dry wells for all critical priority GSAs</font>")`
 ```{r, plot}
 readr::read_rds(paste0("../plotly/", selected_decline, "_", selected_gsa, ".rds"))
 ```
