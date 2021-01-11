@@ -1,17 +1,5 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
 
-<style>
-input[type="text"] {
-  padding: 0.2em;
-}
-input[type="email"]{
-  padding: 0.2em;
-}
-input[type="message"]{
-  padding: 0.2em;
-}
-</style>
-
 
 ### **Purpose**
 
@@ -58,7 +46,7 @@ Controls are labeled in the image and described below:
 
 ### **Additional features**  
 
-On the [main page showing all GSAs](https://www.gsawellfailure.com), click on a GSA in the map to view the forecasted well failure plot for the selected GSA, and hover over the plot to view failure and cost statistics for each scenario.  
+On the [main page showing all GSAs](https://www.gsawellfailure.com?#map), click on a GSA in the map to view the forecasted well failure plot for the selected GSA, and hover over the plot to view failure and cost statistics for each scenario.  
 
 <center>
   <img src="etc/inst_4.png" style="width: 80%">

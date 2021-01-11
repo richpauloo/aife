@@ -22,14 +22,12 @@ This work is made possible with support from the AI for Earth Innovation Program
 
 ### **Contact** 
 
-Have feedback or want to get in touch? Feel free to contact us using the form below:  
-
 
 <form action="https://formspree.io/mpzyozye" method="POST">
   <label for="name">Your name: </label>
   <input type="text" name="name" required="required" placeholder="Name"><br>
   <label for="email">Your email: </label>
-  <input type="email" name="_replyto" required="required" placeholder="email"><br>
+  <input type="email" name="_replyto" required="required" placeholder="Email"><br>
   <label for="message">Your message:</label><br>
   <textarea rows="5" name="message" id="message" required="required" class="form-control" placeholder="Your message here."></textarea>
   <input type="hidden" name="_next" value="/html/thanks.html" />

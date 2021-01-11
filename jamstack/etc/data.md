@@ -1,9 +1,13 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
 
+<center>
+# **Data download**
+</center>
 
-In addition to the web tool data viewer, GSA Well Failure data is available for downloaded via static files and can be accessed programmatically.  
 
-The code for this study is openly available on [<i class="fab fa-github fa-lg" style="color:#be4bdc"></i> Github](https://github.com/richpauloo/aife).  
+In addition to the web tool data viewer, GSA Well Failure data is available for downloaded via static files and can be accessed programmatically via a scripting language. `R` and `Python` examples below are provided below.  
+
+The well failure model in this study is implemented in `R`, and openly available on [<i class="fab fa-github fa-lg" style="color:#be4bdc"></i> Github](https://github.com/richpauloo/aife).  
 
 <br>  
 

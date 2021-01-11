@@ -74,13 +74,19 @@ for(i in 1:length(gsa_names)) {
 # ------------------------------------------------------------------------
 # for(i in 1:length(gsa_names)) {
 #   for(j in 1:length(decline_v)) {
-for(i in 1) {
-  for(j in 1) {
+# this is hacky, but we need to evaluate the pages in reverse order because
+# the greater detail in the non "ALL" and "MT" i == 1 & j == 1 page has some
+# dependencies that need to be propagated to all other pages, hence, we start
+# with these detailed pages
+# for(i in rev(seq_along(gsa_names))) {
+#   for(j in rev(seq_along(decline_v))) {
+for(i in 26) {
+  for(j in 12) {
     write_html_files(gsa_names[i], decline_v[j],
                      gsa_names_full[i], decline_v_full[j])
     
     # move index_files to top level directory
-    if(i == 1 & j == 1) {
+    if(i == length(gsa_names) & j == length(decline_v)) {
       if( !dir.exists("~/Documents/Github/jbp/index_files") ) {
         dir.create("~/Documents/Github/jbp/index_files")
       }
@@ -95,7 +101,7 @@ for(i in 1) {
                         'etc/') %>% 
         write_lines("~/Documents/Github/jbp/index.html")
     }
-    
+  
     # find file, read it in, and change paths to reference the index_files that
     # were moved above. pay special attention to the hashed groundwater level id
     file_loc <-  paste0(site_dir, gsa_names_url[i], "/", decline_v[j], "/index.html")
@@ -108,6 +114,15 @@ for(i in 1) {
       write_lines(file_loc)
     unlink(paste0(site_dir, gsa_names_url[i], "/", decline_v[j], "/index_files"),
            recursive=TRUE)
+    
+    # overwrite main page with all GSAs MT scenario
+    if(i == 1 & j == 1) {
+      lines <- read_lines(paste0(site_dir, gsa_names_url[i], "/", decline_v[j], "/index.html"))
+      lines %>% 
+        str_replace_all('href="../../../etc/w3.css"', 'href="etc/w3.css"') %>% 
+        str_replace_all('../../../index_files', 'index_files') %>% 
+        write_lines("~/Documents/Github/jbp/index.html")
+    }
   }
 }
 # gsa_names[1]; decline_v[1]

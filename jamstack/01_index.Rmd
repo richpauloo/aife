@@ -6,10 +6,16 @@ output:
     vertical_layout: fill
     orientation: rows
     navbar:
-      - { title: "How to use this website",  align: left}
-      - { title: "Methodology", align: left}
-      - { title: "Data", align: left}
-      - { title: "About", align: left}
+      # - { title: "How to use this website",  align: left}
+      # - { title: "Methodology", align: left}
+      # - { title: "Data", align: left}
+      # - { title: "About", align: left}
+      - { title: "Home", href: "#home", align: right }
+      - { title: "Map", href: "#map", align: right }
+      # - { title: "Instructions", href: "#instructions", align: right }
+      - { title: "Methodology", href: "#methodology", align: right }
+      - { title: "Data", href: "#data", align: right }
+      # - { title: "About", href: "#about", align: right }
       - { icon: "fa-github", href: "https://www.github.com/richpauloo/aife", align: right}
     #css: /Users/richpauloo/Github/aife/jamstack/etc/w3.css
     #self_contained: false
@@ -27,43 +33,67 @@ params:
 <!-- list element of the navbar (Instructions) is clicked -->
 <!-- adapted from: https://github.com/rstudio/flexdashboard/issues/208 -->
 
+<style type="text/css">
+#home {
+  padding: 5% 5% 5% 5%;
+  background-color:#f2f2f2;
+}
+#instructions {
+  padding: 5% 5% 5% 5%;
+  background-color:#f2f2f2;
+}
+#data {
+  padding: 5% 5% 5% 5%;
+  background-color:#f2f2f2;
+}
+#methodology {
+  padding: 5% 5% 5% 5%;
+  background-color:#f2f2f2;
+}
+#about {
+  padding: 5% 5% 5% 5%;
+  background-color:#f2f2f2;
+}
+</style>
+
 
 <script>
 
   $('.navbar-brand').wrap('<a href="http://www.gsawellfailure.com">');
   
+  <!-- code to link navbar links to modal popups -->
   <!-- modal popup when navbar list elements are clicked -->
-  $(document).ready(function() {
-    $('#dashboard-container').on('flexdashboard:layoutcomplete', 
-      function() {
-        $('#navbar li:nth-child(1)').click(function() {
-          $('#md-instructions').modal(); });
-    })
-  })
-  
-  $(document).ready(function() {
-    $('#dashboard-container').on('flexdashboard:layoutcomplete', 
-      function() {
-        $('#navbar li:nth-child(2)').click(function() {
-          $('#md-methodology').modal(); });
-    })
-  })
-  
-  $(document).ready(function() {
-    $('#dashboard-container').on('flexdashboard:layoutcomplete', 
-      function() {
-        $('#navbar li:nth-child(3)').click(function() {
-          $('#md-data').modal(); });
-    })
-  })
-  
-  $(document).ready(function() {
-    $('#dashboard-container').on('flexdashboard:layoutcomplete', 
-      function() {
-        $('#navbar li:nth-child(4)').click(function() {
-          $('#md-about').modal(); });
-    })
-  })
+  <!-- $(document).ready(function() { -->
+  <!--   $('#dashboard-container').on('flexdashboard:layoutcomplete', -->
+  <!--     function() { -->
+  <!--       $('#navbar li:nth-child(1)').click(function() { -->
+  <!--         $('#md-instructions').modal(); }); -->
+  <!--   }) -->
+  <!-- }) -->
+
+  <!-- $(document).ready(function() { -->
+  <!--   $('#dashboard-container').on('flexdashboard:layoutcomplete',  -->
+  <!--     function() { -->
+  <!--       $('#navbar li:nth-child(2)').click(function() { -->
+  <!--         $('#md-methodology').modal(); }); -->
+  <!--   }) -->
+  <!-- }) -->
+
+  <!-- $(document).ready(function() { -->
+  <!--   $('#dashboard-container').on('flexdashboard:layoutcomplete',  -->
+  <!--     function() { -->
+  <!--       $('#navbar li:nth-child(3)').click(function() { -->
+  <!--         $('#md-data').modal(); }); -->
+  <!--   }) -->
+  <!-- }) -->
+
+  <!-- $(document).ready(function() { -->
+  <!--   $('#dashboard-container').on('flexdashboard:layoutcomplete',  -->
+  <!--     function() { -->
+  <!--       $('#navbar li:nth-child(4)').click(function() { -->
+  <!--         $('#md-about').modal(); }); -->
+  <!--   }) -->
+  <!-- }) -->
   
   <!-- modal popup when valueBoxes are clicked -->
   $(document).ready(function() {
@@ -115,8 +145,10 @@ params:
   })
 </script>
 
+Home {.hidden}
+===================================== 
 
-```{r setup, include=FALSE}
+```{r, echo = FALSE}
 library(flexdashboard)
 library(shiny)
 library(bsplus)
@@ -128,7 +160,16 @@ library(stringr)
 library(readr)
 library(here)
 library(leafem)
+library(raster)
+library(sf)
+includeMarkdown(here("jamstack", "etc", "home.md"))
+```
 
+
+Map {.hidden}
+===================================== 
+
+```{r setup, include=FALSE}
 # read current groundwater level, mt surface, gsas, model output
 gwl <- read_rds(here("code", "results", "gwl_2019_avg_ll.rds"))
 mts <- read_rds(here("code", "results", "mt_surface_cv.rds")) %>% projectRaster(to = gwl)
@@ -136,13 +177,24 @@ gwl <- mask(gwl, mts) # mask 2019 values to 2040 raster
 gsa <- read_rds(here("code", "results", "gsa_ll.rds"))
 l   <- read_rds(here("code", "results", "model_output.rds"))
 l   <- l[ params$gsa_names_full ][[1]]$failp
-# l   <- l[ "ALL" ][[1]]$failp # debugging
+# l   <- l[ "Northern Central" ][[1]]$failp # debugging
 # ivs <- read_rds(here("code","results","ivs.rds")) %>%
   # filter(gsp_name == params$selected_gsa)
 # filter(gsp_name == "ALL") # debugging
-mtfs <- read_rds(here("code", "results", "mt_fail_summary_for_index.rds")) %>% 
-  filter(gsp_name == params$selected_gsa) 
-  #filter(gsp_name == "ALL") # debugging
+mtfs <- read_rds(here("code", "results", "mt_fail_summary.rds")) %>% 
+  filter(gsp_name == params$selected_gsa)
+  # filter(gsp_name == "northern_central") # debugging
+
+# active and failing points for leaflet not on main page
+if(params$selected_gsa != "ALL"){
+  lp <- read_rds(here("code", "results", "results_leaflet.rds")) %>% .[[1]] %>% 
+    spTransform(crs(gwl)) %>% 
+    st_as_sf() %>% 
+    filter(gsp_name == params$gsa_names_full)
+    # filter(gsp_name == "Northern Central (DM)")
+  lp <- mutate(lp, lat = st_coordinates(lp)[,1], lng = st_coordinates(lp)[,2])
+  lp$high_0 <- "active"
+}
 
 # store Rmd params as global variables
 selected_gsa     <- params$selected_gsa #"ALL" # debugging
@@ -152,16 +204,22 @@ selected_decline_ft <- ifelse(selected_decline != "mt",
                               paste0(selected_decline, " ft. of decline"),
                               "Minimum Threshold")
 
-# value box data for declines %in% 10 - 500 ft
+# value box data for declines %in% 10 - 300 ft
 if(selected_decline != "mt") { 
   vb1 = paste0(selected_decline, " ft.") 
   vbd <- filter(l, decline == selected_decline) %>% 
     mutate(
-      vb2 = paste0(failn_low, "-", failn_high),
-      vb3 = paste0(formatC(round(failp_low*100,  1), format="f", digits=1), "-", 
-                   formatC(round(failp_high*100, 1), format="f", digits=1)),
-      vb4 = paste0(formatC(round(cost_low/ 1e6, 1), format="f", digits=1), "-", 
+      vb2 = ifelse(failn_low == failn_high, failn_low, paste0(failn_low, "-", failn_high)),
+      vb3 = ifelse(failn_low == failn_high, 
+                   formatC(round(failp_low*100,  1), format="f", digits=1),
+                   paste0(formatC(round(failp_low*100,  1), format="f", digits=1), "-", 
+                   formatC(round(failp_high*100, 1), format="f", digits=1))
+                   ),
+      vb4 = ifelse(round(cost_low/1e6, 1) == round(cost_high/1e6, 1),
+                   formatC(round(cost_low/ 1e6, 1), format="f", digits=1),
+                   paste0(formatC(round(cost_low/ 1e6, 1), format="f", digits=1), "-", 
                    formatC(round(cost_high/1e6, 1), format="f", digits=1))
+                   )
     )
   vb2 = vbd$vb2
   vb3 = vbd$vb3
@@ -193,9 +251,15 @@ if(selected_decline == "mt") {
       vb4 = formatC(round(cost_high/ 1e6,  1), format="f", digits=1)
     ) %>% 
     dplyr::select(vb2:vb4)
-  vb2 = paste0(vbd_low$vb2, "-", vbd_high$vb2)
-  vb3 = paste0(vbd_low$vb3, "-", vbd_high$vb3)
-  vb4 = paste0("$", vbd_low$vb4, "-", vbd_high$vb4, "M")
+  vb2 = ifelse(vbd_low$vb2 == vbd_high$vb2,
+               vbd_low$vb2,
+               paste0(vbd_low$vb2, "-", vbd_high$vb2))
+  vb3 = ifelse(vbd_low$vb2 == vbd_high$vb2,
+               vbd_low$vb3,
+               paste0(vbd_low$vb3, "-", vbd_high$vb3))
+  vb4 = ifelse(vbd_low$vb4 == vbd_high$vb4,
+               vbd_low$vb4,
+               paste0("$", vbd_low$vb4, "-", vbd_high$vb4, "M"))
 }
 
 # gsa names
@@ -216,6 +280,7 @@ source(here("jamstack", "etc", "functions.R"))
 # root url for links
 root <- "https://www.gsawellfailure.com/gsas/"
 ```
+
 
 Row {.sidebar data-width=150 data-padding=10}
 -----------------------------------------------------------------------
@@ -291,6 +356,13 @@ tags$div(
     tags$a(href = paste0(root, selected_gsa_url, "/", "300"), "300 ft decline")
     )
 )
+
+tags$br()
+tags$br()
+
+# instructions
+bs_button("How to use this website", button_type = "info") %>%
+  bs_attach_modal("md-instructions")
 ```
 
 
@@ -306,24 +378,24 @@ bs_modal(
   body = includeMarkdown(here("jamstack", "etc", "instructions.md")),
   size = "large"
 )
-bs_modal(
-  id = "md-methodology",
-  title = htmltools::HTML('<h1>Science and methodology</h1>'),
-  body = includeMarkdown(here("jamstack", "etc", "methodology.md")),
-  size = "large"
-)
-bs_modal(
-  id = "md-data",
-  title = htmltools::HTML('<h1>Data access</h1>'),
-  body = includeMarkdown(here("jamstack", "etc", "data.md")),
-  size = "large"
-)
-bs_modal(
-  id = "md-about",
-  title = htmltools::HTML('<h1>About</h1>'),
-  body = includeMarkdown(here("jamstack", "etc", "about.md")),
-  size = "large"
-)
+# bs_modal(
+#   id = "md-methodology",
+#   title = htmltools::HTML('<h1>Science and methodology</h1>'),
+#   body = includeMarkdown(here("jamstack", "etc", "methodology.md")),
+#   size = "large"
+# )
+# bs_modal(
+#   id = "md-data",
+#   title = htmltools::HTML('<h1>Data access</h1>'),
+#   body = includeMarkdown(here("jamstack", "etc", "data.md")),
+#   size = "large"
+# )
+# bs_modal(
+#   id = "md-about",
+#   title = htmltools::HTML('<h1>About</h1>'),
+#   body = includeMarkdown(here("jamstack", "etc", "about.md")),
+#   size = "large"
+# )
 bs_modal(
   id = "md-groundwater-level-decline",
   title = htmltools::HTML('<h1 style="color:cornflowerblue"><i class="fas fa-arrow-down"></i> Groundwater level decline</h1>'),
@@ -364,14 +436,14 @@ bs_modal(
 
 ```{r, include=FALSE}
 # continuation of the above
-bs_button("Click for modal", button_type = "primary") %>%
-  bs_attach_modal("md-instructions")
-bs_button("Click for modal", button_type = "primary") %>%
-  bs_attach_modal("md-methodology")
-bs_button("Click for modal", button_type = "primary") %>%
-  bs_attach_modal("md-data")
-bs_button("Click for modal", button_type = "primary") %>%
-  bs_attach_modal("md-about")
+# bs_button("Click for modal", button_type = "primary") %>%
+#   bs_attach_modal("md-instructions")
+# bs_button("Click for modal", button_type = "primary") %>%
+#   bs_attach_modal("md-methodology")
+# bs_button("Click for modal", button_type = "primary") %>%
+#   bs_attach_modal("md-data")
+# bs_button("Click for modal", button_type = "primary") %>%
+#   bs_attach_modal("md-about")
 bs_button("Click for modal", button_type = "primary") %>%
   bs_attach_modal("md-groundwater-level-decline")
 bs_button("Click for modal", button_type = "primary") %>%
@@ -424,6 +496,8 @@ Row
 
 ### `r ifelse(selected_gsa != "ALL", paste0("<font size='+1.5'><button type='button' style='border:none; background-color: Transparent;' data-toggle='modal' data-target='#md-map-description'><i class='fas fa-question-circle'></i></button> ", gsa@data$gsp_name, " GSA and groundwater levels</font>"), "<font size='+1.5'><button type='button' style='border:none; background-color: Transparent;' data-toggle='modal' data-target='#md-map-description'><i class='fas fa-question-circle'></i></button> All critical priority GSAs and groundwater levels</font>")`
 ```{r, leaflet}
+leaf_map <- leaflet() %>% addProviderTiles("CartoDB")
+
 # color palettes for gwl decline
 # col <- rev(colormap::colormap(colormap::colormaps$magma, nshades = 100))
 col <- rev(colormap::colormap(colormap::colormaps$portland, reverse=TRUE, nshades = 50))
@@ -471,83 +545,183 @@ zoom      <- ifelse(selected_gsa == "ALL", 7, 8)
 if(selected_gsa == "ALL"){og <- "critical priority GSAs"}
 if(selected_gsa != "ALL"){og <- params$gsa_names_full}
 
-# map 
-leaflet() %>% 
+# show active and failing wells on non-main page
+if(selected_gsa != "ALL"){
+  og <- c(og, "domestic wells")
+  pal_fail <- colorFactor(c("navy", "red"), domain = c("active", "failing"))
   
-  # tiles
-  addProviderTiles("CartoDB") %>% 
+  # add active and failing wells in separate layers 
+  # lpa <- lp[st_drop_geometry(lp)[ , paste0("high_", 100)] == "active", ]
+  # lpf <- lp[st_drop_geometry(lp)[ , paste0("high_", 100)] == "failing", ]
   
-  # groundwater level
-  addRasterImage(mts, opacity = 0.8, colors = pal, 
-                 layerId = "2040", group = "2040 min threshold") %>%
-  addRasterImage(gwl, opacity = 0.8, colors = pal, 
-                 layerId = "2019", group = "2019 groundwater level") %>%
-  addLegend(pal = pal, values = raster::values(mts),
-            title    = "Groundwater <br>level (ft. BLS)",
-            position = "bottomright") %>%
-  
-  # layer control
-  addLayersControl(
-    overlayGroups = og,
-    baseGroups    = c("2040 min threshold", "2019 groundwater level"),
-    options       = layersControlOptions(collapsed = FALSE,
-                                         position = "bottomleft")
-  ) %>%
-  
-  # center
-  # setView(-119.7, 36.8, 7) %>% 
-  setView(xy[1], xy[2], zoom) %>% 
-  
-  # zoom to center
-  addEasyButton(easyButton(
-    icon="fa-globe", title="Zoom to center",
-    onClick=JS(
-      paste0("function(btn, map){ map.setView([",
-             xy[2], ",", xy[1], "],", zoom, ")",
-             "; }")
-      ),
-    position = "topleft")
-  ) %>% 
-  
-  # full screen
-  leaflet.extras::addFullscreenControl(position = "topleft") %>% 
+  leaf_map <- leaf_map %>%
+    addMapPane("apts", zIndex = 430) %>%
+    # addMapPane("fpts", zIndex = 420) %>%
+    addMapPane("gsap", zIndex = 410) %>%
+    # active
+    addCircleMarkers(lng = lp$lat, lat = lp$lng,
+    color = pal_fail(dplyr::pull(lp, paste0("high_", selected_decline))),
+    group = og[2],
+    options = pathOptions(pane = "apts"),
+    clusterOptions = markerClusterOptions(),
+    stroke = FALSE, fillOpacity = 0.5, radius = 8,
+    popup = glue::glue("<b>WCR Number:</b> {lp$WCRNumber}<br>
+                       <b>Estimated pump location:</b> {round(lp$mean_ci_lower,2)}-{round(lp$mean_ci_upper,2)} ft BLS<br>
+                       <b>Total completed depth:</b> {round(lp$TotalCompletedDepth,2)} ft BLS")
+    ) %>% 
 
-  # polygons
-  addPolygons(data = gsa, weight = 1, opacity = 1, fillOpacity = 0.1,
-              group = og,
-              label = ~gsp_name, 
-              color = "black",
-              highlightOptions = 
-                highlightOptions(color = "white", weight = 2,
-                                 bringToFront = TRUE),
-              labelOptions = labelOptions(textsize = "13px"),
-              popup = pop
-  ) %>% 
+    # gsa polygon
+    addPolygons(data = gsa, weight = 1, opacity = 1, fillOpacity = 0.1,
+                group = og[1], # gsa name
+                label = ~gsp_name, 
+                color = "black",
+                options = pathOptions(pane = "gsap"),
+                highlightOptions = 
+                  highlightOptions(color = "white", weight = 2,
+                                   bringToFront = TRUE),
+                labelOptions = labelOptions(textsize = "13px"),
+                popup = pop
+    ) %>% 
+    # groundwater level
+    addRasterImage(mts, opacity = 0.8, colors = pal, 
+                   layerId = "2040", group = "minimum threshold") %>%
+    addRasterImage(gwl, opacity = 0.8, colors = pal, 
+                   layerId = "2019", group = "2019 groundwater level") %>%
+    addLegend(pal = pal, values = raster::values(mts),
+              title    = "Groundwater <br>level (ft. BLS)",
+              position = "bottomright") %>%
+    
+    # layer control
+    addLayersControl(
+      overlayGroups = rev(og),
+      baseGroups    = c("minimum threshold", "2019 groundwater level"),
+      options       = layersControlOptions(collapsed = FALSE,
+                                           position = "bottomleft")
+    ) %>%
+    
+    # center
+    # setView(-119.7, 36.8, 7) %>% 
+    setView(xy[1], xy[2], zoom) %>% 
+    
+    # zoom to center
+    addEasyButton(easyButton(
+      icon="fa-globe", title="Zoom to center",
+      onClick=JS(
+        paste0("function(btn, map){ map.setView([",
+               xy[2], ",", xy[1], "],", zoom, ")",
+               "; }")
+        ),
+      position = "topleft")
+    ) %>% 
+    
+    # full screen
+    leaflet.extras::addFullscreenControl(position = "topleft") %>% 
   
-  # raster value display
-  leafem::addMouseCoordinates() %>%
-    onRender("
-        function() {
-            $('.leaflet-control-layers-list').prepend('<label style=\"text-align:center\">TOGGLE OPTIONS<hr></label>');
-        }
-    ") %>% 
-  # leafem::addImageQuery(gwl, layerId = "2019",
-  #                       group = "2019 groundwater level", prefix = "",
-  #                       digits = 2, position = "bottomright") %>%
-  # leafem::addImageQuery(mts, layerId = "2040",
-  #                       group = "2040 min threshold", prefix = "",
-  #                       digits = 2, position = "bottomright") %>%
+    # raster value display
+    leafem::addMouseCoordinates() %>%
+      onRender("
+          function() {
+              $('.leaflet-control-layers-list').prepend('<label style=\"text-align:center\">TOGGLE OPTIONS<hr></label>');
+          }
+      ") %>% 
+    # leafem::addImageQuery(gwl, layerId = "2019",
+    #                       group = "2019 groundwater level", prefix = "",
+    #                       digits = 2, position = "bottomright") %>%
+    # leafem::addImageQuery(mts, layerId = "2040",
+    #                       group = "2040 min threshold", prefix = "",
+    #                       digits = 2, position = "bottomright") %>%
+    
+    # JS for polygon popups
+    onRender(
+      "function(el,x) {
+      this.on('popupopen', function() {HTMLWidgets.staticRender(); remove()})
+      }"
+    ) %>%
+    add_deps("plotly") %>%
+    htmltools::attachDependencies(plotly:::plotlyMainBundle(), append = TRUE) %>%
+    htmltools::attachDependencies(crosstalk::crosstalkLibs(),  append = TRUE) %>%
+    browsable()
+}
+
+# map 
+if(selected_gsa == "ALL"){
+    
+  leaf_map <- leaf_map %>% 
+    # groundwater level
+    addRasterImage(mts, opacity = 0.8, colors = pal, 
+                   layerId = "2040", group = "minimum threshold") %>%
+    addRasterImage(gwl, opacity = 0.8, colors = pal, 
+                   layerId = "2019", group = "2019 groundwater level") %>%
+    addLegend(pal = pal, values = raster::values(mts),
+              title    = "Groundwater <br>level (ft. BLS)",
+              position = "bottomright") %>%
+    
+    # layer control
+    addLayersControl(
+      overlayGroups = rev(og),
+      baseGroups    = c("minimum threshold", "2019 groundwater level"),
+      options       = layersControlOptions(collapsed = FALSE,
+                                           position = "bottomleft")
+    ) %>%
+    
+    # center
+    # setView(-119.7, 36.8, 7) %>% 
+    setView(xy[1], xy[2], zoom) %>% 
+    
+    # zoom to center
+    addEasyButton(easyButton(
+      icon="fa-globe", title="Zoom to center",
+      onClick=JS(
+        paste0("function(btn, map){ map.setView([",
+               xy[2], ",", xy[1], "],", zoom, ")",
+               "; }")
+        ),
+      position = "topleft")
+    ) %>% 
+    
+    # full screen
+    leaflet.extras::addFullscreenControl(position = "topleft") %>% 
   
-  # JS for polygon popups
-  onRender(
-    "function(el,x) {
-    this.on('popupopen', function() {HTMLWidgets.staticRender(); remove()})
-    }"
-  ) %>%
-  add_deps("plotly") %>%
-  htmltools::attachDependencies(plotly:::plotlyMainBundle(), append = TRUE) %>%
-  htmltools::attachDependencies(crosstalk::crosstalkLibs(),  append = TRUE) %>%
-  browsable()
+    # polygons
+    addPolygons(data = gsa, weight = 1, opacity = 1, fillOpacity = 0.1,
+                group = og[1], # gsa name
+                label = ~gsp_name, 
+                color = "black",
+                highlightOptions = 
+                  highlightOptions(color = "white", weight = 2,
+                                   bringToFront = TRUE),
+                labelOptions = labelOptions(textsize = "13px"),
+                popup = pop
+    ) %>% 
+    
+    # raster value display
+    leafem::addMouseCoordinates() %>%
+      onRender("
+          function() {
+              $('.leaflet-control-layers-list').prepend('<label style=\"text-align:center\">TOGGLE OPTIONS<hr></label>');
+          }
+      ") %>% 
+    # leafem::addImageQuery(gwl, layerId = "2019",
+    #                       group = "2019 groundwater level", prefix = "",
+    #                       digits = 2, position = "bottomright") %>%
+    # leafem::addImageQuery(mts, layerId = "2040",
+    #                       group = "2040 min threshold", prefix = "",
+    #                       digits = 2, position = "bottomright") %>%
+    
+    # JS for polygon popups
+    onRender(
+      "function(el,x) {
+      this.on('popupopen', function() {HTMLWidgets.staticRender(); remove()})
+      }"
+    ) %>%
+    add_deps("plotly") %>%
+    htmltools::attachDependencies(plotly:::plotlyMainBundle(), append = TRUE) %>%
+    htmltools::attachDependencies(crosstalk::crosstalkLibs(),  append = TRUE) %>%
+    browsable()
+}
+
+# show map
+leaf_map
 ```
 
 ### `r ifelse(selected_gsa != "ALL", paste0("<font size='+1.5'><button type='button' style='border:none; background-color: Transparent;' data-toggle='modal' data-target='#md-plot-description'><i class='fas fa-question-circle'></i></button> Forecasted percentage of dry wells for ", gsa@data$gsp_name, "GSA</font>"), "<font size='+1.5'><button type='button' style='border:none; background-color: Transparent;' data-toggle='modal' data-target='#md-plot-description'><i class='fas fa-question-circle'></i></button> Forecasted percentage of dry wells for all critical priority GSAs</font>")`
@@ -556,4 +730,16 @@ readr::read_rds(paste0("../plotly/", selected_decline, "_", selected_gsa, ".rds"
 ```
 
 
+
+Methodology {.hidden}
+===================================== 
+```{r}
+includeMarkdown(here("jamstack", "etc", "methodology.md"))
+```
+
+Data {.hidden}
+===================================== 
+```{r}
+includeMarkdown(here("jamstack", "etc", "data.md"))
+```
 
