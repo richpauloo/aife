@@ -1,7 +1,7 @@
 # AI enabled forecasting of regional-scale drinking water shortages in underserved communities
 
 Rich Pauloo, PhD [richpauloo at gmail dot com], *Larry Walker Associates, UC Davis*  
-Darcy Bostic, MS [email], *Pacific Institute, UC Davis*  
+Darcy Bostic, MS [dbostic at pacinst dot org], *Pacific Institute, UC Davis*  
 
 
 ## Overview
@@ -16,6 +16,11 @@ If you've reached this site looking for the static site at [gsawellfailure.com](
 ## Project summary
 
 About 1.5 million residents of California’s Central Valley rely on private domestic wells for drinking water, and many of these wells can, and oftentimes do, fail during drought or as the result of unsustainable groundwater management. This project uses hydrologic modeling, statistical learning, and data science to predict how groundwater level changes will impact domestic well failure and provides estimated information on drinking water shortages for underserved populations. Decision makers and local agencies can use this information to prevent well failure and inform water resource management and planning.
+
+
+## Workflow
+
+Run scripts in `code` beginning in 02, 05, 06, 07 in order to generate objects for 00, which writes the static site.    
 
 
 ## Contents
@@ -44,8 +49,3 @@ About 1.5 million residents of California’s Central Valley rely on private dom
 ## TODO:
 
 Spring and Fall groundwater levels are taken from Pauloo (2020). Darcy implemented this code in `data/4Interpolationinterpolate_cgwl_mts_CVcobs.R`, which should be genralized into a kriging pipeline in `code/06_kriging.R` for future updates to the "present day" groundwater level and the "MT surface".
-
-
-## LICENSE
-
-Need to add MIT

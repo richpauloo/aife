@@ -23,7 +23,7 @@ write_html_files <- function(x, y, w, z) {
 }
 
 # root dir for website
-site_dir <- "/Users/richpauloo/Github/jbp/gsas/"
+site_dir <- "/Users/richpauloo/Documents/Github/jbp/gsas/"
 
 # gsa names
 gsa_names <- 
@@ -34,7 +34,7 @@ gsa_names <-
   str_replace_all(" |-", "_") 
 
 # declines (from code/05_postprocess.R) 
-decline_v <- c(0,10,20,30,40,50,100,150,200,250,300,400,500)
+decline_v <- c(0,10,20,30,40,50,100,150,200,250,300)
 
 # add ALL and mt scenario to GSAs and declines
 gsa_names <- c("ALL", gsa_names)
@@ -54,14 +54,14 @@ gsa_names_url <- str_replace_all(gsa_names, "_", "-")
 # ------------------------------------------------------------------------
 # create directory structure
 # ------------------------------------------------------------------------
-unlink("~/Github/jbp/index.html")
-unlink("~/Github/jbp/index_files", recursive = TRUE)
-unlink("~/Github/jbp/gsas", recursive = TRUE)
-dir.create("~/Github/jbp/gsas")
+unlink("~/Documents/Github/jbp/index.html")
+unlink("~/Documents/Github/jbp/index_files", recursive = TRUE)
+unlink("~/Documents/Github/jbp/gsas", recursive = TRUE)
+dir.create("~/Documents/Github/jbp/gsas")
 for(i in 1:length(gsa_names)) {
-  dir.create(paste0("~/Github/jbp/gsas/", gsa_names_url[i]))
+  dir.create(paste0("~/Documents/Github/jbp/gsas/", gsa_names_url[i]))
   for(j in 1:length(decline_v)){
-    dir.create(paste0("~/Github/jbp/gsas/", 
+    dir.create(paste0("~/Documents/Github/jbp/gsas/", 
                       gsa_names_url[i], "/",
                       decline_v[j])
     )
@@ -72,28 +72,36 @@ for(i in 1:length(gsa_names)) {
 # ------------------------------------------------------------------------
 # write the index.html files - takes about 30 min for ~500 files
 # ------------------------------------------------------------------------
-for(i in 1:length(gsa_names)) {
-  for(j in 1:length(decline_v)) {
+# for(i in 1:length(gsa_names)) {
+#   for(j in 1:length(decline_v)) {
+# this is hacky, but we need to evaluate the pages in reverse order because
+# the greater detail in the non "ALL" and "MT" i == 1 & j == 1 page has some
+# dependencies that need to be propagated to all other pages, hence, we start
+# with these detailed pages
+for(i in rev(seq_along(gsa_names))) {
+  for(j in rev(seq_along(decline_v))) {
+# for(i in 26) {
+#   for(j in 12) {
     write_html_files(gsa_names[i], decline_v[j],
                      gsa_names_full[i], decline_v_full[j])
     
     # move index_files to top level directory
-    if(i == 1 & j == 1) {
-      if( !dir.exists("~/Github/jbp/index_files") ) {
-        dir.create("~/Github/jbp/index_files")
+    if(i == length(gsa_names) & j == length(decline_v)) {
+      if( !dir.exists("~/Documents/Github/jbp/index_files") ) {
+        dir.create("~/Documents/Github/jbp/index_files")
       }
       file.copy(paste0(site_dir, gsa_names_url[i], "/", decline_v[j], "/index_files"),
-                paste0("~/Github/jbp/"), recursive = TRUE)
+                paste0("~/Documents/Github/jbp/"), recursive = TRUE)
       lines <- read_lines(paste0(site_dir, gsa_names_url[i], "/", decline_v[j], "/index.html"))
       replace <- lines[str_which(lines, "X2019|X2040")]
       # write the ALL/mt index to the root directory
       lines %>% 
         str_replace_all('href="../../../etc/w3.css"', 'href="etc/w3.css"') %>% 
-        str_replace_all('/Users/richpauloo/Github/aife/jamstack/etc/',
+        str_replace_all('/Users/richpauloo/Documents/Github/aife/jamstack/etc/',
                         'etc/') %>% 
-        write_lines("~/Github/jbp/index.html")
+        write_lines("~/Documents/Github/jbp/index.html")
     }
-    
+  
     # find file, read it in, and change paths to reference the index_files that
     # were moved above. pay special attention to the hashed groundwater level id
     file_loc <-  paste0(site_dir, gsa_names_url[i], "/", decline_v[j], "/index.html")
@@ -102,10 +110,19 @@ for(i in 1:length(gsa_names)) {
     lines %>% 
       str_replace_all('script src="index_files', 'script src="../../../index_files') %>%
       str_replace_all('link href="index_files',  'link href="../../../index_files') %>% 
-      str_replace_all('/Users/richpauloo/Github/aife/jamstack/etc/','../../../etc/') %>% 
+      str_replace_all('/Users/richpauloo/Documents/Github/aife/jamstack/etc/','../../../etc/') %>% 
       write_lines(file_loc)
     unlink(paste0(site_dir, gsa_names_url[i], "/", decline_v[j], "/index_files"),
            recursive=TRUE)
+    
+    # overwrite main page with all GSAs MT scenario
+    if(i == 1 & j == 1) {
+      lines <- read_lines(paste0(site_dir, gsa_names_url[i], "/", decline_v[j], "/index.html"))
+      lines %>% 
+        str_replace_all('href="../../../etc/w3.css"', 'href="etc/w3.css"') %>% 
+        str_replace_all('../../../index_files', 'index_files') %>% 
+        write_lines("~/Documents/Github/jbp/index.html")
+    }
   }
 }
 # gsa_names[1]; decline_v[1]

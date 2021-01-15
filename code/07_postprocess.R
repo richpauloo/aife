@@ -43,8 +43,9 @@ for(i in 1:length(decline_v)){
   
   for(j in 1:length(l)){
     
+    # color vector
     cv                    <- rep("gray60", ndeclines) # grey 
-    cv[(decline_v[i]/10)] <- "black" 
+    cv[(decline_v[i]/10)] <- "red" 
 
     # plotly needs darker alpha...
     p  <- ggplot(l[[j]]$failp, 
@@ -52,8 +53,9 @@ for(i in 1:length(decline_v)){
                      ymin = failp_low, ymax = failp_high)) +
       geom_rect(aes(xmin = 0, xmax = decline_v[i], 
                     ymin = 0, ymax = 1), fill = "red", alpha = 0.15) +      
-      geom_point(aes(text=text), alpha = 0, color = cv) +
       geom_errorbar(color = cv) +
+      geom_point(aes(text=text), color = cv) +
+      geom_line(color = "blue") +
       labs(x = "Groundwater level decline (ft)", y = "Failure percentage") +
       scale_y_continuous(labels = scales::percent) +
       theme_minimal()
@@ -138,7 +140,8 @@ mt_fail_summary <- mt_fail_summary %>%
             by = c("gsp_name" = "full_name")) %>% 
   rename(full_name = gsp_name,
          gsp_name  = name) %>% 
-  select(gsp_name, everything())
+  select(gsp_name, everything()) %>% 
+  filter(full_name %in% c("ALL", gsa@data$gsp_name))
 
 ivs <- vector("list", length = length(nrow(mt_fail_summary)))
 # write the MT decline ggplots and plotly objects
@@ -162,8 +165,9 @@ for(j in 1:nrow(mt_fail_summary)){
     mutate(cost_low  = min(ds[k,]$cost_low), 
            cost_high = max(ds[k,]$cost_high))
 
+  # color vector
   cv <- rep("gray60", ndeclines) # grey 
-  cv[ k_seq ] <- "black"
+  cv[ k_seq ] <- "red"
   
   # modeled results are out of order, so filter for the right gsa!
   # plotly 
@@ -172,8 +176,9 @@ for(j in 1:nrow(mt_fail_summary)){
                    ymin = failp_low, ymax = failp_high)) +
     geom_rect(aes(xmin = 0, xmax = max(ds[k, ]$decline), 
                   ymin = 0, ymax = 1), fill = "red", alpha = 0.15) +      
-    geom_point(aes(text=text), alpha = 0, color = cv) +
     geom_errorbar(color = cv) +
+    geom_point(aes(text=text), color = cv) +
+    geom_line(color = "blue") +
     labs(x = "Groundwater level decline (ft)", y = "Failure percentage") +
     scale_y_continuous(labels = scales::percent) +
     theme_minimal()
