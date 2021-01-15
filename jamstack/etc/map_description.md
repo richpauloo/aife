@@ -6,4 +6,4 @@ Toggle between the minimum threshold surface and 2019 groundwater level and hove
 
 On the home page, click GSAs to see a plot of how many wells are expected to fail as groundwater levels fall.
 
-On GSA-specific pages, active (blue marker) and failing (red marker) well locations are shown. Click on markers to see well attributes.  
+On GSA-specific pages, active (<i class="fas fa-circle" style="color:#6ba2e8"></i> blue marker) and failing (<i class="fas fa-circle" style="color:#ff6173"></i> red marker) well locations are shown. Click on markers to see well attributes.  

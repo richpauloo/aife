@@ -3,6 +3,8 @@
 title: "GSA Well Failure"
 output: 
   flexdashboard::flex_dashboard:
+    logo: etc/gwf_8_pixels.png
+    favicon: etc/gwf_8_pixels.png
     vertical_layout: fill
     orientation: rows
     navbar:
@@ -10,13 +12,14 @@ output:
       # - { title: "Methodology", align: left}
       # - { title: "Data", align: left}
       # - { title: "About", align: left}
-      - { title: "Home", href: "#home", align: right }
+      #- { title: "Home", href: "#home", align: right }
       - { title: "Map", href: "#map", align: right }
       # - { title: "Instructions", href: "#instructions", align: right }
       - { title: "Methodology", href: "#methodology", align: right }
       - { title: "Data", href: "#data", align: right }
+      - { icon: "fa-question-circle",  href: "#instructions", align: right}
       # - { title: "About", href: "#about", align: right }
-      - { icon: "fa-github", href: "https://www.github.com/richpauloo/aife", align: right}
+      # - { icon: "fa-github", href: "https://www.github.com/richpauloo/aife", align: right}
     #css: /Users/richpauloo/Github/aife/jamstack/etc/w3.css
     #self_contained: false
     #lib_dir: libs
@@ -34,14 +37,6 @@ params:
 <!-- adapted from: https://github.com/rstudio/flexdashboard/issues/208 -->
 
 <style type="text/css">
-#home {
-  padding: 5% 5% 5% 5%;
-  background-color:#f2f2f2;
-}
-#instructions {
-  padding: 5% 5% 5% 5%;
-  background-color:#f2f2f2;
-}
 #data {
   padding: 5% 5% 5% 5%;
   background-color:#f2f2f2;
@@ -51,6 +46,10 @@ params:
   background-color:#f2f2f2;
 }
 #about {
+  padding: 5% 5% 5% 5%;
+  background-color:#f2f2f2;
+}
+#instructions {
   padding: 5% 5% 5% 5%;
   background-color:#f2f2f2;
 }
@@ -66,7 +65,7 @@ params:
   <!-- $(document).ready(function() { -->
   <!--   $('#dashboard-container').on('flexdashboard:layoutcomplete', -->
   <!--     function() { -->
-  <!--       $('#navbar li:nth-child(1)').click(function() { -->
+  <!--       $('#navbar li:nth-child(4)').click(function() { -->
   <!--         $('#md-instructions').modal(); }); -->
   <!--   }) -->
   <!-- }) -->
@@ -145,8 +144,8 @@ params:
   })
 </script>
 
-Home {.hidden}
-===================================== 
+<!-- Home {.hidden} -->
+<!-- =====================================  -->
 
 ```{r, echo = FALSE}
 library(flexdashboard)
@@ -162,7 +161,7 @@ library(here)
 library(leafem)
 library(raster)
 library(sf)
-includeMarkdown(here("jamstack", "etc", "home.md"))
+# includeMarkdown(here("jamstack", "etc", "home.md"))
 ```
 
 
@@ -294,41 +293,41 @@ tags$div(
   tags$div(
     class = "dropdown-content",
     tags$a(href = paste0(root, "ALL/", selected_decline), "ALL"),
-    tags$a(href = paste0(root, "aliso", selected_decline), "Aliso (DM)"),
-    tags$a(href = paste0(root, "alpaugh_tule", selected_decline), "Alpaugh (Tule)"),
-    tags$a(href = paste0(root, "buena_vista_kern", selected_decline), "Buena Vista (Kern)"),
-    tags$a(href = paste0(root, "central_kings", selected_decline), "Central Kings"),
-    tags$a(href = paste0(root, "chowchilla", selected_decline), "Chowchilla"),
-    tags$a(href = paste0(root, "delano_earlimart_tule", selected_decline), "Delano-Earlimart (Tule)"),
-    tags$a(href = paste0(root, "east_kaweah", selected_decline), "East Kaweah"),
-    tags$a(href = paste0(root, "east_tule", selected_decline), "East Tule"),
-    tags$a(href = paste0(root, "eastern_san_joaquin", selected_decline), "Eastern San Joaquin"),
-    tags$a(href = paste0(root, "farmers", selected_decline), "Farmers (DM)"),
-    tags$a(href = paste0(root, "fresno_county", selected_decline), "Fresno County (DM)"),
-    tags$a(href = paste0(root, "grassland", selected_decline), "Grassland (DM)"),
-    tags$a(href = paste0(root, "gravelly_ford_madera", selected_decline), "Gravelly Ford (Madera)"),
-    tags$a(href = paste0(root, "greater_kaweah", selected_decline), "Greater Kaweah"),
-    tags$a(href = paste0(root, "henry_miller_kern", selected_decline), "Henry Miller (Kern)"),
-    tags$a(href = paste0(root, "james_kings", selected_decline), "James (Kings)"),
-    tags$a(href = paste0(root, "kern_groundwater_authority", selected_decline), "Kern Groundwater Authority"),
-    tags$a(href = paste0(root, "kern_river", selected_decline), "Kern River"),
-    tags$a(href = paste0(root, "kings_river_east", selected_decline), "Kings River East"),
-    tags$a(href = paste0(root, "lower_tule_river", selected_decline), "Lower Tule River"),
-    tags$a(href = paste0(root, "madera_joint", selected_decline), "Madera Joint"),
-    tags$a(href = paste0(root, "mc_mullin", selected_decline), "Mc Mullin"),
-    tags$a(href = paste0(root, "merced", selected_decline), "Merced"),
-    tags$a(href = paste0(root, "mid_kaweah", selected_decline), "Mid Kaweah"),
-    tags$a(href = paste0(root, "new_stone_madera", selected_decline), "New Stone (Madera)"),
-    tags$a(href = paste0(root, "north_fork_kings", selected_decline), "North Fork Kings"),
-    tags$a(href = paste0(root, "north_kings", selected_decline), "North Kings"),
-    tags$a(href = paste0(root, "northern_central", selected_decline), "Northern Central (DM)"),
-    tags$a(href = paste0(root, "pixley_tule", selected_decline), "Pixley (Tule)"),
-    tags$a(href = paste0(root, "root_creek_madera", selected_decline), "Root Creek (Madera)"),
-    tags$a(href = paste0(root, "sjrec", selected_decline), "SJREC (DM)"),
-    tags$a(href = paste0(root, "south_kings", selected_decline), "South Kings"),
-    tags$a(href = paste0(root, "tri_county_tule", selected_decline), "Tri-County (Tule)"),
-    tags$a(href = paste0(root, "tulare_lake", selected_decline), "Tulare Lake"),
-    tags$a(href = paste0(root, "westside", selected_decline), "Westside")
+    tags$a(href = paste0(root, "aliso/", selected_decline), "Aliso (DM)"),
+    tags$a(href = paste0(root, "alpaugh_tule/", selected_decline), "Alpaugh (Tule)"),
+    tags$a(href = paste0(root, "buena_vista_kern/", selected_decline), "Buena Vista (Kern)"),
+    tags$a(href = paste0(root, "central_kings/", selected_decline), "Central Kings"),
+    tags$a(href = paste0(root, "chowchilla/", selected_decline), "Chowchilla"),
+    tags$a(href = paste0(root, "delano_earlimart_tule/", selected_decline), "Delano-Earlimart (Tule)"),
+    tags$a(href = paste0(root, "east_kaweah/", selected_decline), "East Kaweah"),
+    tags$a(href = paste0(root, "east_tule/", selected_decline), "East Tule"),
+    tags$a(href = paste0(root, "eastern_san_joaquin/", selected_decline), "Eastern San Joaquin"),
+    tags$a(href = paste0(root, "farmers/", selected_decline), "Farmers (DM)"),
+    tags$a(href = paste0(root, "fresno_county/", selected_decline), "Fresno County (DM)"),
+    tags$a(href = paste0(root, "grassland/", selected_decline), "Grassland (DM)"),
+    tags$a(href = paste0(root, "gravelly_ford_madera/", selected_decline), "Gravelly Ford (Madera)"),
+    tags$a(href = paste0(root, "greater_kaweah/", selected_decline), "Greater Kaweah"),
+    tags$a(href = paste0(root, "henry_miller_kern/", selected_decline), "Henry Miller (Kern)"),
+    tags$a(href = paste0(root, "james_kings/", selected_decline), "James (Kings)"),
+    tags$a(href = paste0(root, "kern_groundwater_authority/", selected_decline), "Kern Groundwater Authority"),
+    tags$a(href = paste0(root, "kern_river/", selected_decline), "Kern River"),
+    tags$a(href = paste0(root, "kings_river_east/", selected_decline), "Kings River East"),
+    tags$a(href = paste0(root, "lower_tule_river/", selected_decline), "Lower Tule River"),
+    tags$a(href = paste0(root, "madera_joint/", selected_decline), "Madera Joint"),
+    tags$a(href = paste0(root, "mc_mullin/", selected_decline), "Mc Mullin"),
+    tags$a(href = paste0(root, "merced/", selected_decline), "Merced"),
+    tags$a(href = paste0(root, "mid_kaweah/", selected_decline), "Mid Kaweah"),
+    tags$a(href = paste0(root, "new_stone_madera/", selected_decline), "New Stone (Madera)"),
+    tags$a(href = paste0(root, "north_fork_kings/", selected_decline), "North Fork Kings"),
+    tags$a(href = paste0(root, "north_kings/", selected_decline), "North Kings"),
+    tags$a(href = paste0(root, "northern_central/", selected_decline), "Northern Central (DM)"),
+    tags$a(href = paste0(root, "pixley_tule/", selected_decline), "Pixley (Tule)"),
+    tags$a(href = paste0(root, "root_creek_madera/", selected_decline), "Root Creek (Madera)"),
+    tags$a(href = paste0(root, "sjrec/", selected_decline), "SJREC (DM)"),
+    tags$a(href = paste0(root, "south_kings/", selected_decline), "South Kings"),
+    tags$a(href = paste0(root, "tri_county_tule/", selected_decline), "Tri-County (Tule)"),
+    tags$a(href = paste0(root, "tulare_lake/", selected_decline), "Tulare Lake"),
+    tags$a(href = paste0(root, "westside/", selected_decline), "Westside")
     )
 )
 
@@ -359,11 +358,8 @@ tags$div(
 
 tags$br()
 tags$br()
-
-# instructions
-bs_button("How to use this website", button_type = "info") %>%
-  bs_attach_modal("md-instructions")
 ```
+
 
 
 <!-- Row {data-width=100} -->
@@ -372,12 +368,12 @@ Row
 
 ```{r}
 # markdown files for methods behind each of the reported statistics, obtained when clicking value boxes
-bs_modal(
-  id = "md-instructions",
-  title = htmltools::HTML('<h1>How to use this website</h1>'),
-  body = includeMarkdown(here("jamstack", "etc", "instructions.md")),
-  size = "large"
-)
+# bs_modal(
+#   id = "md-instructions",
+#   title = htmltools::HTML('<h1>How to use this website</h1>'),
+#   body = includeMarkdown(here("jamstack", "etc", "instructions.md")),
+#   size = "large"
+# )
 # bs_modal(
 #   id = "md-methodology",
 #   title = htmltools::HTML('<h1>Science and methodology</h1>'),
@@ -456,6 +452,8 @@ bs_button("Click for modal", button_type = "primary") %>%
   bs_attach_modal("md-plot-description")
 bs_button("Click for modal", button_type = "primary") %>%
   bs_attach_modal("md-map-description")
+# bs_button("How to use this website", button_type = "info") %>%
+#   bs_attach_modal("md-instructions")
 ```
 
 
@@ -741,5 +739,17 @@ Data {.hidden}
 ===================================== 
 ```{r}
 includeMarkdown(here("jamstack", "etc", "data.md"))
+```
+
+Terms {.hidden}
+===================================== 
+```{r}
+includeMarkdown(here("jamstack", "etc", "terms.md"))
+```
+
+Instructions {.hidden}
+===================================== 
+```{r}
+includeMarkdown(here("jamstack", "etc", "instructions.md"))
 ```
 

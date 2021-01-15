@@ -2,6 +2,6 @@
 
 This plot shows the percentage of failing wells (y axis) for a given groundwater level decline relative to the 2019 groundwater level (x axis).  
 
-The red shaded region shows the user's selected groundwater level decline. If the minimum threshold scenario is selected, the closest groundwater level decline scenario(s) that correspond to a similar number of failing wells is shown.  
+The red shaded region <i class="fas fa-square" style="color:#ffe0dd"></i> shows the user's selected groundwater level decline. If the minimum threshold scenario is selected, the closest groundwater level decline scenario(s) that correspond to a similar number of failing wells is shown.  
 
 Hover on points to well failure statistics associated with various degrees of groundwater level decline.  

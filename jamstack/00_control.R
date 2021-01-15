@@ -78,10 +78,10 @@ for(i in 1:length(gsa_names)) {
 # the greater detail in the non "ALL" and "MT" i == 1 & j == 1 page has some
 # dependencies that need to be propagated to all other pages, hence, we start
 # with these detailed pages
-# for(i in rev(seq_along(gsa_names))) {
-#   for(j in rev(seq_along(decline_v))) {
-for(i in 26) {
-  for(j in 12) {
+for(i in rev(seq_along(gsa_names))) {
+  for(j in rev(seq_along(decline_v))) {
+# for(i in 26) {
+#   for(j in 12) {
     write_html_files(gsa_names[i], decline_v[j],
                      gsa_names_full[i], decline_v_full[j])
     
