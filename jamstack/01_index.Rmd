@@ -603,7 +603,7 @@ if(selected_gsa != "ALL"){
     addLayersControl(
       overlayGroups = rev(og),
       baseGroups    = c("minimum threshold", "2019 groundwater level"),
-      options       = layersControlOptions(collapsed = TRUE,
+      options       = layersControlOptions(collapsed = FALSE,
                                            position = "bottomleft")
     ) %>%
     
