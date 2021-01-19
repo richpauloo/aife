@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
 
+
 <center>
 # **Data download**
 </center>
@@ -196,26 +197,68 @@ Well failure model results are available for interactive visual inspection on th
 
 ### **R data access**  
 
-<center>
-<iframe scrolling = "no"
-  src="https://carbon.now.sh/embed?bg=rgba%28242%2C242%2C242%2C1%29&t=material&wt=none&l=r&ds=false&dsyoff=20px&dsblur=68px&wc=true&wa=true&pv=56px&ph=56px&ln=false&fl=1&fm=Hack&fs=14px&lh=133%25&si=false&es=2x&wm=false&code=library%28tidyverse%29%250Alibrary%28raster%29%250Alibrary%28sf%29%250A%250A%2523%2520urls%250Aurl_dw%2520%253C-%2520%2522https%253A%252F%252Fgithub.com%252Frichpauloo%252Faife%252Fraw%252Fq4-updates%252Fdownload%252Fdomestic_wells.csv%2522%250Aurl_mr%2520%253C-%2520%2522https%253A%252F%252Fgithub.com%252Frichpauloo%252Faife%252Fraw%252Fq4-updates%252Fdownload%252Fwell_failure_model_results.csv%2522%250Aurl_g1%2520%253C-%2520%2522%252Fvsicurl%252Fhttps%253A%252F%252Fgithub.com%252Frichpauloo%252Faife%252Fraw%252Fq4-updates%252Fdownload%252Fgwl_2019.tif%2522%250Aurl_g2%2520%253C-%2520%2522%252Fvsicurl%252Fhttps%253A%252F%252Fgithub.com%252Frichpauloo%252Faife%252Fraw%252Fq4-updates%252Fdownload%252Fgwl_mt.tif%2522%250A%250A%2523%2520read%2520domestic%2520well%2520data%2520and%2520model%2520results%250Adomestic_wells%2520%253C-%2520read_csv%28url_dw%29%2520%2525%253E%2525%2520st_as_sf%28coords%2520%253D%2520c%28%2522x%2522%252C%2520%2522y%2522%29%252C%2520crs%2520%253D%25204269%29%250Amodel_results%2520%2520%253C-%2520read_csv%28url_mr%29%250A%250A%2523%2520read%25202019%2520groundwater%2520level%2520and%2520MT%2520surface%250Agwl_2019%2520%253C-%2520raster%28url_g1%29%250Agwl_mt%2520%2520%2520%253C-%2520raster%28url_g2%29%250A%250A%2523%2520they%2520above%2520code%2520may%2520not%2520work%2520depending%2520on%2520how%2520your%2520spatial%2520packages%2520are%2520configured%250A%2523%2520in%2520this%2520case%252C%2520download%2520the%2520files%2520and%2520open%2520them%2520like%2520so%253A%250Atemp1%2520%253C-%2520temp2%2520%253C-%2520tempfile%28%29%250Adownload.file%28url_g1%252C%2520temp1%29%253B%2520download.file%28url_g2%252C%2520temp2%29%250A%250Agwl_2019%2520%253C-%2520raster%28temp1%29%250Agwl_mt%2520%2520%2520%253C-%2520raster%28temp2%29"
-  style="width: 1001px; height: 636px; border:0; transform: scale(1); overflow:hidden;"
-  sandbox="allow-scripts allow-same-origin">
-</iframe>
-</center>
 
+<div>
+<pre>
+<code class="r">
+library(tidyverse)
+library(raster)
+library(sf)
+
+# urls
+url_dw <- "https://github.com/richpauloo/aife/raw/q4-updates/download/domestic_wells.csv"
+url_mr <- "https://github.com/richpauloo/aife/raw/q4-updates/download/well_failure_model_results.csv"
+url_g1 <- "/vsicurl/https://github.com/richpauloo/aife/raw/q4-updates/download/gwl_2019.tif"
+url_g2 <- "/vsicurl/https://github.com/richpauloo/aife/raw/q4-updates/download/gwl_mt.tif"
+
+# read domestic well data and model results
+domestic_wells <- read_csv(url_dw) %>% st_as_sf(coords = c("x", "y"), crs = 4269)
+model_results  <- read_csv(url_mr)
+
+# read 2019 groundwater level and MT surface
+gwl_2019 <- raster(url_g1)
+gwl_mt   <- raster(url_g2)
+
+# the above code may not work depending on how your spatial packages are configured
+# in this case, download the files and open them like so:
+temp1 <- temp2 <- tempfile()
+download.file(url_g1, temp1); download.file(url_g2, temp2)
+
+gwl_2019 <- raster(temp1)
+gwl_mt   <- raster(temp2)
+
+</code>
+</pre>
+</div>
 
 <br>
 
+
 ### **Python data access**  
 
-<center>
-<iframe scrolling = "no"
-  src="https://carbon.now.sh/embed?bg=rgba%28242%2C242%2C242%2C1%29&t=material&wt=none&l=python&ds=false&dsyoff=20px&dsblur=68px&wc=true&wa=true&pv=56px&ph=56px&ln=false&fl=1&fm=Hack&fs=14px&lh=133%25&si=false&es=2x&wm=false&code=import%2520pandas%2520as%2520pd%250Aimport%2520rasterio%250A%250A%2523%2520urls%250Aurl_dw%2520%253D%2520%2522https%253A%252F%252Fgithub.com%252Frichpauloo%252Faife%252Fraw%252Fq4-updates%252Fdownload%252Fdomestic_wells.csv%2522%250Aurl_mr%2520%253D%2520%2522https%253A%252F%252Fgithub.com%252Frichpauloo%252Faife%252Fraw%252Fq4-updates%252Fdownload%252Fwell_failure_model_results.csv%2522%2520%250Aurl_g1%2520%253D%2520%2522%252Fvsicurl%252Fhttps%253A%252F%252Fgithub.com%252Frichpauloo%252Faife%252Fraw%252Fq4-updates%252Fdownload%252Fgwl_2019.tif%2522%250Aurl_g2%2520%253D%2520%2522%252Fvsicurl%252Fhttps%253A%252F%252Fgithub.com%252Frichpauloo%252Faife%252Fraw%252Fq4-updates%252Fdownload%252Fgwl_mt.tif%2522%250A%250A%2523%2520read%2520domestic%2520well%2520data%2520and%2520model%2520results%250Adomestic_wells%2520%253D%2520pd.read_csv%28url_dw%29%250Amodel_results%2520%2520%253D%2520pd.read_csv%28url_mr%29%250A%250A%2523%2520read%25202019%2520groundwater%2520level%2520and%2520MT%2520surface%250Agwl_2019%2520%253D%2520rasterio.open%28url_g1%29%250Agwl_mt%2520%2520%2520%253D%2520rasterio.open%28url_g2%29"
-  style="width: 1001px; height: 474px; border:0; transform: scale(1); overflow:hidden;"
-  sandbox="allow-scripts allow-same-origin">
-</iframe>
-<center>
+<div>
+<pre>
+<code class="python">
+import pandas as pd
+import rasterio
+
+# urls
+url_dw = "https://github.com/richpauloo/aife/raw/q4-updates/download/domestic_wells.csv"
+url_mr = "https://github.com/richpauloo/aife/raw/q4-updates/download/well_failure_model_results.csv" 
+url_g1 = "/vsicurl/https://github.com/richpauloo/aife/raw/q4-updates/download/gwl_2019.tif"
+url_g2 = "/vsicurl/https://github.com/richpauloo/aife/raw/q4-updates/download/gwl_mt.tif"
+
+# read domestic well data and model results
+domestic_wells = pd.read_csv(url_dw)
+model_results  = pd.read_csv(url_mr)
+
+# read 2019 groundwater level and MT surface
+gwl_2019 = rasterio.open(url_g1)
+gwl_mt   = rasterio.open(url_g2)
+
+</code>
+</pre>
+</div>
 
 <br>
 <br>

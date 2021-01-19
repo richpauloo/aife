@@ -3,8 +3,8 @@
 title: "GSA Well Failure"
 output: 
   flexdashboard::flex_dashboard:
-    logo: etc/gwf_8_pixels.png
-    favicon: etc/gwf_8_pixels.png
+    logo: ../../../etc/gwf_8_pixels.png
+    favicon: ../../../etc/gwf_8_pixels.png
     vertical_layout: fill
     orientation: rows
     navbar:
@@ -23,8 +23,6 @@ output:
     #css: /Users/richpauloo/Github/aife/jamstack/etc/w3.css
     #self_contained: false
     #lib_dir: libs
-    #logo: etc/cwq_8_pixels.png
-    #favicon: etc/cwq_8_pixels.png
 params: 
   selected_gsa:     "hold"
   selected_decline: "hold"
@@ -32,7 +30,14 @@ params:
   decline_v_full:   "hold"
 ---
 
-<!-- a wee bit of JS that allows a modal popup when the first -->
+<!-- code syntax highlighting, a la https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/ -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/stackoverflow-dark.min.css">
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/highlight.min.js"></script>
+<!-- and it's easy to individually load additional languages -->
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/languages/python.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<!-- a bit of JS that allows a modal popup when the first -->
 <!-- list element of the navbar (Instructions) is clicked -->
 <!-- adapted from: https://github.com/rstudio/flexdashboard/issues/208 -->
 
@@ -281,52 +286,52 @@ root <- "https://www.gsawellfailure.com/gsas/"
 ```
 
 
-Row {.sidebar data-width=150 data-padding=10}
+<i class="fas fa-exclamation-circle"></i> Mobile view detected {.sidebar data-width=150 data-padding=10}
 -----------------------------------------------------------------------
 
 ```{r sidebar downdown menus}
 # GSA dropdown
 tags$div(
-  class="dropdown",
+  class="dropdown", id = "content-desktop",
   tags$button(
     class="dropbtn", "Select a GSA"),
   tags$div(
     class = "dropdown-content",
     tags$a(href = paste0(root, "ALL/", selected_decline), "ALL"),
-    tags$a(href = paste0(root, "aliso/", selected_decline), "Aliso (DM)"),
-    tags$a(href = paste0(root, "alpaugh_tule/", selected_decline), "Alpaugh (Tule)"),
-    tags$a(href = paste0(root, "buena_vista_kern/", selected_decline), "Buena Vista (Kern)"),
-    tags$a(href = paste0(root, "central_kings/", selected_decline), "Central Kings"),
+    # tags$a(href = paste0(root, "aliso/", selected_decline), "Aliso (DM)"),
+    # tags$a(href = paste0(root, "alpaugh-tule/", selected_decline), "Alpaugh (Tule)"),
+    tags$a(href = paste0(root, "buena-vista-kern/", selected_decline), "Buena Vista (Kern)"),
+    tags$a(href = paste0(root, "central-kings/", selected_decline), "Central Kings"),
     tags$a(href = paste0(root, "chowchilla/", selected_decline), "Chowchilla"),
-    tags$a(href = paste0(root, "delano_earlimart_tule/", selected_decline), "Delano-Earlimart (Tule)"),
-    tags$a(href = paste0(root, "east_kaweah/", selected_decline), "East Kaweah"),
-    tags$a(href = paste0(root, "east_tule/", selected_decline), "East Tule"),
-    tags$a(href = paste0(root, "eastern_san_joaquin/", selected_decline), "Eastern San Joaquin"),
-    tags$a(href = paste0(root, "farmers/", selected_decline), "Farmers (DM)"),
-    tags$a(href = paste0(root, "fresno_county/", selected_decline), "Fresno County (DM)"),
+    # tags$a(href = paste0(root, "delano-earlimart-tule/", selected_decline), "Delano-Earlimart (Tule)"),
+    tags$a(href = paste0(root, "east-kaweah/", selected_decline), "East Kaweah"),
+    tags$a(href = paste0(root, "east-tule/", selected_decline), "East Tule"),
+    tags$a(href = paste0(root, "eastern-san-joaquin/", selected_decline), "Eastern San Joaquin"),
+    # tags$a(href = paste0(root, "farmers/", selected_decline), "Farmers (DM)"),
+    # tags$a(href = paste0(root, "fresno-county/", selected_decline), "Fresno County (DM)"),
     tags$a(href = paste0(root, "grassland/", selected_decline), "Grassland (DM)"),
-    tags$a(href = paste0(root, "gravelly_ford_madera/", selected_decline), "Gravelly Ford (Madera)"),
-    tags$a(href = paste0(root, "greater_kaweah/", selected_decline), "Greater Kaweah"),
-    tags$a(href = paste0(root, "henry_miller_kern/", selected_decline), "Henry Miller (Kern)"),
-    tags$a(href = paste0(root, "james_kings/", selected_decline), "James (Kings)"),
-    tags$a(href = paste0(root, "kern_groundwater_authority/", selected_decline), "Kern Groundwater Authority"),
-    tags$a(href = paste0(root, "kern_river/", selected_decline), "Kern River"),
-    tags$a(href = paste0(root, "kings_river_east/", selected_decline), "Kings River East"),
-    tags$a(href = paste0(root, "lower_tule_river/", selected_decline), "Lower Tule River"),
-    tags$a(href = paste0(root, "madera_joint/", selected_decline), "Madera Joint"),
-    tags$a(href = paste0(root, "mc_mullin/", selected_decline), "Mc Mullin"),
+    # tags$a(href = paste0(root, "gravelly-ford-madera/", selected_decline), "Gravelly Ford (Madera)"),
+    tags$a(href = paste0(root, "greater-kaweah/", selected_decline), "Greater Kaweah"),
+    # tags$a(href = paste0(root, "henry-miller-kern/", selected_decline), "Henry Miller (Kern)"),
+    tags$a(href = paste0(root, "james-kings/", selected_decline), "James (Kings)"),
+    tags$a(href = paste0(root, "kern-groundwater-authority/", selected_decline), "Kern Groundwater Authority"),
+    tags$a(href = paste0(root, "kern-river/", selected_decline), "Kern River"),
+    tags$a(href = paste0(root, "kings-river-east/", selected_decline), "Kings River East"),
+    tags$a(href = paste0(root, "lower-tule-river/", selected_decline), "Lower Tule River"),
+    tags$a(href = paste0(root, "madera-joint/", selected_decline), "Madera Joint"),
+    tags$a(href = paste0(root, "mc-mullin/", selected_decline), "Mc Mullin"),
     tags$a(href = paste0(root, "merced/", selected_decline), "Merced"),
-    tags$a(href = paste0(root, "mid_kaweah/", selected_decline), "Mid Kaweah"),
-    tags$a(href = paste0(root, "new_stone_madera/", selected_decline), "New Stone (Madera)"),
-    tags$a(href = paste0(root, "north_fork_kings/", selected_decline), "North Fork Kings"),
-    tags$a(href = paste0(root, "north_kings/", selected_decline), "North Kings"),
-    tags$a(href = paste0(root, "northern_central/", selected_decline), "Northern Central (DM)"),
-    tags$a(href = paste0(root, "pixley_tule/", selected_decline), "Pixley (Tule)"),
-    tags$a(href = paste0(root, "root_creek_madera/", selected_decline), "Root Creek (Madera)"),
+    tags$a(href = paste0(root, "mid-kaweah/", selected_decline), "Mid Kaweah"),
+    # tags$a(href = paste0(root, "new-stone-madera/", selected_decline), "New Stone (Madera)"),
+    tags$a(href = paste0(root, "north-fork-kings/", selected_decline), "North Fork Kings"),
+    tags$a(href = paste0(root, "north-kings/", selected_decline), "North Kings"),
+    tags$a(href = paste0(root, "northern-central/", selected_decline), "Northern Central (DM)"),
+    tags$a(href = paste0(root, "pixley-tule/", selected_decline), "Pixley (Tule)"),
+    # tags$a(href = paste0(root, "root-creek-madera/", selected_decline), "Root Creek (Madera)"),
     tags$a(href = paste0(root, "sjrec/", selected_decline), "SJREC (DM)"),
-    tags$a(href = paste0(root, "south_kings/", selected_decline), "South Kings"),
-    tags$a(href = paste0(root, "tri_county_tule/", selected_decline), "Tri-County (Tule)"),
-    tags$a(href = paste0(root, "tulare_lake/", selected_decline), "Tulare Lake"),
+    tags$a(href = paste0(root, "south-kings/", selected_decline), "South Kings"),
+    # tags$a(href = paste0(root, "tri-county-tule/", selected_decline), "Tri-County (Tule)"),
+    tags$a(href = paste0(root, "tulare-lake/", selected_decline), "Tulare Lake"),
     tags$a(href = paste0(root, "westside/", selected_decline), "Westside")
     )
 )
@@ -336,7 +341,7 @@ tags$br()
 
 # groundwater level dropdown
 tags$div(
-  class="dropdown",
+  class="dropdown", id = "content-desktop",
   tags$button(
     class="dropbtn", paste0("Select a groundwater scenario")),
   tags$div(
@@ -356,10 +361,15 @@ tags$div(
     )
 )
 
+# mobile only message
+tags$div(
+  id = "content-mobile",
+  tags$p("The data visualizations on this website are too large for mobile devices and small screens. For best results, please visit gsawellfailure.com on a PC.")
+)
+
 tags$br()
 tags$br()
 ```
-
 
 
 <!-- Row {data-width=100} -->
@@ -593,7 +603,7 @@ if(selected_gsa != "ALL"){
     addLayersControl(
       overlayGroups = rev(og),
       baseGroups    = c("minimum threshold", "2019 groundwater level"),
-      options       = layersControlOptions(collapsed = FALSE,
+      options       = layersControlOptions(collapsed = TRUE,
                                            position = "bottomleft")
     ) %>%
     
@@ -722,7 +732,7 @@ if(selected_gsa == "ALL"){
 leaf_map
 ```
 
-### `r ifelse(selected_gsa != "ALL", paste0("<font size='+1.5'><button type='button' style='border:none; background-color: Transparent;' data-toggle='modal' data-target='#md-plot-description'><i class='fas fa-question-circle'></i></button> Forecasted percentage of dry wells for ", gsa@data$gsp_name, "GSA</font>"), "<font size='+1.5'><button type='button' style='border:none; background-color: Transparent;' data-toggle='modal' data-target='#md-plot-description'><i class='fas fa-question-circle'></i></button> Forecasted percentage of dry wells for all critical priority GSAs</font>")`
+### `r ifelse(selected_gsa != "ALL", paste0("<font size='+1.5'><button type='button' style='border:none; background-color: Transparent;' data-toggle='modal' data-target='#md-plot-description'><i class='fas fa-question-circle'></i></button> Forecasted percentage of dry wells for ", gsa@data$gsp_name, " GSA</font>"), "<font size='+1.5'><button type='button' style='border:none; background-color: Transparent;' data-toggle='modal' data-target='#md-plot-description'><i class='fas fa-question-circle'></i></button> Forecasted percentage of dry wells for all critical priority GSAs</font>")`
 ```{r, plot}
 readr::read_rds(paste0("../plotly/", selected_decline, "_", selected_gsa, ".rds"))
 ```

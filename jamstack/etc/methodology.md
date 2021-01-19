@@ -1,6 +1,5 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
 
-
 <center>
 # **Science and Methodology**
 </center>
@@ -69,7 +68,12 @@ Next, we distinguish between two classes of well status: *active* and *failing*.
 
 <br>  
 <center>
+<div id = "content-desktop">
   <img src="etc/well_failure.png" style="width: 50%">
+</div>
+<div id = "content-mobile">
+  <img src="etc/well_failure.png" style="width: 100%">
+</div>
 </center>
 
 <i>Figure 1: A conceptual model of well failure from Pauloo et al, 2020. (A) groundwater level is shallower than the pump location of the two wells and both are active, (B) the shallower well fails because the groundwater level falls below the level of the pump, but the deep well remains active.</i>
@@ -103,7 +107,7 @@ Our estimates of domestic well failure count, percentage, and cost agree with ot
 
 <i>Table 1: Comparison of well failure statistics across three studies, including this one, that estimate domestic well failure in critical priority basins, assuming the specified minimum threshold is reached.</i>
 
-<table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;">
+<table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;" width = "100%;">
  <thead>
   <tr>
    <th style="text-align:left;"> Study </th>
@@ -118,18 +122,18 @@ Our estimates of domestic well failure count, percentage, and cost agree with ot
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> Pauloo et al (2021), this study </td>
-   <td style="text-align:left;"> 31 yrs </td>
+   <td style="text-align:left;"> this study </td>
+   <td style="text-align:left;"> 31 </td>
    <td style="text-align:left;"> 2019 </td>
    <td style="text-align:left;"> 15,368 </td>
    <td style="text-align:left;"> 9,281-9651 </td>
    <td style="text-align:left;"> 61-63% </td>
    <td style="text-align:left;"> 109-115 </td>
-   <td style="text-align:left;"> not calculated </td>
+   <td style="text-align:left;"> NA </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Bostic et al (2020) </td>
-   <td style="text-align:left;"> 29 yrs </td>
+   <td style="text-align:left;"> 29 </td>
    <td style="text-align:left;"> 2019 </td>
    <td style="text-align:left;"> 8,206 </td>
    <td style="text-align:left;"> 5,416 </td>
@@ -139,8 +143,8 @@ Our estimates of domestic well failure count, percentage, and cost agree with ot
   </tr>
   <tr>
    <td style="text-align:left;"> EKI (2020) </td>
-   <td style="text-align:left;"> not reported </td>
-   <td style="text-align:left;"> not reported </td>
+   <td style="text-align:left;"> NA </td>
+   <td style="text-align:left;"> NA </td>
    <td style="text-align:left;"> 24,500 </td>
    <td style="text-align:left;"> 12,000 </td>
    <td style="text-align:left;"> 49% </td>
@@ -172,7 +176,7 @@ This work is made possible with support from the AI for Earth Innovation Program
 
 [1] <a href = "https://pacinst.org/publication/sustainable-for-whom/" target = "_blank">Bostic, D., Dobbin, K., Pauloo, R., Mendoza, J., Kuo, M., and London, J. (2020). Sustainable for Whom? The Impact of Groundwater Sustainability Plans on Domestic Wells. UC Davis Center for Regional Change.</a>
 
-[2] a href = "https://data.cnra.ca.gov/dataset/well-completion-reports" target = "_blank">CA-DWR. (2018). California Online State Well Completion Report Database. Available at: https://data.cnra.ca.gov/dataset/well-completion-reports. Accessed January 1, 2018</a>
+[2] <a href = "https://data.cnra.ca.gov/dataset/well-completion-reports" target = "_blank">CA-DWR. (2018). California Online State Well Completion Report Database. Available at: https://data.cnra.ca.gov/dataset/well-completion-reports. Accessed January 1, 2018</a>
 
 [3] <a href = "https://data.cnra.ca.gov/dataset/periodic-groundwater-level-measurements" target = "_blank">CA-DWR. (2020) Periodic Groundwater Level Measurement database. Available at: https://data.cnra.ca.gov/dataset/periodic-groundwater-level-measurements. Accessed March 1, 2020</a>
 

@@ -15,13 +15,24 @@ This tool was created to show you, the user, how groundwater management decision
 (1) Select the GSA that is most relevant to you. You may also select "All GSAs," which will show you results for all 25 of the GSAs included in this tool.  
 
 <center>
+<div id = "content-desktop">
   <img src="etc/inst_1.png" style="width: 40%">
+</div>
+<div id = "content-mobile">
+  <img src="etc/inst_1.png" style="width: 100%">
+</div>
 </center>
 
 (2) Select between the options of groundwater levels and scenarios. You have the option of choosing the "minimum threshold" that the GSA has specified in its Groundwater Sustainability Plan. You may also choose how many feet below the 2019 groundwater levels you want to see. For example, you can choose to see how many wells will go dry if the water in the aquifers is lowered by 10 feet, 20 feet, and more, up to 300 feet.  
 
 <center>
+<div id = "content-desktop">
   <img src="etc/inst_2.png" style="width: 40%">
+</div>
+<div id = "content-mobile">
+  <img src="etc/inst_2.png" style="width: 100%">
+</div>
+
 </center>
 
 (3) Based on your selections, the tool will show you how many domestic wells are likely to go dry in that scenario for the GSA(s) you selected.  
@@ -35,7 +46,12 @@ If you do not know what Groundwater Sustainability Agency is relevant to you, se
 Controls are labeled in the image and described below: 
 
 <center>
+<div id = "content-desktop">
   <img src="etc/inst_3.png" style="width: 80%">
+</div>
+<div id = "content-mobile">
+  <img src="etc/inst_3.png" style="width: 100%">
+</div>
 </center>
 
 1. `Groundwater level decline`, `Well failure count`, `Well failure percent`, and `Cost estimate` for the selected scenario. Click buttons to read more.  
@@ -52,7 +68,12 @@ Controls are labeled in the image and described below:
 On the [main page showing all GSAs](https://www.gsawellfailure.com?#map), click on a GSA in the map to view the forecasted well failure plot for the selected GSA, and hover over the plot to view failure and cost statistics for each scenario.  
 
 <center>
+<div id = "content-desktop">
   <img src="etc/inst_4.png" style="width: 80%">
+</div>
+<div id = "content-mobile">
+  <img src="etc/inst_4.png" style="width: 100%">
+</div>
 </center>
 
 <br>
