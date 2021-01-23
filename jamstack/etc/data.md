@@ -6,7 +6,7 @@
 </center>
 
 
-In addition to the web tool data viewer, GSA Well Failure data is available for downloaded via static files and can be accessed programmatically via a scripting language. `R` and `Python` examples below are provided below.  
+In addition to the web tool data viewer, GSP Well Failure data is available for downloaded via static files and can be accessed programmatically via a scripting language. `R` and `Python` examples below are provided below.  
 
 The well failure model in this study is implemented in `R`, and openly available on <i class="fab fa-github fa-lg" style="color:#be4bdc"></i> <a href = "https://github.com/richpauloo/aife" target = "_blank">Github</a>.  
 
@@ -21,7 +21,7 @@ The Well Completion report database can be downloaded from the California Natura
 
 <br>
 
-The subset of 15,368 domestic wells considered in this study, unfiltered for retirement age, are provided below.  
+The subset of 15,368 domestic wells considered in this study are provided below.  
 
 [<i class="fa fa-download fa-lg" style="color:#65a2e7"></i> domestic_wells.csv, 2MB](https://github.com/richpauloo/aife/raw/q4-updates/download/domestic_wells.csv.zip)  
 
@@ -59,7 +59,11 @@ The subset of 15,368 domestic wells considered in this study, unfiltered for ret
   </tr>
   <tr>
    <td style="text-align:left;"> gsp_name </td>
-   <td style="text-align:left;"> name of the GSA the well is within </td>
+   <td style="text-align:left;"> name of the GSP the well is within </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> year_drilled </td>
+   <td style="text-align:left;"> year the well was drilled </td>
   </tr>
   <tr>
    <td style="text-align:left;"> x </td>
@@ -76,13 +80,13 @@ The subset of 15,368 domestic wells considered in this study, unfiltered for ret
 <br>
 
 
-### **GSA Spatial Boundaries**  
+### **GSP Spatial Boundaries**  
 
-GSA spatial boundaries for the GSAs examined in this study were downloaded from the State of California's GSA Map Viewer, which provides all GSA spatial boundaries in full.   
+GSP spatial boundaries for the GSPs examined in this study were downloaded from the State of California's GSP Map Viewer, which provides all GSP spatial boundaries in full.   
 
 <a href = "https://sgma.water.ca.gov/webgis/index.jsp?appid=gasmaster&rz=true" target = "_blank>https://sgma.water.ca.gov/webgis/index.jsp?appid=gasmaster&rz=true</a>
 
-The GSAs considered in this study are: *Buena Vista (Kern), Central Kings, Chowchilla, East Kaweah, East Tule, Eastern San Joaquin, Grassland (DM), Greater Kaweah, James (Kings), Kern Groundwater Authority, Kern River, Kings River East, Lower Tule River, Madera Joint, Mc Mullin, Merced, Mid Kaweah, North Fork Kings, North Kings, Northern Central (DM), Pixley (Tule), SJREC (DM), South Kings, Tulare Lake,* and *Westside.*  
+The GSPs considered in this study are: *Buena Vista (Kern), Central Kings, Chowchilla, East Kaweah, East Tule, Eastern San Joaquin, Grassland (DM), Greater Kaweah, James (Kings), Kern Groundwater Authority, Kern River, Kings River East, Lower Tule River, Madera Joint, Mc Mullin, Merced, Mid Kaweah, North Fork Kings, North Kings, Northern Central (DM), Pixley (Tule), SJREC (DM), South Kings, Tulare Lake,* and *Westside.*  
 
 
 <br>
@@ -105,7 +109,7 @@ Two groundwater level surfaces were developed via ordinary kriging for this stud
 <tbody>
   <tr>
    <td style="text-align:left;"> gwl_2019 </td>
-   <td style="text-align:left;"> Initial groundwater level condition representing the average 2019 groundwater level in the GSAs considered in this study. Values reported are in feet below land surface. </td>
+   <td style="text-align:left;"> Initial groundwater level condition representing the average 2019 groundwater level in the GSPs considered in this study. Values reported are in feet below land surface. </td>
   </tr>
 </tbody>
 </table>

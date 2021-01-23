@@ -25,7 +25,7 @@ The lack of well failure research in California until recent years is largely be
 
 California's snowpack is forecasted to decline by as much as 79.3% by the year 2100 (Rhoades et al 2018). Drought frequency in California's southern CV, also the location of greatest domestic well density, may increase by more than 100% (Swain et al 2018). A drier and warmer climate (Diffenbaugh 2015; Cook 2015) with more frequent heat waves and extended droughts (Tebaldi et al 2006; Lobell et al 2011) will coincide with the implementation of the Sustainable Groundwater Management Act (SGMA 2014), in which critical priority basins have already submitted groundwater sustainability plans (GSPs) that specify groundwater level minimum thresholds. These minimum thresholds signify the groundwater elevation at which undesirable impacts to beneficial users of groundwater, such as domestic wells, are anticipated to occur. Although methodological approaches to estimate well failure exist today, these were not widely understood during the development of GSPs in critical priority basins, and hence, a basic understanding of how groundwater minimum thresholds will impact well failure was unknown during the planning process. Two recent studies have shown that widespread and significant domestic well failure would result if minimum thresholds were reached in critical priority basins. 
 
-In this research, we predict the spatial distribution, count, and cost of domestic well failure in California's critical priority basins, focusing on groundwater sustainability agencies (GSAs) as our unit of observation. We also evaluate uniform groundwater level decline scenarios from a roughly present day (2019) average groundwater level to compare the impact of these alternate management scenarios. Lastly, we compare our results to those of Bostic et al (2020), and EKI (2020) then provide a [dataset of our findings](#data) to enable further analysis and incorporation of domestic well protection measures into ongoing GSP development and planning over the SGMA implementation period.  
+In this research, we predict the spatial distribution, count, and cost of domestic well failure in California's critical priority basins, focusing on groundwater sustainability agencies (GSAs) as our unit of observation. We also evaluate uniform groundwater level decline scenarios from a roughly present day (2019) average groundwater level to compare the impact of these alternate management scenarios. Lastly, we compare our results to those of Bostic et al (2020), and EKI (2020) then provide a [dataset of our findings](#data) to enable further analysis and incorporation of domestic well protection measures (Islas et al, 2020) into ongoing GSP development and planning over the SGMA implementation period.  
 
 
 <br>
@@ -149,7 +149,7 @@ Our estimates of domestic well failure count, percentage, and cost agree with ot
    <td style="text-align:left;"> 12,000 </td>
    <td style="text-align:left;"> 49% </td>
    <td style="text-align:left;"> 88-359 </td>
-   <td style="text-align:left;"> 106,000-127000 </td>
+   <td style="text-align:left;"> 106,000-127,000 </td>
   </tr>
 </tbody>
 </table>
@@ -196,45 +196,47 @@ This work is made possible with support from the AI for Earth Innovation Program
 
 [11] Hanak, E., Lund, J., Dinar, A., Gray, B., and Howitt, R. (2011). Managing California’s  Water: From Conflict to Reconciliation. Public Policy Institute of California. ISBN9781582131412. 
 
-[12] Johnson, T. D., & Belitz, K. (2015). Identifying the location and population served by domestic wells in California. _Journal of Hydrology: Regional Studies_, 3, 31-86.
+[12] <a href = "https://d3n8a8pro7vhmx.cloudfront.net/communitywatercenter/pages/3928/attachments/original/1590776730/Well_Mitigation_Print.pdf?1590776730" target = "_blank">Islas, A., Monaco, A., Ores, D. (2020) Framework for a Drinking Water Well Impact Mitigation Program. Self Help Enterprises.</a>
 
-[13] Johnson, T. D., & Belitz, K. (2017). Domestic well locations and populations served in the contiguous US: 1990. _Science of The Total Environment_, 607, 658-668.
+[13] Johnson, T. D., & Belitz, K. (2015). Identifying the location and population served by domestic wells in California. _Journal of Hydrology: Regional Studies_, 3, 31-86.
 
-[14] Journel, A. G., & Huijbregts, C. J. (1978). _Mining geostatistics_ (Vol. 600). London: Academic press.
+[14] Johnson, T. D., & Belitz, K. (2017). Domestic well locations and populations served in the contiguous US: 1990. _Science of The Total Environment_, 607, 658-668.
 
-[15] Laurent, A. G. (1963). The lognormal distribution and the translation method: description and estimation problems. _Journal of the American Statistical Association_, 58(301), 231-235.
+[15] Journel, A. G., & Huijbregts, C. J. (1978). _Mining geostatistics_ (Vol. 600). London: Academic press.
 
-[16] Lobell, D. B., Schlenker, W., & Costa-Roberts, J. (2011). Climate trends and global crop production since 1980. _Science_, 333(6042), 616-620.
+[16] Laurent, A. G. (1963). The lognormal distribution and the translation method: description and estimation problems. _Journal of the American Statistical Association_, 58(301), 231-235.
 
-[17] Lopez, A., Tebaldi, C., New, M., Stainforth, D., Allen, M., & Kettleborough, J. (2006). Two approaches to quantifying uncertainty in global temperature changes. _Journal of Climate_, 19(19), 4785-4796.
+[17] Lobell, D. B., Schlenker, W., & Costa-Roberts, J. (2011). Climate trends and global crop production since 1980. _Science_, 333(6042), 616-620.
 
-[18] Medellín-Azuara, J., MacEwan, D., Howitt, R., Sumner, D.A., Lund, J., Scheer, J., Gailey, R., Hart, Q., Alexander, N.D., and Arnold B. (2016). Economic Analysis of the California Drought on Agriculture: A report for the California Department of Food and Agriculture. Center for Watershed Sciences, University of California Davis. Davis, CA. 
+[18] Lopez, A., Tebaldi, C., New, M., Stainforth, D., Allen, M., & Kettleborough, J. (2006). Two approaches to quantifying uncertainty in global temperature changes. _Journal of Climate_, 19(19), 4785-4796.
 
-[19] Mitchell, D., Hanak, E., Baerenklau, K., Escriva-Bou, A., Mccann, H., Pérez-Urdiales, M., and Schwabe, K. (2017). Building Drought Resilience in California's Cities and Suburbs. Public Policy Institute of California. SAn Francisco, CA. 
+[19] Medellín-Azuara, J., MacEwan, D., Howitt, R., Sumner, D.A., Lund, J., Scheer, J., Gailey, R., Hart, Q., Alexander, N.D., and Arnold B. (2016). Economic Analysis of the California Drought on Agriculture: A report for the California Department of Food and Agriculture. Center for Watershed Sciences, University of California Davis. Davis, CA. 
 
-[20] Pauloo, R., Fogg, G., Dahlke, H., Escriva-Bou, A., Fencl, A., and Guillon, H. (2020). Domestic well vulnerability to drought duration and unsustainable groundwater management in California’s Central Valley. _Environmental Research Letters_, 15.4 044010
+[20] Mitchell, D., Hanak, E., Baerenklau, K., Escriva-Bou, A., Mccann, H., Pérez-Urdiales, M., and Schwabe, K. (2017). Building Drought Resilience in California's Cities and Suburbs. Public Policy Institute of California. SAn Francisco, CA. 
 
-[21] Perrone, D., & Jasechko, S. (2017). Dry groundwater wells in the western United States. _Environmental Research Letters_, 12(10), 104002.
+[21] Pauloo, R., Fogg, G., Dahlke, H., Escriva-Bou, A., Fencl, A., and Guillon, H. (2020). Domestic well vulnerability to drought duration and unsustainable groundwater management in California’s Central Valley. _Environmental Research Letters_, 15.4 044010
 
-[22] Perrone, D. and Jasechko, S., Deeper well drilling an unsustainable stopgap to groundwater depletion. (2019). _Nature Sustainability_, 2773–782 
+[22] Perrone, D., & Jasechko, S. (2017). Dry groundwater wells in the western United States. _Environmental Research Letters_, 12(10), 104002.
 
-[23] Rhoades, A. M., Jones, A. D., & Ullrich, P. A. (2018). The changing character of the California Sierra Nevada as a natural reservoir. _Geophysical Research Letters_, 45(23), 13-008.
+[23] Perrone, D. and Jasechko, S., Deeper well drilling an unsustainable stopgap to groundwater depletion. (2019). _Nature Sustainability_, 2773–782 
 
-[24] Sophocleous M., From safe yield to sustainable development of water resources—the Kansas experience., (2000). _Journal of Hydrology_, 23527–43.   
+[24] Rhoades, A. M., Jones, A. D., & Ullrich, P. A. (2018). The changing character of the California Sierra Nevada as a natural reservoir. _Geophysical Research Letters_, 45(23), 13-008.
 
-[25] Sustainable Groundwater Management Act. (2014). California Water Code sec. 10720-10737.8
+[25] Sophocleous M., From safe yield to sustainable development of water resources—the Kansas experience., (2000). _Journal of Hydrology_, 23527–43.   
 
-[26] Swain, D. L., Langenbrunner, B., Neelin, J. D., & Hall, A. (2018). Increasing precipitation volatility in twenty-first-century California. _Nature Climate Change_, 8(5), 427-433.
+[26] Sustainable Groundwater Management Act. (2014). California Water Code sec. 10720-10737.8
 
-[27] Theis, C.V., (1935). The relation between the lowering of the piezometric surface and the rate and duration of discharge of a well using ground-water storage., Eos, _Transactions American Geophysical Union_, 16519–52. 
+[27] Swain, D. L., Langenbrunner, B., Neelin, J. D., & Hall, A. (2018). Increasing precipitation volatility in twenty-first-century California. _Nature Climate Change_, 8(5), 427-433.
 
-[28] Theis, C.V., (1940). The source of water derived from wells., _Civil Engineering_, 10277–280. 
+[28] Theis, C.V., (1935). The relation between the lowering of the piezometric surface and the rate and duration of discharge of a well using ground-water storage., Eos, _Transactions American Geophysical Union_, 16519–52. 
 
-[29] Tullis, J. Paul. (1989). Hydraulics of pipelines: Pumps, valves, cavitation, transients. John Wiley & Sons.  
+[29] Theis, C.V., (1940). The source of water derived from wells., _Civil Engineering_, 10277–280. 
 
-[30] Williams, A. P., Seager, R., Abatzoglou, J. T., Cook, B. I., Smerdon, J. E., & Cook, E. R. (2015). Contribution of anthropogenic warming to California drought during 2012–2014. _Geophysical Research Letters_, 42(16), 6819-6828.
+[30] Tullis, J. Paul. (1989). Hydraulics of pipelines: Pumps, valves, cavitation, transients. John Wiley & Sons.  
 
-[31] Varouchakis, E. A., Hristopulos, D. T., & Karatzas, G. P. (2012). Improving kriging of groundwater level data using nonlinear normalizing transformations—a field application. _Hydrological Sciences Journal_, 57(7), 1404-1419.
+[31] Williams, A. P., Seager, R., Abatzoglou, J. T., Cook, B. I., Smerdon, J. E., & Cook, E. R. (2015). Contribution of anthropogenic warming to California drought during 2012–2014. _Geophysical Research Letters_, 42(16), 6819-6828.
+
+[32] Varouchakis, E. A., Hristopulos, D. T., & Karatzas, G. P. (2012). Improving kriging of groundwater level data using nonlinear normalizing transformations—a field application. _Hydrological Sciences Journal_, 57(7), 1404-1419.
 
 
 <br>
