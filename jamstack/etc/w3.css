@@ -1,10 +1,42 @@
 .navbar {
-  background-color: #222222;
+  background-color: #383838;
   border-color: #d7d7d7;
 }
 
+/* Whole document: */
+body{
+  font-family: Sans-Serif;
+}
+
+/* Headers */
+h1{
+  font-size: 48pt;
+}
+h2{
+  font-size: 36pt;
+}
+h3{
+  font-size: 24pt;
+}
+h4,h5,h6{
+  font-size: 20pt;
+}
+p, li, table{
+  font-size: 16pt;
+}
+.navbar-brand{
+  font-size: 16pt;
+}
+
+
+/* wrap text in buttons */
+.btn {
+    white-space: normal !important;
+    word-wrap: break-word !important;
+}
+
 .dropbtn {
-  background-color: #222222;
+  background-color: #383838;
   color: white;
   padding: 10px;
   font-size: 15px;
@@ -67,4 +99,45 @@
 /* change cursor from mouse to hand on hover for "Instructions" in navbar-right*/
 .navbar-right {
   cursor: pointer;
+}
+
+/* footer*/
+footer {
+  text-align: center;
+  background-color: #f2f2f2;
+  color: black;
+}
+
+
+/* hide some content on mobile*/
+#content-desktop {display: block;}
+#content-mobile {display: none;}
+
+@media screen and (max-width: 768px) {
+
+#content-desktop {display: none;}
+#content-mobile {display: block;}
+
+}
+
+/* tble widths 100% in mobile*/
+table{
+    width:100%;
+    table-layout: fixed;
+    overflow-wrap: break-word;
+    font-size: 14px;
+}
+
+/* cleanup code appearance*/
+pre {
+  border-style: none!important;
+  background-color: #f2f2f2;
+}
+
+.python {
+  border-radius: 5px;
+}
+
+.r {
+  border-radius: 5px;
 }

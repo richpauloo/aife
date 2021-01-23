@@ -1,8 +1,7 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
 
 <center>
-# **Terms of use**
-
+# **Terms of use**  
 The GSA Well Failure website is available for use under the <a href = "https://opendatacommons.org/licenses/odbl/summary/" target = "_blank">Open Database License</a>.  
 </center>
 
