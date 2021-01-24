@@ -99,6 +99,9 @@ for(i in rev(seq_along(gsa_names))) {
         str_replace_all('href="../../../etc/w3.css"', 'href="etc/w3.css"') %>% 
         str_replace_all('/Users/richpauloo/Documents/Github/aife/jamstack/etc/',
                         'etc/') %>% 
+        # fixes safari logo issue
+        str_replace_all(" pull-left", "") %>% 
+        str_replace_all('<span class="navbar-brand">', '<span class="navbar-brand pull-right">') %>% 
         write_lines("~/Documents/Github/jbp/index.html")
     }
   
@@ -113,6 +116,8 @@ for(i in rev(seq_along(gsa_names))) {
       str_replace_all('/Users/richpauloo/Documents/Github/aife/jamstack/etc/','../../../etc/') %>%
       str_replace_all('/Users/richpauloo/Documents/GitHub/aife/jamstack/', 
                       "../../../") %>% 
+      str_replace_all(" pull-left", "") %>% 
+      str_replace_all('<span class="navbar-brand">', '<span class="navbar-brand pull-right">') %>% 
       write_lines(file_loc)
     unlink(paste0(site_dir, gsa_names_url[i], "/", decline_v[j], "/index_files"),
            recursive=TRUE)
