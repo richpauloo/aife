@@ -1,6 +1,6 @@
 ---
 # title: '`r paste0("GSA well failure ", " /  ", params$gsa_names_full, "  /  ", params$decline_v_full)`'
-title: "GSA Well Failure"
+title: "GSP Dry Wells"
 output: 
   flexdashboard::flex_dashboard:
     logo: ../../../etc/gwf_8_pixels.png
@@ -63,7 +63,7 @@ params:
 
 <script>
 
-  $('.navbar-brand').wrap('<a href="http://www.gsawellfailure.com">');
+  $('.navbar-brand').wrap('<a href="http://www.gspdrywells.com">');
   
   <!-- code to link navbar links to modal popups -->
   <!-- modal popup when navbar list elements are clicked -->
@@ -282,7 +282,7 @@ if(selected_gsa != "ALL") {
 source(here("jamstack", "etc", "functions.R"))
   
 # root url for links
-root <- "https://www.gsawellfailure.com/gsas/"
+root <- "https://www.gspdrywells.com/gsas/"
 ```
 
 
@@ -364,7 +364,7 @@ tags$div(
 # mobile only message
 tags$div(
   id = "content-mobile",
-  tags$p("The data visualizations on this website are too large for mobile devices and small screens. For best results, please visit gsawellfailure.com on a PC.")
+  tags$p("The data visualizations on this website are too large for mobile devices and small screens. For best results, please visit gspdrywells.com on a PC.")
 )
 
 tags$br()

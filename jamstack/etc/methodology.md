@@ -12,7 +12,7 @@ Millions of Californians rely on drinking water obtained from private domestic w
 <br>
 **Suggested Citation:**  
 
-*Pauloo, R., Bostic, D., Monaco, A. and Hammond, K. 2021. GSA Well Failure: forecasting domestic well failure in critical priority basins. Berkeley, California. Available at https://www.gsawellfailure.com. (Date Accessed)*
+*Pauloo, R., Bostic, D., Monaco, A. and Hammond, K. 2021. GSA Well Failure: forecasting domestic well failure in critical priority basins. Berkeley, California. Available at https://www.gspdrywells.com. (Date Accessed)*
 
 <br> 
 ## **Introduction**  
@@ -31,7 +31,7 @@ In this research, we predict the spatial distribution, count, and cost of domest
 <br>
 ## **Methods and data sources**
 
-We well completion reports from 943,469 wells from the <a href = "https://data.ca.gov/dataset/well-completion-reports" target = "_blank">California Department of Water Resources</a> (CA-DWR 2018), seasonal groundwater level measurements (CA-DWR 2020) from the year 2019 in the <a href = "https://data.cnra.ca.gov/dataset/periodic-groundwater-level-measurements" target = "_blank">CA-DWR Periodic Groundwater Level Measurement database</a>, and minimum thresholds reported at representative monitoring points specified in GSPs submitted in critical priority basins.
+We use well completion reports from 943,469 wells from the <a href = "https://data.ca.gov/dataset/well-completion-reports" target = "_blank">California Department of Water Resources</a> (CA-DWR 2018), seasonal groundwater level measurements (CA-DWR 2020) from the year 2019 in the <a href = "https://data.cnra.ca.gov/dataset/periodic-groundwater-level-measurements" target = "_blank">CA-DWR Periodic Groundwater Level Measurement database</a>, and minimum thresholds reported at representative monitoring points specified in GSPs submitted in critical priority basins.
 
 
 ### **Groundwater level**

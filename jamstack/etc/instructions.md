@@ -65,7 +65,7 @@ Controls are labeled in the image and described below:
 
 ### **Additional features**  
 
-On the [main page showing all GSP areas](https://www.gsawellfailure.com?#map), click on a GSP region in the map to view the forecasted well failure plot for the selected GSP, and hover over the plot to view failure and cost statistics for each scenario.  
+On the [main page showing all GSP areas](https://www.gspdrywells.com?#map), click on a GSP region in the map to view the forecasted well failure plot for the selected GSP, and hover over the plot to view failure and cost statistics for each scenario.  
 
 <center>
 <div id = "content-desktop">
