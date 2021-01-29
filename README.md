@@ -6,7 +6,7 @@ Darcy Bostic, MS [dbostic at pacinst dot org], *Pacific Institute, UC Davis*
 
 ## Overview
 
-This is the project repository for [gspdrywells.com](www.gsawellfailure.com), made possible with support from the AI for Earth Innovation Program Grant provided by Global Wildlife Conservation and Microsoft Corporation. [See press release](https://www.globalwildlife.org/press/winners-of-ai-for-earth-innovation-grants-poised-to-address-urgent-environmental-challenges-with-creative-use-of-technology/).  
+This is the project repository for [gspdrywells.com](www.gspdrywells.com), made possible with support from the AI for Earth Innovation Program Grant provided by Global Wildlife Conservation and Microsoft Corporation. [See press release](https://www.globalwildlife.org/press/winners-of-ai-for-earth-innovation-grants-poised-to-address-urgent-environmental-challenges-with-creative-use-of-technology/).  
 
 This work further extends the domestic well failure modeling published in [Pauloo, et al (2020)](https://iopscience.iop.org/article/10.1088/1748-9326/ab6f10), and [Bostic, et al (2020)](WF_report).  
 
