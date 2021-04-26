@@ -99,6 +99,9 @@ for(i in rev(seq_along(gsa_names))) {
         str_replace_all('href="../../../etc/w3.css"', 'href="etc/w3.css"') %>% 
         str_replace_all('/Users/richpauloo/Documents/Github/aife/jamstack/etc/',
                         'etc/') %>% 
+        # fixes safari logo issue
+        str_replace_all(" pull-left", "") %>% 
+        str_replace_all('<span class="navbar-brand">', '<span class="navbar-brand pull-right">') %>% 
         write_lines("~/Documents/Github/jbp/index.html")
     }
   
@@ -110,7 +113,11 @@ for(i in rev(seq_along(gsa_names))) {
     lines %>% 
       str_replace_all('script src="index_files', 'script src="../../../index_files') %>%
       str_replace_all('link href="index_files',  'link href="../../../index_files') %>% 
-      str_replace_all('/Users/richpauloo/Documents/Github/aife/jamstack/etc/','../../../etc/') %>% 
+      str_replace_all('/Users/richpauloo/Documents/Github/aife/jamstack/etc/','../../../etc/') %>%
+      str_replace_all('/Users/richpauloo/Documents/GitHub/aife/jamstack/', 
+                      "../../../") %>% 
+      str_replace_all(" pull-left", "") %>% 
+      str_replace_all('<span class="navbar-brand">', '<span class="navbar-brand pull-right">') %>% 
       write_lines(file_loc)
     unlink(paste0(site_dir, gsa_names_url[i], "/", decline_v[j], "/index_files"),
            recursive=TRUE)
@@ -119,8 +126,11 @@ for(i in rev(seq_along(gsa_names))) {
     if(i == 1 & j == 1) {
       lines <- read_lines(paste0(site_dir, gsa_names_url[i], "/", decline_v[j], "/index.html"))
       lines %>% 
-        str_replace_all('href="../../../etc/w3.css"', 'href="etc/w3.css"') %>% 
-        str_replace_all('../../../index_files', 'index_files') %>% 
+        # str_replace_all('href="../../../etc/w3.css"', 'href="etc/w3.css"') %>% 
+        # str_replace_all('href="../../../etc/gwf_8_pixels.png"', 'href="etc/gwf_8_pixels.png"') %>% 
+        # str_replace_all('src="../../../etc/gwf_8_pixels.png"', 'src="etc/gwf_8_pixels.png"') %>% 
+        # str_replace_all('../../../index_files', 'index_files') %>% 
+        str_replace_all('../../../', "") %>% 
         write_lines("~/Documents/Github/jbp/index.html")
     }
   }

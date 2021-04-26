@@ -29,7 +29,7 @@ d   <- d[!d@data$gsp_name %in% rm_gsas_low_n, ] # same object as in 02_preproces
 d2 <- d %>% 
   st_as_sf() %>% 
   select(wcr_number = WCRNumber, mean_ci_upper:mean_ci_lower, 
-         tot_completed_depth = TotalCompletedDepth, gwl_2019, gsp_name) %>% 
+         tot_completed_depth = TotalCompletedDepth, gwl_2019, gsp_name, year_drilled = year) %>% 
   mutate(x = st_coordinates(.)[,1], y = st_coordinates(.)[,2]) %>% 
   st_drop_geometry()
 d2 %>% write_csv(here("download","domestic_wells.csv"))
@@ -41,6 +41,7 @@ tibble(Variable = colnames(d2),
                        "Total completed depth of well in feet below land surface from the Well Completion report database (https://data.cnra.ca.gov/dataset/well-completion-reports)",
                        "Initial groundwater level condition (2019 average) at the well in feet below land surface, calculated via ordinary kriging from ambient seasonal groundwater level measurements in the Periodic Groundwater Level Measurement Database (https://data.cnra.ca.gov/dataset/periodic-groundwater-level-measurements)",
                        "GSA the well falls within",
+                       "year the well was drilled",
                        "x coordinate of the well in EPSG 4269",
                        "y coordinate of the well in EPSG 4269")) %>%
   knitr::kable() %>% 

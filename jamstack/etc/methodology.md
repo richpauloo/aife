@@ -1,6 +1,5 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
 
-
 <center>
 # **Science and Methodology**
 </center>
@@ -13,7 +12,7 @@ Millions of Californians rely on drinking water obtained from private domestic w
 <br>
 **Suggested Citation:**  
 
-*Pauloo, R., Bostic, D., Monaco, A. and Hammond, K. 2021. GSA Well Failure: forecasting domestic well failure in critical priority basins. Berkeley, California. Available at https://www.gsawellfailure.com. (Date Accessed)*
+*Pauloo, R., Bostic, D., Monaco, A. and Hammond, K. 2021. GSA Well Failure: forecasting domestic well failure in critical priority basins. Berkeley, California. Available at https://www.gspdrywells.com. (Date Accessed)*
 
 <br> 
 ## **Introduction**  
@@ -26,13 +25,13 @@ The lack of well failure research in California until recent years is largely be
 
 California's snowpack is forecasted to decline by as much as 79.3% by the year 2100 (Rhoades et al 2018). Drought frequency in California's southern CV, also the location of greatest domestic well density, may increase by more than 100% (Swain et al 2018). A drier and warmer climate (Diffenbaugh 2015; Cook 2015) with more frequent heat waves and extended droughts (Tebaldi et al 2006; Lobell et al 2011) will coincide with the implementation of the Sustainable Groundwater Management Act (SGMA 2014), in which critical priority basins have already submitted groundwater sustainability plans (GSPs) that specify groundwater level minimum thresholds. These minimum thresholds signify the groundwater elevation at which undesirable impacts to beneficial users of groundwater, such as domestic wells, are anticipated to occur. Although methodological approaches to estimate well failure exist today, these were not widely understood during the development of GSPs in critical priority basins, and hence, a basic understanding of how groundwater minimum thresholds will impact well failure was unknown during the planning process. Two recent studies have shown that widespread and significant domestic well failure would result if minimum thresholds were reached in critical priority basins. 
 
-In this research, we predict the spatial distribution, count, and cost of domestic well failure in California's critical priority basins, focusing on groundwater sustainability agencies (GSAs) as our unit of observation. We also evaluate uniform groundwater level decline scenarios from a roughly present day (2019) average groundwater level to compare the impact of these alternate management scenarios. Lastly, we compare our results to those of Bostic et al (2020), and EKI (2020) then provide a [dataset of our findings](#data) to enable further analysis and incorporation of domestic well protection measures into ongoing GSP development and planning over the SGMA implementation period.  
+In this research, we predict the spatial distribution, count, and cost of domestic well failure in California's critical priority basins, focusing on groundwater sustainability agencies (GSAs) as our unit of observation. We also evaluate uniform groundwater level decline scenarios from a roughly present day (2019) average groundwater level to compare the impact of these alternate management scenarios. Lastly, we compare our results to those of Bostic et al (2020), and EKI (2020) then provide a [dataset of our findings](#data) to enable further analysis and incorporation of domestic well protection measures (Islas et al, 2020) into ongoing GSP development and planning over the SGMA implementation period.  
 
 
 <br>
 ## **Methods and data sources**
 
-We well completion reports from 943,469 wells from the <a href = "https://data.ca.gov/dataset/well-completion-reports" target = "_blank">California Department of Water Resources</a> (CA-DWR 2018), seasonal groundwater level measurements (CA-DWR 2020) from the year 2019 in the <a href = "https://data.cnra.ca.gov/dataset/periodic-groundwater-level-measurements" target = "_blank">CA-DWR Periodic Groundwater Level Measurement database</a>, and minimum thresholds reported at representative monitoring points specified in GSPs submitted in critical priority basins.
+We use well completion reports from 943,469 wells from the <a href = "https://data.ca.gov/dataset/well-completion-reports" target = "_blank">California Department of Water Resources</a> (CA-DWR 2018), seasonal groundwater level measurements (CA-DWR 2020) from the year 2019 in the <a href = "https://data.cnra.ca.gov/dataset/periodic-groundwater-level-measurements" target = "_blank">CA-DWR Periodic Groundwater Level Measurement database</a>, and minimum thresholds reported at representative monitoring points specified in GSPs submitted in critical priority basins.
 
 
 ### **Groundwater level**
@@ -69,7 +68,12 @@ Next, we distinguish between two classes of well status: *active* and *failing*.
 
 <br>  
 <center>
+<div id = "content-desktop">
   <img src="etc/well_failure.png" style="width: 50%">
+</div>
+<div id = "content-mobile">
+  <img src="etc/well_failure.png" style="width: 100%">
+</div>
 </center>
 
 <i>Figure 1: A conceptual model of well failure from Pauloo et al, 2020. (A) groundwater level is shallower than the pump location of the two wells and both are active, (B) the shallower well fails because the groundwater level falls below the level of the pump, but the deep well remains active.</i>
@@ -97,13 +101,13 @@ The 2019 groundwater level initial condition, the minimum threshold surface, and
 
 Domestic wells, particularly in California's Central Valley, tend to be privately owned and adjacent to or within areas of concentrated groundwater extraction for agricultural and municipal use. Due to their relatively shallow depth, these wells are vulnerable to failing when water levels decline due to drought or unsustainable management. With the passage of the Sustainable Groundwater Management Act, local groundwater sustainability agencies will develop sustainable management criteria including minimum thresholds and objectives, codified in monitoring networks that are intended to measure progress towards, or deviance from, sustainability goals. These sustainable management criteria may or may not include domestic wells, owing to a lack of data, models, and systemic understanding. 
 
-Our estimates of domestic well failure count, percentage, and cost agree with other studies (Table 1). Notably, even though the three studies use have different initial well counts, they arrive at similar well failure precents. The nearly threefold higher cost estimate upper range estimated by EKI (2020) compared to this study's metric may be explained by the additional wells considered, and to a less extent, because this study did not consider screen cleaning and increased lift costs. Differences in well failure count estimates may be attributed to the initial set of wells considered, groundwater level initial condition, well retirement age, and the threshold at which failures are evaluated (e.g., pump location, total completed depth, total completed depth plus an operating margin). It is critical for future modeling efforts that these parameters are understood, standardized, and evaluated in terms of their sensitivity on model output. Nonetheless, across all studies, estimated well failures assuming minimum thresholds are reached range from the thousands to just over ten thousand, and may come at a cost of $1-3 or more million USD.  
+Our estimates of domestic well failure count, percentage, and cost agree with other studies (Table 1). Notably, even though the three studies use different initial well counts, they arrive at similar well failure precents. The nearly threefold higher cost estimate upper range estimated by EKI (2020) compared to this study's metric may be explained by the additional wells considered, and to a lesser extent, because this study did not consider screen cleaning and increased lift costs. Differences in well failure count estimates may be attributed to the initial set of wells considered, groundwater level initial condition, well retirement age, and the threshold at which failures are evaluated (e.g., pump location, total completed depth, total completed depth plus an operating margin). It is critical for future modeling efforts that these parameters are understood, standardized, and evaluated in terms of their sensitivity on model output. Nonetheless, across all studies, estimated well failures assuming minimum thresholds are reached range from the thousands to just over ten thousand, and may come at a cost of around $1-3 million USD.  
 
 <br>  
 
 <i>Table 1: Comparison of well failure statistics across three studies, including this one, that estimate domestic well failure in critical priority basins, assuming the specified minimum threshold is reached.</i>
 
-<table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;">
+<table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;" width = "100%;">
  <thead>
   <tr>
    <th style="text-align:left;"> Study </th>
@@ -118,18 +122,18 @@ Our estimates of domestic well failure count, percentage, and cost agree with ot
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> Pauloo et al (2021), this study </td>
-   <td style="text-align:left;"> 31 yrs </td>
+   <td style="text-align:left;"> this study </td>
+   <td style="text-align:left;"> 31 </td>
    <td style="text-align:left;"> 2019 </td>
    <td style="text-align:left;"> 15,368 </td>
    <td style="text-align:left;"> 9,281-9651 </td>
    <td style="text-align:left;"> 61-63% </td>
    <td style="text-align:left;"> 109-115 </td>
-   <td style="text-align:left;"> not calculated </td>
+   <td style="text-align:left;"> NA </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Bostic et al (2020) </td>
-   <td style="text-align:left;"> 29 yrs </td>
+   <td style="text-align:left;"> 29 </td>
    <td style="text-align:left;"> 2019 </td>
    <td style="text-align:left;"> 8,206 </td>
    <td style="text-align:left;"> 5,416 </td>
@@ -139,13 +143,13 @@ Our estimates of domestic well failure count, percentage, and cost agree with ot
   </tr>
   <tr>
    <td style="text-align:left;"> EKI (2020) </td>
-   <td style="text-align:left;"> not reported </td>
-   <td style="text-align:left;"> not reported </td>
+   <td style="text-align:left;"> NA </td>
+   <td style="text-align:left;"> NA </td>
    <td style="text-align:left;"> 24,500 </td>
    <td style="text-align:left;"> 12,000 </td>
    <td style="text-align:left;"> 49% </td>
    <td style="text-align:left;"> 88-359 </td>
-   <td style="text-align:left;"> 106,000-127000 </td>
+   <td style="text-align:left;"> 106,000-127,000 </td>
   </tr>
 </tbody>
 </table>
@@ -172,7 +176,7 @@ This work is made possible with support from the AI for Earth Innovation Program
 
 [1] <a href = "https://pacinst.org/publication/sustainable-for-whom/" target = "_blank">Bostic, D., Dobbin, K., Pauloo, R., Mendoza, J., Kuo, M., and London, J. (2020). Sustainable for Whom? The Impact of Groundwater Sustainability Plans on Domestic Wells. UC Davis Center for Regional Change.</a>
 
-[2] a href = "https://data.cnra.ca.gov/dataset/well-completion-reports" target = "_blank">CA-DWR. (2018). California Online State Well Completion Report Database. Available at: https://data.cnra.ca.gov/dataset/well-completion-reports. Accessed January 1, 2018</a>
+[2] <a href = "https://data.cnra.ca.gov/dataset/well-completion-reports" target = "_blank">CA-DWR. (2018). California Online State Well Completion Report Database. Available at: https://data.cnra.ca.gov/dataset/well-completion-reports. Accessed January 1, 2018</a>
 
 [3] <a href = "https://data.cnra.ca.gov/dataset/periodic-groundwater-level-measurements" target = "_blank">CA-DWR. (2020) Periodic Groundwater Level Measurement database. Available at: https://data.cnra.ca.gov/dataset/periodic-groundwater-level-measurements. Accessed March 1, 2020</a>
 
@@ -192,45 +196,47 @@ This work is made possible with support from the AI for Earth Innovation Program
 
 [11] Hanak, E., Lund, J., Dinar, A., Gray, B., and Howitt, R. (2011). Managing California’s  Water: From Conflict to Reconciliation. Public Policy Institute of California. ISBN9781582131412. 
 
-[12] Johnson, T. D., & Belitz, K. (2015). Identifying the location and population served by domestic wells in California. _Journal of Hydrology: Regional Studies_, 3, 31-86.
+[12] <a href = "https://d3n8a8pro7vhmx.cloudfront.net/communitywatercenter/pages/3928/attachments/original/1590776730/Well_Mitigation_Print.pdf?1590776730" target = "_blank">Islas, A., Monaco, A., Ores, D. (2020) Framework for a Drinking Water Well Impact Mitigation Program. Self Help Enterprises.</a>
 
-[13] Johnson, T. D., & Belitz, K. (2017). Domestic well locations and populations served in the contiguous US: 1990. _Science of The Total Environment_, 607, 658-668.
+[13] Johnson, T. D., & Belitz, K. (2015). Identifying the location and population served by domestic wells in California. _Journal of Hydrology: Regional Studies_, 3, 31-86.
 
-[14] Journel, A. G., & Huijbregts, C. J. (1978). _Mining geostatistics_ (Vol. 600). London: Academic press.
+[14] Johnson, T. D., & Belitz, K. (2017). Domestic well locations and populations served in the contiguous US: 1990. _Science of The Total Environment_, 607, 658-668.
 
-[15] Laurent, A. G. (1963). The lognormal distribution and the translation method: description and estimation problems. _Journal of the American Statistical Association_, 58(301), 231-235.
+[15] Journel, A. G., & Huijbregts, C. J. (1978). _Mining geostatistics_ (Vol. 600). London: Academic press.
 
-[16] Lobell, D. B., Schlenker, W., & Costa-Roberts, J. (2011). Climate trends and global crop production since 1980. _Science_, 333(6042), 616-620.
+[16] Laurent, A. G. (1963). The lognormal distribution and the translation method: description and estimation problems. _Journal of the American Statistical Association_, 58(301), 231-235.
 
-[17] Lopez, A., Tebaldi, C., New, M., Stainforth, D., Allen, M., & Kettleborough, J. (2006). Two approaches to quantifying uncertainty in global temperature changes. _Journal of Climate_, 19(19), 4785-4796.
+[17] Lobell, D. B., Schlenker, W., & Costa-Roberts, J. (2011). Climate trends and global crop production since 1980. _Science_, 333(6042), 616-620.
 
-[18] Medellín-Azuara, J., MacEwan, D., Howitt, R., Sumner, D.A., Lund, J., Scheer, J., Gailey, R., Hart, Q., Alexander, N.D., and Arnold B. (2016). Economic Analysis of the California Drought on Agriculture: A report for the California Department of Food and Agriculture. Center for Watershed Sciences, University of California Davis. Davis, CA. 
+[18] Lopez, A., Tebaldi, C., New, M., Stainforth, D., Allen, M., & Kettleborough, J. (2006). Two approaches to quantifying uncertainty in global temperature changes. _Journal of Climate_, 19(19), 4785-4796.
 
-[19] Mitchell, D., Hanak, E., Baerenklau, K., Escriva-Bou, A., Mccann, H., Pérez-Urdiales, M., and Schwabe, K. (2017). Building Drought Resilience in California's Cities and Suburbs. Public Policy Institute of California. SAn Francisco, CA. 
+[19] Medellín-Azuara, J., MacEwan, D., Howitt, R., Sumner, D.A., Lund, J., Scheer, J., Gailey, R., Hart, Q., Alexander, N.D., and Arnold B. (2016). Economic Analysis of the California Drought on Agriculture: A report for the California Department of Food and Agriculture. Center for Watershed Sciences, University of California Davis. Davis, CA. 
 
-[20] Pauloo, R., Fogg, G., Dahlke, H., Escriva-Bou, A., Fencl, A., and Guillon, H. (2020). Domestic well vulnerability to drought duration and unsustainable groundwater management in California’s Central Valley. _Environmental Research Letters_, 15.4 044010
+[20] Mitchell, D., Hanak, E., Baerenklau, K., Escriva-Bou, A., Mccann, H., Pérez-Urdiales, M., and Schwabe, K. (2017). Building Drought Resilience in California's Cities and Suburbs. Public Policy Institute of California. SAn Francisco, CA. 
 
-[21] Perrone, D., & Jasechko, S. (2017). Dry groundwater wells in the western United States. _Environmental Research Letters_, 12(10), 104002.
+[21] Pauloo, R., Fogg, G., Dahlke, H., Escriva-Bou, A., Fencl, A., and Guillon, H. (2020). Domestic well vulnerability to drought duration and unsustainable groundwater management in California’s Central Valley. _Environmental Research Letters_, 15.4 044010
 
-[22] Perrone, D. and Jasechko, S., Deeper well drilling an unsustainable stopgap to groundwater depletion. (2019). _Nature Sustainability_, 2773–782 
+[22] Perrone, D., & Jasechko, S. (2017). Dry groundwater wells in the western United States. _Environmental Research Letters_, 12(10), 104002.
 
-[23] Rhoades, A. M., Jones, A. D., & Ullrich, P. A. (2018). The changing character of the California Sierra Nevada as a natural reservoir. _Geophysical Research Letters_, 45(23), 13-008.
+[23] Perrone, D. and Jasechko, S., Deeper well drilling an unsustainable stopgap to groundwater depletion. (2019). _Nature Sustainability_, 2773–782 
 
-[24] Sophocleous M., From safe yield to sustainable development of water resources—the Kansas experience., (2000). _Journal of Hydrology_, 23527–43.   
+[24] Rhoades, A. M., Jones, A. D., & Ullrich, P. A. (2018). The changing character of the California Sierra Nevada as a natural reservoir. _Geophysical Research Letters_, 45(23), 13-008.
 
-[25] Sustainable Groundwater Management Act. (2014). California Water Code sec. 10720-10737.8
+[25] Sophocleous M., From safe yield to sustainable development of water resources—the Kansas experience., (2000). _Journal of Hydrology_, 23527–43.   
 
-[26] Swain, D. L., Langenbrunner, B., Neelin, J. D., & Hall, A. (2018). Increasing precipitation volatility in twenty-first-century California. _Nature Climate Change_, 8(5), 427-433.
+[26] Sustainable Groundwater Management Act. (2014). California Water Code sec. 10720-10737.8
 
-[27] Theis, C.V., (1935). The relation between the lowering of the piezometric surface and the rate and duration of discharge of a well using ground-water storage., Eos, _Transactions American Geophysical Union_, 16519–52. 
+[27] Swain, D. L., Langenbrunner, B., Neelin, J. D., & Hall, A. (2018). Increasing precipitation volatility in twenty-first-century California. _Nature Climate Change_, 8(5), 427-433.
 
-[28] Theis, C.V., (1940). The source of water derived from wells., _Civil Engineering_, 10277–280. 
+[28] Theis, C.V., (1935). The relation between the lowering of the piezometric surface and the rate and duration of discharge of a well using ground-water storage., Eos, _Transactions American Geophysical Union_, 16519–52. 
 
-[29] Tullis, J. Paul. (1989). Hydraulics of pipelines: Pumps, valves, cavitation, transients. John Wiley & Sons.  
+[29] Theis, C.V., (1940). The source of water derived from wells., _Civil Engineering_, 10277–280. 
 
-[30] Williams, A. P., Seager, R., Abatzoglou, J. T., Cook, B. I., Smerdon, J. E., & Cook, E. R. (2015). Contribution of anthropogenic warming to California drought during 2012–2014. _Geophysical Research Letters_, 42(16), 6819-6828.
+[30] Tullis, J. Paul. (1989). Hydraulics of pipelines: Pumps, valves, cavitation, transients. John Wiley & Sons.  
 
-[31] Varouchakis, E. A., Hristopulos, D. T., & Karatzas, G. P. (2012). Improving kriging of groundwater level data using nonlinear normalizing transformations—a field application. _Hydrological Sciences Journal_, 57(7), 1404-1419.
+[31] Williams, A. P., Seager, R., Abatzoglou, J. T., Cook, B. I., Smerdon, J. E., & Cook, E. R. (2015). Contribution of anthropogenic warming to California drought during 2012–2014. _Geophysical Research Letters_, 42(16), 6819-6828.
+
+[32] Varouchakis, E. A., Hristopulos, D. T., & Karatzas, G. P. (2012). Improving kriging of groundwater level data using nonlinear normalizing transformations—a field application. _Hydrological Sciences Journal_, 57(7), 1404-1419.
 
 
 <br>

@@ -1,10 +1,10 @@
 ---
 # title: '`r paste0("GSA well failure ", " /  ", params$gsa_names_full, "  /  ", params$decline_v_full)`'
-title: "GSA Well Failure"
+title: "GSP Dry Wells"
 output: 
   flexdashboard::flex_dashboard:
-    logo: etc/gwf_8_pixels.png
-    favicon: etc/gwf_8_pixels.png
+    logo: ../../../etc/gwf_8_pixels.png
+    favicon: ../../../etc/gwf_8_pixels.png
     vertical_layout: fill
     orientation: rows
     navbar:
@@ -17,14 +17,12 @@ output:
       # - { title: "Instructions", href: "#instructions", align: right }
       - { title: "Methodology", href: "#methodology", align: right }
       - { title: "Data", href: "#data", align: right }
-      - { icon: "fa-question-circle",  href: "#instructions", align: right}
+      - { title: "Instructions",  href: "#instructions", align: right}
       # - { title: "About", href: "#about", align: right }
       # - { icon: "fa-github", href: "https://www.github.com/richpauloo/aife", align: right}
     #css: /Users/richpauloo/Github/aife/jamstack/etc/w3.css
     #self_contained: false
     #lib_dir: libs
-    #logo: etc/cwq_8_pixels.png
-    #favicon: etc/cwq_8_pixels.png
 params: 
   selected_gsa:     "hold"
   selected_decline: "hold"
@@ -32,7 +30,14 @@ params:
   decline_v_full:   "hold"
 ---
 
-<!-- a wee bit of JS that allows a modal popup when the first -->
+<!-- code syntax highlighting, a la https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/ -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/stackoverflow-dark.min.css">
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/highlight.min.js"></script>
+<!-- and it's easy to individually load additional languages -->
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/languages/python.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<!-- a bit of JS that allows a modal popup when the first -->
 <!-- list element of the navbar (Instructions) is clicked -->
 <!-- adapted from: https://github.com/rstudio/flexdashboard/issues/208 -->
 
@@ -58,7 +63,7 @@ params:
 
 <script>
 
-  $('.navbar-brand').wrap('<a href="http://www.gsawellfailure.com">');
+  $('.navbar-brand').wrap('<a href="http://www.gspdrywells.com">');
   
   <!-- code to link navbar links to modal popups -->
   <!-- modal popup when navbar list elements are clicked -->
@@ -106,16 +111,16 @@ params:
   $(document).ready(function() {
     $('#dashboard-container').on('flexdashboard:layoutcomplete', 
       function() {
-        $('#well-failure-count').click(function() {
-          $('#md-well-failure-count').modal(); });
+        $('#number-of-wells-estimated-to-go-dry').click(function() {
+          $('#md-number-of-wells-estimated-to-go-dry').modal(); });
     })
   })
   
   $(document).ready(function() {
     $('#dashboard-container').on('flexdashboard:layoutcomplete', 
       function() {
-        $('#well-failure-percent').click(function() {
-          $('#md-well-failure-percent').modal(); });
+        $('#percentage-of-wells-estimated-to-go-dry').click(function() {
+          $('#md-percentage-of-wells-estimated-to-go-dry').modal(); });
     })
   })
   
@@ -169,7 +174,7 @@ Map {.hidden}
 ===================================== 
 
 ```{r setup, include=FALSE}
-# read current groundwater level, mt surface, gsas, model output
+# read current groundwater level, mt surface, GSPs, model output
 gwl <- read_rds(here("code", "results", "gwl_2019_avg_ll.rds"))
 mts <- read_rds(here("code", "results", "mt_surface_cv.rds")) %>% projectRaster(to = gwl)
 gwl <- mask(gwl, mts) # mask 2019 values to 2040 raster
@@ -261,14 +266,14 @@ if(selected_decline == "mt") {
                paste0("$", vbd_low$vb4, "-", vbd_high$vb4, "M"))
 }
 
-# gsa names
+# GSP names
 gsa_names <- gsa@data$gsp_name %>% 
   tolower() %>% 
   str_remove_all("[\\(\\)]") %>% 
   str_remove_all(" dm") %>% 
   str_replace_all(" |-", "_") 
 
-# filter gsa polygons to selected_gsa
+# filter GSP polygons to selected_gsa
 if(selected_gsa != "ALL") {
   gsa <- gsa[which(gsa_names == selected_gsa), ]
 }
@@ -277,56 +282,56 @@ if(selected_gsa != "ALL") {
 source(here("jamstack", "etc", "functions.R"))
   
 # root url for links
-root <- "https://www.gsawellfailure.com/gsas/"
+root <- "https://www.gspdrywells.com/gsas/"
 ```
 
 
-Row {.sidebar data-width=150 data-padding=10}
+<i class="fas fa-exclamation-circle"></i> Mobile view detected {.sidebar data-width=150 data-padding=10}
 -----------------------------------------------------------------------
 
 ```{r sidebar downdown menus}
-# GSA dropdown
+# GSP dropdown
 tags$div(
-  class="dropdown",
+  class="dropdown", id = "content-desktop",
   tags$button(
-    class="dropbtn", "Select a GSA"),
+    class="dropbtn", "Select a GSP"),
   tags$div(
     class = "dropdown-content",
     tags$a(href = paste0(root, "ALL/", selected_decline), "ALL"),
-    tags$a(href = paste0(root, "aliso/", selected_decline), "Aliso (DM)"),
-    tags$a(href = paste0(root, "alpaugh_tule/", selected_decline), "Alpaugh (Tule)"),
-    tags$a(href = paste0(root, "buena_vista_kern/", selected_decline), "Buena Vista (Kern)"),
-    tags$a(href = paste0(root, "central_kings/", selected_decline), "Central Kings"),
+    # tags$a(href = paste0(root, "aliso/", selected_decline), "Aliso (DM)"),
+    # tags$a(href = paste0(root, "alpaugh-tule/", selected_decline), "Alpaugh (Tule)"),
+    tags$a(href = paste0(root, "buena-vista-kern/", selected_decline), "Buena Vista (Kern)"),
+    tags$a(href = paste0(root, "central-kings/", selected_decline), "Central Kings"),
     tags$a(href = paste0(root, "chowchilla/", selected_decline), "Chowchilla"),
-    tags$a(href = paste0(root, "delano_earlimart_tule/", selected_decline), "Delano-Earlimart (Tule)"),
-    tags$a(href = paste0(root, "east_kaweah/", selected_decline), "East Kaweah"),
-    tags$a(href = paste0(root, "east_tule/", selected_decline), "East Tule"),
-    tags$a(href = paste0(root, "eastern_san_joaquin/", selected_decline), "Eastern San Joaquin"),
-    tags$a(href = paste0(root, "farmers/", selected_decline), "Farmers (DM)"),
-    tags$a(href = paste0(root, "fresno_county/", selected_decline), "Fresno County (DM)"),
+    # tags$a(href = paste0(root, "delano-earlimart-tule/", selected_decline), "Delano-Earlimart (Tule)"),
+    tags$a(href = paste0(root, "east-kaweah/", selected_decline), "East Kaweah"),
+    tags$a(href = paste0(root, "east-tule/", selected_decline), "East Tule"),
+    tags$a(href = paste0(root, "eastern-san-joaquin/", selected_decline), "Eastern San Joaquin"),
+    # tags$a(href = paste0(root, "farmers/", selected_decline), "Farmers (DM)"),
+    # tags$a(href = paste0(root, "fresno-county/", selected_decline), "Fresno County (DM)"),
     tags$a(href = paste0(root, "grassland/", selected_decline), "Grassland (DM)"),
-    tags$a(href = paste0(root, "gravelly_ford_madera/", selected_decline), "Gravelly Ford (Madera)"),
-    tags$a(href = paste0(root, "greater_kaweah/", selected_decline), "Greater Kaweah"),
-    tags$a(href = paste0(root, "henry_miller_kern/", selected_decline), "Henry Miller (Kern)"),
-    tags$a(href = paste0(root, "james_kings/", selected_decline), "James (Kings)"),
-    tags$a(href = paste0(root, "kern_groundwater_authority/", selected_decline), "Kern Groundwater Authority"),
-    tags$a(href = paste0(root, "kern_river/", selected_decline), "Kern River"),
-    tags$a(href = paste0(root, "kings_river_east/", selected_decline), "Kings River East"),
-    tags$a(href = paste0(root, "lower_tule_river/", selected_decline), "Lower Tule River"),
-    tags$a(href = paste0(root, "madera_joint/", selected_decline), "Madera Joint"),
-    tags$a(href = paste0(root, "mc_mullin/", selected_decline), "Mc Mullin"),
+    # tags$a(href = paste0(root, "gravelly-ford-madera/", selected_decline), "Gravelly Ford (Madera)"),
+    tags$a(href = paste0(root, "greater-kaweah/", selected_decline), "Greater Kaweah"),
+    # tags$a(href = paste0(root, "henry-miller-kern/", selected_decline), "Henry Miller (Kern)"),
+    tags$a(href = paste0(root, "james-kings/", selected_decline), "James (Kings)"),
+    tags$a(href = paste0(root, "kern-groundwater-authority/", selected_decline), "Kern Groundwater Authority"),
+    tags$a(href = paste0(root, "kern-river/", selected_decline), "Kern River"),
+    tags$a(href = paste0(root, "kings-river-east/", selected_decline), "Kings River East"),
+    tags$a(href = paste0(root, "lower-tule-river/", selected_decline), "Lower Tule River"),
+    tags$a(href = paste0(root, "madera-joint/", selected_decline), "Madera Joint"),
+    tags$a(href = paste0(root, "mc-mullin/", selected_decline), "Mc Mullin"),
     tags$a(href = paste0(root, "merced/", selected_decline), "Merced"),
-    tags$a(href = paste0(root, "mid_kaweah/", selected_decline), "Mid Kaweah"),
-    tags$a(href = paste0(root, "new_stone_madera/", selected_decline), "New Stone (Madera)"),
-    tags$a(href = paste0(root, "north_fork_kings/", selected_decline), "North Fork Kings"),
-    tags$a(href = paste0(root, "north_kings/", selected_decline), "North Kings"),
-    tags$a(href = paste0(root, "northern_central/", selected_decline), "Northern Central (DM)"),
-    tags$a(href = paste0(root, "pixley_tule/", selected_decline), "Pixley (Tule)"),
-    tags$a(href = paste0(root, "root_creek_madera/", selected_decline), "Root Creek (Madera)"),
+    tags$a(href = paste0(root, "mid-kaweah/", selected_decline), "Mid Kaweah"),
+    # tags$a(href = paste0(root, "new-stone-madera/", selected_decline), "New Stone (Madera)"),
+    tags$a(href = paste0(root, "north-fork-kings/", selected_decline), "North Fork Kings"),
+    tags$a(href = paste0(root, "north-kings/", selected_decline), "North Kings"),
+    tags$a(href = paste0(root, "northern-central/", selected_decline), "Northern Central (DM)"),
+    tags$a(href = paste0(root, "pixley-tule/", selected_decline), "Pixley (Tule)"),
+    # tags$a(href = paste0(root, "root-creek-madera/", selected_decline), "Root Creek (Madera)"),
     tags$a(href = paste0(root, "sjrec/", selected_decline), "SJREC (DM)"),
-    tags$a(href = paste0(root, "south_kings/", selected_decline), "South Kings"),
-    tags$a(href = paste0(root, "tri_county_tule/", selected_decline), "Tri-County (Tule)"),
-    tags$a(href = paste0(root, "tulare_lake/", selected_decline), "Tulare Lake"),
+    tags$a(href = paste0(root, "south-kings/", selected_decline), "South Kings"),
+    # tags$a(href = paste0(root, "tri-county-tule/", selected_decline), "Tri-County (Tule)"),
+    tags$a(href = paste0(root, "tulare-lake/", selected_decline), "Tulare Lake"),
     tags$a(href = paste0(root, "westside/", selected_decline), "Westside")
     )
 )
@@ -336,7 +341,7 @@ tags$br()
 
 # groundwater level dropdown
 tags$div(
-  class="dropdown",
+  class="dropdown", id = "content-desktop",
   tags$button(
     class="dropbtn", paste0("Select a groundwater scenario")),
   tags$div(
@@ -356,10 +361,15 @@ tags$div(
     )
 )
 
+# mobile only message
+tags$div(
+  id = "content-mobile",
+  tags$p("The data visualizations on this website are too large for mobile devices and small screens. For best results, please visit gspdrywells.com on a PC.")
+)
+
 tags$br()
 tags$br()
 ```
-
 
 
 <!-- Row {data-width=100} -->
@@ -399,14 +409,14 @@ bs_modal(
   size = "large"
 )
 bs_modal(
-  id = "md-well-failure-count",
-  title = htmltools::HTML('<h1 style="color:#fb4f73"><i class="fas fa-times-circle"></i> Well failure count</h1>'),
+  id = "md-number-of-wells-estimated-to-go-dry",
+  title = htmltools::HTML('<h1 style="color:#fb4f73"><i class="fas fa-times-circle"></i> Number of wells estimated to go dry</h1>'),
   body = includeMarkdown(here("jamstack", "etc", "well_failure_count.md")), 
   size = "large"
 )
 bs_modal(
-  id = "md-well-failure-percent",
-  title = htmltools::HTML('<h1 style="color:sandybrown"><i class="fas fa-percent"></i> Well failure percent</h1>'),
+  id = "md-percentage-of-wells-estimated-to-go-dry",
+  title = htmltools::HTML('<h1 style="color:sandybrown"><i class="fas fa-percent"></i> Percentage of wells estimated to go dry</h1>'),
   body = includeMarkdown(here("jamstack", "etc", "well_failure_percent.md")),
   size = "large"
 )
@@ -424,7 +434,7 @@ bs_modal(
 )
 bs_modal(
   id = "md-map-description",
-  title = htmltools::HTML('<h1 style="color:grey"><i class="fas fa-question-circle"></i> Critical priority GSAs and groundwater levels</h1>'),
+  title = htmltools::HTML('<h1 style="color:grey"><i class="fas fa-question-circle"></i> Critical priority GSPs and groundwater levels</h1>'),
   body = includeMarkdown(here("jamstack", "etc", "map_description.md")),
   size = "large"
 )
@@ -443,9 +453,9 @@ bs_modal(
 bs_button("Click for modal", button_type = "primary") %>%
   bs_attach_modal("md-groundwater-level-decline")
 bs_button("Click for modal", button_type = "primary") %>%
-  bs_attach_modal("md-well-failure-count")
+  bs_attach_modal("md-number-of-wells-estimated-to-go-dry")
 bs_button("Click for modal", button_type = "primary") %>%
-  bs_attach_modal("md-well-failure-percent")
+  bs_attach_modal("md-percentage-of-wells-estimated-to-go-dry")
 bs_button("Click for modal", button_type = "primary") %>%
   bs_attach_modal("md-cost-estimate")
 bs_button("Click for modal", button_type = "primary") %>%
@@ -465,14 +475,14 @@ valueBox(vb1,
          # icon = "fa-arrow-down")
 ```
 
-### Well failure count
+### Number of wells estimated to go dry
 ```{r}
 valueBox(vb2,
          color = "danger", 
          icon = "fa-times-circle")
 ```
 
-### Well failure percent
+### Percentage of wells estimated to go dry
 ```{r}
 valueBox(vb3,
          color = "warning", 
@@ -492,7 +502,7 @@ valueBox(vb4,
 Row
 -----------------------------------------------------------------------
 
-### `r ifelse(selected_gsa != "ALL", paste0("<font size='+1.5'><button type='button' style='border:none; background-color: Transparent;' data-toggle='modal' data-target='#md-map-description'><i class='fas fa-question-circle'></i></button> ", gsa@data$gsp_name, " GSA and groundwater levels</font>"), "<font size='+1.5'><button type='button' style='border:none; background-color: Transparent;' data-toggle='modal' data-target='#md-map-description'><i class='fas fa-question-circle'></i></button> All critical priority GSAs and groundwater levels</font>")`
+### `r ifelse(selected_gsa != "ALL", paste0("<font size='+1.5'><button type='button' style='border:none; background-color: Transparent;' data-toggle='modal' data-target='#md-map-description'><i class='fas fa-question-circle'></i></button> ", gsa@data$gsp_name, " GSP and groundwater levels</font>"), "<font size='+1.5'><button type='button' style='border:none; background-color: Transparent;' data-toggle='modal' data-target='#md-map-description'><i class='fas fa-question-circle'></i></button> All critical priority GSPs and groundwater levels</font>")`
 ```{r, leaflet}
 leaf_map <- leaflet() %>% addProviderTiles("CartoDB")
 
@@ -530,7 +540,7 @@ if(selected_gsa == "ALL") {
   }
 }
 
-# remove popups for individual GSAs
+# remove popups for individual GSPs
 if(selected_gsa != "ALL") { pop <- NULL}
 
 # setZoom parameters
@@ -540,7 +550,7 @@ xy        <- xy + c(0.4, 0.2)
 zoom      <- ifelse(selected_gsa == "ALL", 7, 8)
 
 # overlayGroups label depends on the selected_gsa
-if(selected_gsa == "ALL"){og <- "critical priority GSAs"}
+if(selected_gsa == "ALL"){og <- "critical priority GSPs"}
 if(selected_gsa != "ALL"){og <- params$gsa_names_full}
 
 # show active and failing wells on non-main page
@@ -568,9 +578,9 @@ if(selected_gsa != "ALL"){
                        <b>Total completed depth:</b> {round(lp$TotalCompletedDepth,2)} ft BLS")
     ) %>% 
 
-    # gsa polygon
+    # GSP polygon
     addPolygons(data = gsa, weight = 1, opacity = 1, fillOpacity = 0.1,
-                group = og[1], # gsa name
+                group = og[1], # GSP name
                 label = ~gsp_name, 
                 color = "black",
                 options = pathOptions(pane = "gsap"),
@@ -682,7 +692,7 @@ if(selected_gsa == "ALL"){
   
     # polygons
     addPolygons(data = gsa, weight = 1, opacity = 1, fillOpacity = 0.1,
-                group = og[1], # gsa name
+                group = og[1], # GSP name
                 label = ~gsp_name, 
                 color = "black",
                 highlightOptions = 
@@ -722,7 +732,7 @@ if(selected_gsa == "ALL"){
 leaf_map
 ```
 
-### `r ifelse(selected_gsa != "ALL", paste0("<font size='+1.5'><button type='button' style='border:none; background-color: Transparent;' data-toggle='modal' data-target='#md-plot-description'><i class='fas fa-question-circle'></i></button> Forecasted percentage of dry wells for ", gsa@data$gsp_name, "GSA</font>"), "<font size='+1.5'><button type='button' style='border:none; background-color: Transparent;' data-toggle='modal' data-target='#md-plot-description'><i class='fas fa-question-circle'></i></button> Forecasted percentage of dry wells for all critical priority GSAs</font>")`
+### `r ifelse(selected_gsa != "ALL", paste0("<font size='+1.5'><button type='button' style='border:none; background-color: Transparent;' data-toggle='modal' data-target='#md-plot-description'><i class='fas fa-question-circle'></i></button> Forecasted percentage of dry wells for ", gsa@data$gsp_name, " GSP</font>"), "<font size='+1.5'><button type='button' style='border:none; background-color: Transparent;' data-toggle='modal' data-target='#md-plot-description'><i class='fas fa-question-circle'></i></button> Forecasted percentage of dry wells for all critical priority GSPs</font>")`
 ```{r, plot}
 readr::read_rds(paste0("../plotly/", selected_decline, "_", selected_gsa, ".rds"))
 ```
