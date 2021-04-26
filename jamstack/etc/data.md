@@ -15,7 +15,7 @@ The well failure model in this study is implemented in `R`, and openly available
 
 ### **Domestic Well Data**  
 
-The Well Completion report database can be downloaded from the California Natural Resources Agency's Online Well Completion Report Database (OSWCR).  
+The Well Completion report database can be downloaded from the California Natural Resources Agency's Online Well Completion Report Database (OSWCR). This DWR database is constantly updated with new records, and new refinements to existing data. Consider accessing this data directly from DWR for the most up-to-date data.   
 
 <a href = "https://data.cnra.ca.gov/dataset/well-completion-reports" target = "_blank>https://data.cnra.ca.gov/dataset/well-completion-reports</a>
 
