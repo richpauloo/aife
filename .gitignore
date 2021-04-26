@@ -2,3 +2,4 @@ plotly/*
 jamstack/00_main_files/*
 .Rproj.user/*
 .Rproj.user
+.DS_Store

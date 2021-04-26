@@ -1,0 +1,105 @@
+---
+title: "Buffered Kriging Domain"
+output: html_document
+---
+
+
+This script creates a buffered kriging domain, specific to the dometic wells in the study.  
+
+Packages used.
+```{r}
+library(gstat)
+library(sp)
+library(raster)
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(lubridate)
+library(here)      # load here after lubridate to avoid `here` conflict
+library(rgeos)
+```
+
+Read in all shapefiles, and CV basin boundary.
+```{r}
+# list of seasonal, log-transformed spatial points in the CV
+dl_cv_ln <- read_rds("dl_cv_log_trans.rds")
+
+# cental valley alluval basin boundary
+cv <- shapefile(here("data","spatial",
+                     "central_valley_alluvial_boundary",
+                     "Alluvial_Bnd.shp"))
+cv <- spTransform(cv, crs(dl_cv_ln[[1]]))
+
+# domestic well locations
+domcv6 <- read_rds("domcv6_mean_gw_with_beta.rds")
+
+# consider only domestic wells drilled within the past 40 years
+domcv6 <- domcv6[domcv6@data$year >= 2016-40, ]
+```
+
+1 km buffer around each domestic well.
+```{r}
+# calculate buffers: write a fucntion and apply it
+bufer_intersect <- function(x, w) {
+  # calculate the buffer
+  x = gBuffer(x, width = w, capStyle = "ROUND", joinStyle = "BEVEL")
+  # trim the buffer to the cv
+  x = intersect(x, cv)
+  return(x) # return result
+}
+
+b <- bufer_intersect(domcv6, 5000) # apply the function
+write_rds(b, "buffer_domestic_wells_3km.rds")
+
+# dsaggregate
+bd <- disaggregate(bsp)
+
+# take one region
+b_trim <- bd[1, ]
+
+plot(cv)
+plot(b_trim, add=T, col="grey50")
+
+# make polygons to merge holes
+library(mapedit); library(mapview)
+add <- editMap(mapview(b_trim))
+add_1 <- spTransform(as(add$finished, "Spatial"), crs(b_trim))
+# write_rds(add_1, "add_1.rds")
+
+# combine
+b_trim_fill <- gUnion(add_1, b_trim)
+
+# tidy up remaining holes, round 2
+add <- editMap(mapview(b_trim_fill))
+add_2 <- spTransform(as(add$finished, "Spatial"), crs(b_trim))
+#write_rds(add_2, "add_2.rds")
+
+# second union
+b_trim_fill <- gUnion(add_2, b_trim_fill)
+
+
+# save the modified new domain for kriging
+write_rds(b_trim_fill, "b_trim_fill.rds")
+```
+
+Plot the domestic well study area 5km buffer.
+```{r}
+# the study area buffer
+library(sf)
+b_trim_fill <- read_rds("b_trim_fill.rds")
+bsf  <- st_as_sf(b_trim_fill)
+cvsf <- st_as_sf(cv) 
+dsf  <- st_as_sf(domcv6)
+pdsf <- st_geometry(dsf)
+
+# plot
+p <- ggplot() + 
+  geom_sf(data = cvsf, color = "grey50") +
+  geom_sf(data = bsf, fill = "#fde725ff", alpha = 0.7) +
+  geom_sf(data = pdsf, size = .2, alpha = 0.3) +
+  coord_sf(datum=NA) + 
+  theme_void()
+
+#ggsave(p, filename = "test.pdf", device = cairo_pdf, height = 11, width = 8.5)
+```
+
