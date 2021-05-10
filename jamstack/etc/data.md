@@ -23,7 +23,7 @@ The Well Completion report database can be downloaded from the California Natura
 
 The subset of 15,368 domestic wells considered in this study are provided below.  
 
-[<i class="fa fa-download fa-lg" style="color:#65a2e7"></i> domestic_wells.csv, 2MB](https://github.com/richpauloo/aife/raw/q4-updates/download/domestic_wells.csv.zip)  
+[<i class="fa fa-download fa-lg" style="color:#65a2e7"></i> domestic_wells.csv, 2MB](https://github.com/richpauloo/aife/raw/master/download/domestic_wells.csv.zip)  
 
 <table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;">
  <thead>
@@ -97,7 +97,7 @@ The GSPs considered in this study are: *Buena Vista (Kern), Central Kings, Chowc
 
 Two groundwater level surfaces were developed via ordinary kriging for this study. They include a 2019 groundwater level initial condition, and a minimum threshold surface, as described in the [Methodology](#methodology).  
 
-[<i class="fa fa-download fa-lg" style="color:#65a2e7"></i> gwl_2019.tif, 12KB](https://github.com/richpauloo/aife/raw/q4-updates/download/gwl_2019.tif)
+[<i class="fa fa-download fa-lg" style="color:#65a2e7"></i> gwl_2019.tif, 12KB](https://github.com/richpauloo/aife/raw/master/download/gwl_2019.tif)
 
 <table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;">
  <thead>
@@ -114,7 +114,7 @@ Two groundwater level surfaces were developed via ordinary kriging for this stud
 </tbody>
 </table>
 
-[<i class="fa fa-download fa-lg" style="color:#65a2e7"></i> gwl_mt.tif, 12KB](https://github.com/richpauloo/aife/raw/q4-updates/download/gwl_mt.tif)
+[<i class="fa fa-download fa-lg" style="color:#65a2e7"></i> gwl_mt.tif, 12KB](https://github.com/richpauloo/aife/raw/master/download/gwl_mt.tif)
 
 <table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;">
  <thead>
@@ -144,7 +144,7 @@ The 2019 groundwater level initial condition was derived from individual groundw
 
 Well failure model results are available for interactive visual inspection on the [Map](#map) page, and can be downloaded below.  
 
-[<i class="fa fa-download fa-lg" style="color:#65a2e7"></i> well_failure_model_results.csv, 40MB](https://github.com/richpauloo/aife/raw/q4-updates/download/well_failure_model_results.csv.zip)  
+[<i class="fa fa-download fa-lg" style="color:#65a2e7"></i> well_failure_model_results.csv, 40MB](https://github.com/richpauloo/aife/raw/master/download/well_failure_model_results.csv.zip)  
 
 
 <table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;">
@@ -210,10 +210,10 @@ library(raster)
 library(sf)
 
 # urls
-url_dw <- "https://github.com/richpauloo/aife/raw/q4-updates/download/domestic_wells.csv"
-url_mr <- "https://github.com/richpauloo/aife/raw/q4-updates/download/well_failure_model_results.csv"
-url_g1 <- "/vsicurl/https://github.com/richpauloo/aife/raw/q4-updates/download/gwl_2019.tif"
-url_g2 <- "/vsicurl/https://github.com/richpauloo/aife/raw/q4-updates/download/gwl_mt.tif"
+url_dw <- "https://github.com/richpauloo/aife/raw/master/download/domestic_wells.csv"
+url_mr <- "https://github.com/richpauloo/aife/raw/master/download/well_failure_model_results.csv"
+url_g1 <- "/vsicurl/https://github.com/richpauloo/aife/raw/master/download/gwl_2019.tif"
+url_g2 <- "/vsicurl/https://github.com/richpauloo/aife/raw/master/download/gwl_mt.tif"
 
 # read domestic well data and model results
 domestic_wells <- read_csv(url_dw) %>% st_as_sf(coords = c("x", "y"), crs = 4269)
@@ -247,10 +247,10 @@ import pandas as pd
 import rasterio
 
 # urls
-url_dw = "https://github.com/richpauloo/aife/raw/q4-updates/download/domestic_wells.csv"
-url_mr = "https://github.com/richpauloo/aife/raw/q4-updates/download/well_failure_model_results.csv" 
-url_g1 = "/vsicurl/https://github.com/richpauloo/aife/raw/q4-updates/download/gwl_2019.tif"
-url_g2 = "/vsicurl/https://github.com/richpauloo/aife/raw/q4-updates/download/gwl_mt.tif"
+url_dw = "https://github.com/richpauloo/aife/raw/master/download/domestic_wells.csv"
+url_mr = "https://github.com/richpauloo/aife/raw/master/download/well_failure_model_results.csv" 
+url_g1 = "/vsicurl/https://github.com/richpauloo/aife/raw/master/download/gwl_2019.tif"
+url_g2 = "/vsicurl/https://github.com/richpauloo/aife/raw/master/download/gwl_mt.tif"
 
 # read domestic well data and model results
 domestic_wells = pd.read_csv(url_dw)

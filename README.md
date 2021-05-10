@@ -28,7 +28,7 @@ Run scripts in `code` beginning in 02, 05, 06, 07 in order to generate objects f
 `/archive`: outdated, unused material  
 `/code`: analysis and modeling scripts  
 * `01_sampling_distribution_MT_GWL_difference.R`: data cleaning, bootstrapping forecasted groundwater declines, generating plots `p1-p4`   
-* `02_preprocess_data_for_dashbard`: read in data saved in `01_...` and preprocess scpecifically for JAMstack   
+* `02_preprocess_data_for_dashbard`: read in data saved in `01_...` and preprocess specifically for jamstack   
 * `03_compare_domestic_and_MT_well_depths.R`: sanity check to ensure domestic well depths coincide with the ranges of groundwater level decline  
 * `04_model.R`: generate forecasts and assets used in the static pages  
 * `05_postprocess.R`: postprocess model results from `04_model.R` into plotly popups for main page  
