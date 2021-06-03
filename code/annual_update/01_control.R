@@ -124,3 +124,17 @@ ggsave(here("output","composite","decline_2yr.pdf"), p2, height = 7, width = 13)
 # ------------------------------------------------------------------------
 # save
 # write_rds(l, here("code", "results", "model_output.rds"))
+
+
+# ------------------------------------------------------------------------
+# save spatial data
+sp %>% 
+  walk(
+    ~st_transform(.x, 4269) %>% 
+      mutate(
+        x = st_coordinates(.)[, 1],
+        y = st_coordinates(.)[, 2]
+      ) %>% 
+      st_drop_geometry() %>% 
+      write_csv(here("output", "sp", glue::glue("{.x$scen_name[1]}.csv")))
+  )
