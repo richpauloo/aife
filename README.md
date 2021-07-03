@@ -15,7 +15,9 @@ If you've reached this site looking for the static site at [gspdrywells.com](gsp
 
 ## Project summary
 
-About 1.5 million residents of California’s Central Valley rely on private domestic wells for drinking water, and many of these wells can, and oftentimes do, fail during drought or as the result of unsustainable groundwater management. This project uses hydrologic modeling, statistical learning, and data science to predict how groundwater level changes will impact domestic well failure and provides estimated information on drinking water shortages for underserved populations. Decision makers and local agencies can use this information to prevent well failure and inform water resource management and planning.
+About 1.5 million residents of California’s Central Valley rely on private domestic wells for drinking water, and many of these wells are vulnerable to chronic groundwater level decline, which may result from drought or unsustainable groundwater management. 
+
+gspdrywells.com uses hydrologic modeling, statistical learning, and data science to predict how groundwater level changes may impact domestic wells. Open data and models are provided for local agencies to implement more refined analyses at a GSA or GSP scale. Decision makers and local agencies can use this information to prevent well failure and inform water resource management and planning.
 
 
 ## Workflow
